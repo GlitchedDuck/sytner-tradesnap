@@ -66,63 +66,255 @@ st.set_page_config(
     layout="centered"
 )
 
-# Color scheme
-PRIMARY = "#0b3b6f"
-ACCENT = "#1e90ff"
-PAGE_BG = "#e6f0fa"
+# Color scheme - Dark blue iOS style
+DARK_BG = "#0a2540"
+CARD_BG = "#1a3a5c"
+TEXT_PRIMARY = "#ffffff"
+TEXT_SECONDARY = "#a0b8d0"
+ACCENT = "#4a9eff"
+SUCCESS = "#34c759"
 
 # Custom CSS
 st.markdown(f"""
 <style>
+/* Hide Streamlit branding */
+#MainMenu {{visibility: hidden;}}
+footer {{visibility: hidden;}}
+header {{visibility: hidden;}}
+
 [data-testid="stAppViewContainer"] {{
-    background-color: {PAGE_BG};
+    background: linear-gradient(180deg, {DARK_BG} 0%, #0d2f4d 100%);
+    padding-top: 20px;
 }}
-.header-card {{
-    background-color: {PRIMARY};
-    color: white;
-    padding: 16px 24px;
-    border-radius: 12px;
-    font-size: 24px;
-    font-weight: 700;
+
+/* Hide default padding */
+.block-container {{
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    max-width: 500px;
+}}
+
+/* Header styling */
+.app-header {{
     text-align: center;
-    margin-bottom: 24px;
+    margin-bottom: 40px;
+    padding: 0 20px;
 }}
-.content-card {{
-    background-color: white;
-    padding: 16px 20px;
-    border-radius: 12px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+
+.app-title {{
+    font-size: 32px;
+    font-weight: 300;
+    color: {TEXT_PRIMARY};
+    margin: 0;
+    line-height: 1.2;
+}}
+
+.app-subtitle {{
+    font-size: 48px;
+    font-weight: 700;
+    color: {TEXT_PRIMARY};
+    margin: 0;
+    line-height: 1.2;
+}}
+
+/* Number plate styling */
+.numberplate {{
+    background: linear-gradient(to bottom, #f9f9f9 0%, #e8e8e8 100%);
+    border: 3px solid #000;
+    border-radius: 8px;
+    padding: 16px 24px;
+    font-size: 36px;
+    font-weight: 900;
+    color: #000;
+    text-align: center;
+    margin: 30px auto;
+    max-width: 280px;
+    letter-spacing: 4px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}}
+
+/* Card styling */
+.info-card {{
+    background-color: {CARD_BG};
+    border-radius: 16px;
+    padding: 20px;
     margin-bottom: 16px;
-    color: {PRIMARY};
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }}
+
+.card-title {{
+    font-size: 22px;
+    font-weight: 600;
+    color: {TEXT_PRIMARY};
+    margin-bottom: 16px;
+}}
+
+.status-row {{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}}
+
+.status-row:last-child {{
+    border-bottom: none;
+}}
+
+.status-label {{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 18px;
+    color: {TEXT_PRIMARY};
+    font-weight: 500;
+}}
+
+.status-value {{
+    font-size: 16px;
+    color: {TEXT_SECONDARY};
+    text-align: right;
+}}
+
+.check-icon {{
+    width: 28px;
+    height: 28px;
+    background-color: {SUCCESS};
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 16px;
+}}
+
+.warning-icon {{
+    width: 28px;
+    height: 28px;
+    background-color: #ff9500;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 16px;
+}}
+
+.value-display {{
+    text-align: center;
+    padding: 24px;
+}}
+
+.value-amount {{
+    font-size: 56px;
+    font-weight: 700;
+    color: {TEXT_PRIMARY};
+    margin: 16px 0 8px 0;
+}}
+
+.value-condition {{
+    font-size: 18px;
+    color: {TEXT_SECONDARY};
+}}
+
+.car-icon {{
+    font-size: 48px;
+    color: {ACCENT};
+}}
+
+/* Buttons */
 .stButton>button {{
     background-color: {ACCENT};
     color: white;
     font-weight: 600;
-    border-radius: 8px;
-}}
-.numberplate {{
-    background-color: #fff;
-    border: 2px solid {PRIMARY};
     border-radius: 12px;
-    padding: 12px 20px;
-    font-size: 28px;
-    font-weight: 700;
-    color: {PRIMARY};
-    text-align: center;
-    margin-bottom: 24px;
+    border: none;
+    padding: 12px 24px;
+    font-size: 16px;
+    width: 100%;
 }}
-.badge {{
-    padding: 4px 10px;
+
+.stButton>button:hover {{
+    background-color: #3a8eef;
+}}
+
+/* Recall card */
+.recall-card {{
+    background-color: {CARD_BG};
+    border-radius: 16px;
+    padding: 20px;
+    margin: 16px 0;
+    cursor: pointer;
+}}
+
+.recall-header {{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}}
+
+.recall-title {{
+    font-size: 20px;
+    font-weight: 600;
+    color: {TEXT_PRIMARY};
+}}
+
+.recall-subtitle {{
+    font-size: 14px;
+    color: {TEXT_SECONDARY};
+    margin-top: 4px;
+}}
+
+.chevron {{
+    color: {TEXT_SECONDARY};
+    font-size: 24px;
+}}
+
+/* Hide streamlit elements */
+.stExpander {{
+    background-color: transparent !important;
+    border: none !important;
+}}
+
+div[data-testid="stExpander"] {{
+    background-color: {CARD_BG};
+    border-radius: 16px;
+    border: none;
+}}
+
+.streamlit-expanderHeader {{
+    background-color: transparent;
+    color: {TEXT_PRIMARY};
+    font-size: 20px;
+    font-weight: 600;
+}}
+
+/* Input styling */
+.stTextInput>div>div>input {{
+    background-color: {CARD_BG};
+    color: {TEXT_PRIMARY};
+    border: 1px solid rgba(255,255,255,0.2);
     border-radius: 12px;
-    color: white;
-    margin-right: 4px;
-    font-size: 12px;
-    display: inline-block;
+    padding: 16px;
+    font-size: 16px;
 }}
-.badge-warning {{background-color: #ff9800;}}
-.badge-error {{background-color: #f44336;}}
-.badge-info {{background-color: #0b3b6f;}}
+
+.stRadio>div {{
+    background-color: {CARD_BG};
+    padding: 16px;
+    border-radius: 12px;
+}}
+
+.stRadio label {{
+    color: {TEXT_PRIMARY};
+}}
+
+/* Reset button */
+.reset-btn {{
+    background-color: transparent !important;
+    color: {ACCENT} !important;
+    border: 2px solid {ACCENT} !important;
+}}
 </style>
 """, unsafe_allow_html=True)
 
@@ -150,31 +342,35 @@ def reset_state():
 init_session_state()
 
 # -------------------------
-# Header
-# -------------------------
-st.markdown(
-    "<div class='header-card'>Sytner AutoSense — POC</div>",
-    unsafe_allow_html=True
-)
-
-# -------------------------
 # Input Page
 # -------------------------
 def show_input_page():
     """Display the vehicle registration input page"""
-    st.markdown("## Enter Vehicle Registration or Take Photo")
+    
+    # Header
+    st.markdown("""
+    <div class='app-header'>
+        <div class='app-title'>Sytner</div>
+        <div class='app-subtitle'>AutoSense</div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Input card
+    st.markdown("<div class='info-card'>", unsafe_allow_html=True)
     
     option = st.radio(
         "Choose input method",
-        ["Enter Registration / VIN", "Take Photo"],
+        ["Enter Registration", "Take Photo"],
         index=0,
-        horizontal=True
+        horizontal=True,
+        label_visibility="collapsed"
     )
 
-    if option == "Enter Registration / VIN":
+    if option == "Enter Registration":
         manual_reg = st.text_input(
-            "Enter registration / VIN",
-            placeholder="e.g. KT68XYZ or WBA8BFAKEVIN12345"
+            "Enter registration",
+            placeholder="e.g. KT68 XYZ",
+            label_visibility="collapsed"
         )
         
         if st.button("Look Up Vehicle", disabled=not manual_reg):
@@ -184,16 +380,16 @@ def show_input_page():
                 st.session_state.show_summary = True
                 st.rerun()
             else:
-                st.error("Please enter a valid registration or VIN")
+                st.error("Please enter a valid registration")
     
     elif option == "Take Photo":
         image = st.camera_input(
             "Take photo of the number plate",
-            help="Position the number plate clearly in the frame"
+            help="Position the number plate clearly in the frame",
+            label_visibility="collapsed"
         )
         
         if image is not None:
-            # Process the image
             extracted_reg = mock_ocr_numberplate(image)
             
             if extracted_reg:
@@ -202,7 +398,9 @@ def show_input_page():
                 st.session_state.show_summary = True
                 st.rerun()
             else:
-                st.error("Could not read number plate. Please try again or enter manually.")
+                st.error("Could not read number plate. Please try again.")
+    
+    st.markdown("</div>", unsafe_allow_html=True)
 
 # -------------------------
 # Summary Page
@@ -212,178 +410,169 @@ def show_summary_page():
     reg = st.session_state.reg
     image = st.session_state.image
     
-    # Reset button at the top
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
-        if st.button("🔄 Check Another Vehicle", use_container_width=True):
-            reset_state()
-            st.rerun()
+    # Header
+    st.markdown("""
+    <div class='app-header'>
+        <div class='app-title'>Sytner</div>
+        <div class='app-subtitle'>AutoSense</div>
+    </div>
+    """, unsafe_allow_html=True)
     
-    st.markdown("---")
-    
-    # Display captured image if available
-    if image:
-        col1, col2, col3 = st.columns([1, 2, 1])
-        with col2:
-            st.image(
-                ImageOps.exif_transpose(Image.open(image)),
-                use_container_width=True,
-                caption="Captured Image"
-            )
-    
-    # Display number plate
+    # Number plate
+    formatted_reg = reg[:4] + " " + reg[4:] if len(reg) > 4 else reg
     st.markdown(
-        f"<div class='numberplate'>{reg}</div>",
+        f"<div class='numberplate'>{formatted_reg}</div>",
         unsafe_allow_html=True
     )
     
-    # Fetch vehicle data (with loading spinner)
-    with st.spinner("Fetching vehicle information..."):
+    # Fetch vehicle data
+    with st.spinner(""):
         vehicle = lookup_vehicle_basic(reg)
         mot_tax = lookup_mot_and_tax(reg)
         recalls = lookup_recalls(reg)
         history_flags = get_history_flags(reg)
     
-    # Vehicle Summary Card
-    st.markdown("<div class='content-card'>", unsafe_allow_html=True)
-    st.markdown("#### Vehicle Summary")
-    
-    # Basic info
-    col1, col2 = st.columns(2)
-    with col1:
-        st.markdown(f"**Make & Model:** {vehicle['make']} {vehicle['model']}")
-        st.markdown(f"**Year:** {vehicle['year']}")
-        st.markdown(f"**Mileage:** {vehicle['mileage']:,} miles")
-    with col2:
-        st.markdown(f"**VIN:** {vehicle['vin']}")
-        st.markdown(f"**Next MOT:** {mot_tax['mot_next_due']}")
-        st.markdown(f"**Tax Expiry:** {mot_tax['tax_expiry']}")
-    
-    # Status badges
-    st.markdown("---")
-    st.markdown("**Status Flags:**")
-    
-    flags_html = ""
-    if history_flags.get("write_off"):
-        flags_html += '<span class="badge badge-error">Write-off</span> '
-    if history_flags.get("theft"):
-        flags_html += '<span class="badge badge-error">Theft Record</span> '
-    if history_flags.get("mileage_anomaly"):
-        flags_html += '<span class="badge badge-warning">Mileage Anomaly</span> '
-    
+    # Recalls card
     open_recalls = sum(1 for r in recalls if r["open"])
-    if open_recalls:
-        flags_html += f'<span class="badge badge-warning">{open_recalls} Open Recall(s)</span> '
     
-    if not flags_html:
-        flags_html = '<span class="badge badge-info">No Issues</span>'
+    st.markdown("<div class='recall-card'>", unsafe_allow_html=True)
+    if open_recalls > 0:
+        st.markdown(f"""
+        <div class='recall-header'>
+            <div>
+                <div class='recall-title'>⚠️ {open_recalls} open recall{'s' if open_recalls > 1 else ''}</div>
+                <div class='recall-subtitle'>Check for safety recalls</div>
+            </div>
+            <div class='chevron'>›</div>
+        </div>
+        """, unsafe_allow_html=True)
+    else:
+        st.markdown(f"""
+        <div class='recall-header'>
+            <div>
+                <div class='recall-title'>No open recalls</div>
+                <div class='recall-subtitle'>Check for safety recalls</div>
+            </div>
+            <div class='chevron'>›</div>
+        </div>
+        """, unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)
     
-    st.markdown(flags_html, unsafe_allow_html=True)
+    # Expand recalls section
+    if open_recalls > 0:
+        with st.expander("View recall details", expanded=False):
+            for idx, recall in enumerate(recalls):
+                if recall['open']:
+                    st.markdown(f"**{recall['summary']}**")
+                    st.markdown(f"ID: `{recall['id']}`")
+                    
+                    if st.button("📅 Book Repair", key=f"book_recall_{idx}"):
+                        st.session_state[f"booking_recall_{idx}"] = True
+                    
+                    # Booking form
+                    if st.session_state.get(f"booking_recall_{idx}", False):
+                        st.markdown("---")
+                        
+                        garage = st.selectbox(
+                            "Select Garage",
+                            [
+                                "Sytner BMW Birmingham",
+                                "Sytner BMW Manchester",
+                                "Sytner BMW London",
+                                "Sytner BMW Bristol"
+                            ],
+                            key=f"garage_{idx}"
+                        )
+                        
+                        min_date = datetime.date.today() + datetime.timedelta(days=1)
+                        max_date = datetime.date.today() + datetime.timedelta(days=60)
+                        
+                        booking_date = st.date_input(
+                            "Preferred Date",
+                            min_value=min_date,
+                            max_value=max_date,
+                            key=f"date_{idx}"
+                        )
+                        
+                        time_slot = st.selectbox(
+                            "Preferred Time",
+                            ["9:00 AM", "11:00 AM", "2:00 PM", "4:00 PM"],
+                            key=f"time_{idx}"
+                        )
+                        
+                        col_a, col_b = st.columns(2)
+                        with col_a:
+                            customer_name = st.text_input("Name", key=f"name_{idx}")
+                        with col_b:
+                            customer_phone = st.text_input("Phone", key=f"phone_{idx}")
+                        
+                        col_x, col_y = st.columns(2)
+                        with col_x:
+                            if st.button("✅ Confirm", key=f"confirm_{idx}", use_container_width=True):
+                                if customer_name and customer_phone:
+                                    st.success(f"✅ Booked at **{garage}** on **{booking_date}** at **{time_slot}**")
+                                    st.session_state[f"booking_recall_{idx}"] = False
+                                else:
+                                    st.error("Please fill in all fields")
+                        with col_y:
+                            if st.button("Cancel", key=f"cancel_{idx}", use_container_width=True):
+                                st.session_state[f"booking_recall_{idx}"] = False
+                                st.rerun()
+                    
+                    st.markdown("---")
     
-    if history_flags.get("note"):
-        st.info(f"ℹ️ {history_flags['note']}")
+    # Vehicle status card
+    st.markdown("<div class='info-card'>", unsafe_allow_html=True)
+    st.markdown("<div class='card-title'>Vehicle status</div>", unsafe_allow_html=True)
+    
+    # MOT
+    mot_date = datetime.datetime.fromisoformat(mot_tax['mot_next_due']).strftime("%d %b %Y")
+    st.markdown(f"""
+    <div class='status-row'>
+        <div class='status-label'>
+            <div class='check-icon'>✓</div>
+            <span>MOT</span>
+        </div>
+        <div class='status-value'>Expires {mot_date}</div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Tax
+    tax_date = datetime.datetime.fromisoformat(mot_tax['tax_expiry']).strftime("%d %b %Y")
+    st.markdown(f"""
+    <div class='status-row'>
+        <div class='check-icon'>✓</div>
+        <div class='status-label'>
+            <span>Tax</span>
+        </div>
+        <div class='status-value'>Expires {tax_date}</div>
+    </div>
+    """, unsafe_allow_html=True)
     
     st.markdown("</div>", unsafe_allow_html=True)
     
-    # MOT History
-    with st.expander("📋 MOT History", expanded=False):
-        for entry in mot_tax['mot_history']:
-            result_emoji = "✅" if entry['result'] == "Pass" else "⚠️"
-            st.markdown(
-                f"{result_emoji} **{entry['date']}**: {entry['result']} — {entry['mileage']:,} miles"
-            )
+    # Insurance card
+    st.markdown("<div class='info-card'>", unsafe_allow_html=True)
+    st.markdown(f"""
+    <div class='status-row'>
+        <div class='status-label'>
+            <span style='font-size: 18px; font-weight: 500;'>Insurance</span>
+        </div>
+        <div class='status-value' style='color: {ACCENT}; font-weight: 600;'>Get a quote ›</div>
+    </div>
+    """, unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)
     
-    # Recalls
-    with st.expander("🔔 Recalls", expanded=False):
-        if not recalls:
-            st.success("No recalls found for this vehicle")
-        else:
-            for idx, recall in enumerate(recalls):
-                st.markdown("---" if idx > 0 else "")
-                
-                col1, col2 = st.columns([3, 1])
-                with col1:
-                    status = "⚠️ **Open**" if recall['open'] else "✅ Closed"
-                    st.markdown(f"**{recall['summary']}**")
-                    st.markdown(f"ID: `{recall['id']}` — Status: {status}")
-                
-                with col2:
-                    if recall['open']:
-                        if st.button("📅 Book In", key=f"book_recall_{idx}"):
-                            st.session_state[f"booking_recall_{idx}"] = True
-                
-                # Booking form for open recalls
-                if recall['open'] and st.session_state.get(f"booking_recall_{idx}", False):
-                    st.markdown("##### Book Recall Repair")
-                    
-                    # Select garage
-                    garage = st.selectbox(
-                        "Select Sytner Garage",
-                        [
-                            "Sytner BMW Birmingham",
-                            "Sytner BMW Manchester",
-                            "Sytner BMW London",
-                            "Sytner BMW Bristol"
-                        ],
-                        key=f"garage_{idx}"
-                    )
-                    
-                    # Date picker
-                    min_date = datetime.date.today() + datetime.timedelta(days=1)
-                    max_date = datetime.date.today() + datetime.timedelta(days=60)
-                    
-                    booking_date = st.date_input(
-                        "Preferred Date",
-                        min_value=min_date,
-                        max_value=max_date,
-                        key=f"date_{idx}"
-                    )
-                    
-                    # Time slot
-                    time_slot = st.selectbox(
-                        "Preferred Time",
-                        ["9:00 AM", "11:00 AM", "2:00 PM", "4:00 PM"],
-                        key=f"time_{idx}"
-                    )
-                    
-                    # Contact details
-                    col_a, col_b = st.columns(2)
-                    with col_a:
-                        customer_name = st.text_input("Your Name", key=f"name_{idx}")
-                    with col_b:
-                        customer_phone = st.text_input("Phone Number", key=f"phone_{idx}")
-                    
-                    # Submit buttons
-                    col_x, col_y, col_z = st.columns([1, 1, 1])
-                    with col_x:
-                        if st.button("✅ Confirm Booking", key=f"confirm_{idx}", use_container_width=True):
-                            if customer_name and customer_phone:
-                                st.success(f"✅ Recall repair booked at **{garage}** on **{booking_date}** at **{time_slot}**")
-                                st.info(f"📧 Confirmation sent to customer. Reference: RCL-{recall['id']}-{idx}")
-                                st.session_state[f"booking_recall_{idx}"] = False
-                                st.balloons()
-                            else:
-                                st.error("Please fill in all required fields")
-                    with col_y:
-                        if st.button("❌ Cancel", key=f"cancel_{idx}", use_container_width=True):
-                            st.session_state[f"booking_recall_{idx}"] = False
-                            st.rerun()
-    
-    # Insurance
-    with st.expander("🛡️ Insurance Quote", expanded=False):
-        st.info("Insurance quotes are mocked. Integrate with aggregator APIs for live quotes.")
-        if st.button('Get Mock Insurance Quote'):
-            st.success('Sample quote: **£320/year** (3rd party, excess £250)')
-    
-    # Valuation Card
-    st.markdown("<div class='content-card'>", unsafe_allow_html=True)
-    st.markdown("#### 💰 Valuation")
+    # Valuation card
+    st.markdown("<div class='info-card'>", unsafe_allow_html=True)
+    st.markdown("<div class='card-title'>Estimated value</div>", unsafe_allow_html=True)
     
     condition = st.radio(
-        "Select vehicle condition",
+        "Condition",
         ["excellent", "good", "fair", "poor"],
         index=1,
-        horizontal=True
+        horizontal=True,
+        label_visibility="collapsed"
     )
     
     value = estimate_value(
@@ -394,24 +583,41 @@ def show_summary_page():
         condition
     )
     
-    st.markdown(
-        f"**Estimated Value:** <span style='font-size: 24px; color: {PRIMARY}; font-weight: 700;'>£{value:,}</span>",
-        unsafe_allow_html=True
-    )
-    st.caption(f"Condition: {condition.capitalize()}")
+    st.markdown(f"""
+    <div class='value-display'>
+        <div class='car-icon'>🚗</div>
+        <div class='value-amount'>£{value:,}</div>
+        <div class='value-condition'>{condition.capitalize()} condition</div>
+    </div>
+    """, unsafe_allow_html=True)
     
-    st.markdown("---")
-    
-    # Send to buyer section
-    col1, col2 = st.columns([2, 1])
-    with col1:
-        st.markdown("**Assigned Buyer:** John Smith | 📞 01234 567890")
-    with col2:
-        if st.button("📤 Send to Buyer", use_container_width=True):
-            st.success("✅ Sent successfully!")
-            st.balloons()
+    if st.button("📤 Send to Buyer"):
+        st.success("✅ Sent to John Smith")
+        st.balloons()
     
     st.markdown("</div>", unsafe_allow_html=True)
+    
+    # Vehicle details expander
+    with st.expander("📋 View full vehicle details"):
+        st.markdown(f"**Make & Model:** {vehicle['make']} {vehicle['model']}")
+        st.markdown(f"**Year:** {vehicle['year']}")
+        st.markdown(f"**VIN:** {vehicle['vin']}")
+        st.markdown(f"**Mileage:** {vehicle['mileage']:,} miles")
+        
+        if history_flags.get("mileage_anomaly"):
+            st.warning(f"⚠️ {history_flags['note']}")
+        
+        st.markdown("---")
+        st.markdown("**MOT History**")
+        for entry in mot_tax['mot_history']:
+            result_emoji = "✅" if entry['result'] == "Pass" else "⚠️"
+            st.markdown(f"{result_emoji} {entry['date']}: {entry['result']} — {entry['mileage']:,} miles")
+    
+    # Reset button
+    st.markdown("<br>", unsafe_allow_html=True)
+    if st.button("🔄 Check Another Vehicle", key="reset_btn"):
+        reset_state()
+        st.rerun()
 
 # -------------------------
 # Main App Logic
