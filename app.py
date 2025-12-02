@@ -1,6 +1,6 @@
 import streamlit as st
 from PIL import Image, ImageOps
-import datetime, re, json
+import datetime, re
 
 # -------------------------
 # Mock / Helpers
@@ -45,9 +45,9 @@ PLATE_REGEX = re.compile(r"[A-Z0-9]{5,10}", re.I)
 # Streamlit config + theming
 # -------------------------
 st.set_page_config(page_title="Sytner AutoSense", page_icon="🚗", layout="centered")
-PRIMARY = "#0b3b6f"
-ACCENT = "#1e90ff"
-PAGE_BG = "#e6f0fa"
+PRIMARY = "#0b3b6f"   # Sytner dark blue
+ACCENT = "#1e90ff"    # Accent blue
+PAGE_BG = "#e6f0fa"   # Light Sytner background
 
 st.markdown(f"""
 <style>
@@ -57,36 +57,41 @@ st.markdown(f"""
 .header-card {{
     background-color: {PRIMARY};
     color: white;
-    padding: 16px 24px;
+    padding: 20px 30px;
     border-radius: 12px;
-    font-size: 24px;
+    font-size: 28px;
     font-weight: 700;
     text-align: center;
-    margin-bottom: 24px;
+    margin-bottom: 30px;
 }}
 .content-card {{
     background-color: white;
-    padding: 16px 20px;
+    padding: 20px 24px;
     border-radius: 12px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
-    margin-bottom: 16px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    margin-bottom: 18px;
+    margin-left: auto;
+    margin-right: auto;
+    width: fit-content;
 }}
 .content-card h4 {{
     margin-top: 0;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
+    color: {PRIMARY};
 }}
 .stButton>button {{
     background-color: {ACCENT};
     color: white;
     font-weight: 600;
     border-radius: 8px;
+    padding: 8px 24px;
 }}
 .numberplate {{
     background-color: #fff;
     border: 2px solid {PRIMARY};
     border-radius: 12px;
-    padding: 12px 20px;
-    font-size: 28px;
+    padding: 14px 24px;
+    font-size: 32px;
     font-weight: 700;
     color: {PRIMARY};
     text-align: center;
@@ -94,11 +99,11 @@ st.markdown(f"""
     width: fit-content;
 }}
 .badge {{
-    padding: 4px 10px;
-    border-radius: 12px;
+    padding: 5px 12px;
+    border-radius: 14px;
     color: white;
-    margin-right: 4px;
-    font-size: 12px;
+    margin-right: 6px;
+    font-size: 13px;
 }}
 .badge-warning {{background-color: #ff9800;}}
 .badge-error {{background-color: #f44336;}}
@@ -170,7 +175,7 @@ if st.session_state.show_summary and st.session_state.reg:
     }
 
     # Vehicle Summary with badges
-    st.markdown("<div class='content-card' style='margin-left:auto;margin-right:auto;width:fit-content;'>", unsafe_allow_html=True)
+    st.markdown("<div class='content-card'>", unsafe_allow_html=True)
     st.markdown("<h4>Vehicle Summary</h4>", unsafe_allow_html=True)
     summary_html = f"""
     <p><strong>Make & Model:</strong> {vehicle['make']} {vehicle['model']}</p>
@@ -215,7 +220,7 @@ if st.session_state.show_summary and st.session_state.reg:
             st.success('Sample quote: £320/year (3rd party, excess £250)')
 
     # Valuation card with Send to Buyer
-    st.markdown("<div class='content-card' style='margin-left:auto;margin-right:auto;width:fit-content;'>", unsafe_allow_html=True)
+    st.markdown("<div class='content-card'>", unsafe_allow_html=True)
     st.markdown("<h4>Valuation</h4>", unsafe_allow_html=True)
     condition = st.radio("Select condition", ["excellent", "good", "fair", "poor"], index=1, horizontal=True)
     value = estimate_value(vehicle["make"], vehicle["model"], vehicle["year"], vehicle["mileage"], condition)
