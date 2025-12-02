@@ -1832,31 +1832,29 @@ class Sections:
         
         st.markdown('</div>', unsafe_allow_html=True)
     
-@staticmethod
-def mot_history(mot_history: list[MOTEntry]):
-    """Render MOT history expander"""
-    # FIX: Added unique key using the vehicle registration
-    with st.expander("📜 MOT History", key=f"mot_history_expander_{st.session_state.reg}"):
-        if mot_history:
-            for entry in mot_history:
-                icon = "✅" if entry.is_pass else "⚠️"
-                st.markdown(f"{icon} **{entry.date}**: {entry.result} — {entry.mileage:,} miles")
-        else:
-            st.info("No MOT history available")
+    @staticmethod
+    def mot_history(mot_history: list[MOTEntry]):
+        """Render MOT history expander"""
+        with st.expander("📜 MOT History"):
+            if mot_history:
+                for entry in mot_history:
+                    icon = "✅" if entry.is_pass else "⚠️"
+                    st.markdown(f"{icon} **{entry.date}**: {entry.result} — {entry.mileage:,} miles")
+            else:
+                st.info("No MOT history available")
     
-@staticmethod
-def recalls(recalls: list[Recall]):
-    """Render recalls section"""
-    open_count = sum(1 for r in recalls if r.is_open)
-    
-    # FIX: Added unique key using the vehicle registration
-    with st.expander(f"🔔 Recalls ({len(recalls)} total, {open_count} open)", key=f"recalls_summary_expander_{st.session_state.reg}"):
-        if not recalls:
-            st.success("✅ No recalls found for this vehicle")
-            return
+    @staticmethod
+    def recalls(recalls: list[Recall]):
+        """Render recalls section"""
+        open_count = sum(1 for r in recalls if r.is_open)
         
-        for idx, recall in enumerate(recalls):
-            recall_key = f"recall_{recall.id}"
+        with st.expander(f"🔔 Recalls ({len(recalls)} total, {open_count} open)"):
+            if not recalls:
+                st.success("✅ No recalls found for this vehicle")
+                return
+            
+            for idx, recall in enumerate(recalls):
+                recall_key = f"recall_{recall.id}"
                 
                 col1, col2 = st.columns([3, 1])
                 with col1:
@@ -2026,12 +2024,11 @@ def recalls(recalls: list[Recall]):
         
         st.info("💬 Speak to our sales team about part-exchange deals and finance options")
     
-@staticmethod
-def additional_details(vehicle: Vehicle, mot_tax: MOTAndTax, history_flags: HistoryFlags, open_recalls: int):
-    """Render additional details expander"""
-    # FIX: Added unique key using the vehicle registration
-    with st.expander("🔍 View All Details", key=f"details_expander_{vehicle.reg}"):
-        tab1, tab2, tab3, tab4 = st.tabs(["Specifications", "History", "Alerts", "Upgrades"])
+    @staticmethod
+    def additional_details(vehicle: Vehicle, mot_tax: MOTAndTax, history_flags: HistoryFlags, open_recalls: int):
+        """Render additional details expander"""
+        with st.expander("🔍 View All Details"):
+            tab1, tab2, tab3, tab4 = st.tabs(["Specifications", "History", "Alerts", "Upgrades"])
             
             with tab1:
                 st.markdown(f"""
@@ -2187,16 +2184,14 @@ class Pages:
         # Demand Forecast - NEW FEATURE
         Sections.demand_forecast(vehicle)
         
-# Insurance quote (simplified)
-# FIX: Added unique key using the vehicle registration for stability
-with st.expander("🛡️ Insurance Quote", key=f"quote_expander_{st.session_state.reg}"): 
-    st.info("Insurance quotes available through partner aggregators")
-    # NOTE: The button key was already unique enough, but included 'reg' for robustness
-    if st.button("Get Sample Quote", key=f"insurance_quote_btn_{st.session_state.reg}"):
-        st.success("""
-        **Sample Quote:** £320/year (Third Party, Fire & Theft)  
-        Excess: £250 | No Claims: Year 1 | Mileage: 10,000/year
-        """)
+        # Insurance quote (simplified)
+        with st.expander("🛡️ Insurance Quote"):
+            st.info("Insurance quotes available through partner aggregators")
+            if st.button("Get Sample Quote", key="insurance_quote"):
+                st.success("""
+                **Sample Quote:** £320/year (Third Party, Fire & Theft)  
+                Excess: £250 | No Claims: Year 1 | Mileage: 10,000/year
+                """)
         
         Sections.valuation(vehicle)
         Sections.additional_details(vehicle, mot_tax, history_flags, open_recalls)
@@ -2238,7 +2233,6 @@ def main():
 
 if __name__ == "__main__":
     main()
-
 
 
 
