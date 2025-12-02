@@ -70,7 +70,7 @@ st.set_page_config(
 DARK_BG = "#0d1f3c"
 CARD_BG = "#1a3552"
 TEXT_PRIMARY = "#ffffff"
-TEXT_SECONDARY = "#8fa5ba"
+TEXT_SECONDARY = "#d1dce6"
 ACCENT = "#4a9eff"
 SUCCESS = "#30d158"
 
@@ -294,9 +294,10 @@ div[data-testid="stExpander"] {{
 
 /* Input styling */
 .stTextInput label {{
-    color: {TEXT_SECONDARY};
-    font-size: 14px;
+    color: {TEXT_PRIMARY};
+    font-size: 15px;
     margin-bottom: 8px;
+    font-weight: 500;
 }}
 
 .stTextInput>div>div>input {{
@@ -309,8 +310,7 @@ div[data-testid="stExpander"] {{
 }}
 
 .stTextInput>div>div>input::placeholder {{
-    color: {TEXT_SECONDARY};
-    opacity: 0.6;
+    color: rgba(255,255,255,0.5);
 }}
 
 .stRadio>label {{
