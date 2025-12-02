@@ -2185,13 +2185,13 @@ class Pages:
         Sections.demand_forecast(vehicle)
         
         # Insurance quote (simplified)
-with st.expander("🛡️ Insurance Quote"):
-    st.info("Insurance quotes available through partner aggregators")
-    if st.button("Get Sample Quote", key="insurance_quote"):
-        st.markdown(
-            "**Sample Quote:** £320/year (Third Party, Fire & Theft)  \n\n"
-            "Excess: £250 | No Claims: Year 1 | Mileage: 10,000/year"
-        )
+        with st.expander("🛡️ Insurance Quote"):
+            st.info("Insurance quotes available through partner aggregators")
+            if st.button("Get Sample Quote", key="insurance_quote"):
+                st.success("""
+                **Sample Quote:** £320/year (Third Party, Fire & Theft)  
+                Excess: £250 | No Claims: Year 1 | Mileage: 10,000/year
+                """)
         
         Sections.valuation(vehicle)
         Sections.additional_details(vehicle, mot_tax, history_flags, open_recalls)
@@ -2233,6 +2233,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
