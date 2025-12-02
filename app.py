@@ -122,10 +122,11 @@ if "show_summary" not in st.session_state: st.session_state.show_summary = False
 # -------------------------
 if st.session_state.show_summary:
     if st.button("Reset / Change Registration"):
+        # Clear session variables
         st.session_state.reg = None
         st.session_state.image = None
         st.session_state.show_summary = False
-        st.stop()  # stop to immediately show input page
+        # Do NOT stop here; allow input page to show immediately
 
 # -------------------------
 # Input page
@@ -139,7 +140,6 @@ if not st.session_state.show_summary:
         if manual_reg:
             st.session_state.reg = manual_reg.strip().upper().replace(" ", "")
             st.session_state.show_summary = True
-            st.stop()  # immediately show summary
 
     elif option == "Take Photo":
         image = st.camera_input("Take photo of the number plate (rear camera)")
@@ -147,7 +147,6 @@ if not st.session_state.show_summary:
             st.session_state.image = image
             st.session_state.reg = "KT68XYZ"  # Mock OCR
             st.session_state.show_summary = True
-            st.stop()  # immediately show summary
 
 # -------------------------
 # Summary page
@@ -229,3 +228,4 @@ if st.session_state.show_summary and st.session_state.reg:
         st.success("Sent successfully!")
     st.markdown("<small>Buyer: John Smith | 01234 567890</small>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
+
