@@ -1620,22 +1620,23 @@ class Components:
         """Render the main demand forecast card"""
         # Determine trend styling
         if forecast.seasonal_trend == "rising":
-            trend_class = "trend-up"
             trend_icon = "📈"
             trend_sign = "+"
+            trend_bg = "rgba(6, 214, 160, 0.2)"
+            trend_color = "#06d6a0"
         elif forecast.seasonal_trend == "falling":
-            trend_class = "trend-down"
             trend_icon = "📉"
             trend_sign = ""
+            trend_bg = "rgba(239, 71, 111, 0.2)"
+            trend_color = "#ef476f"
         else:
-            trend_class = "trend-stable"
             trend_icon = "➡️"
             trend_sign = ""
+            trend_bg = "rgba(255, 209, 102, 0.2)"
+            trend_color = "#ffd166"
         
-        # Demand level color
         demand_color = forecast.national_demand.color
         
-        # Calculate meter width
         meter_width = {
             DemandLevel.VERY_HIGH: 95,
             DemandLevel.HIGH: 75,
@@ -1644,60 +1645,46 @@ class Components:
             DemandLevel.VERY_LOW: 15,
         }[forecast.national_demand]
         
-        # Best region days to sell
         days_to_sell = forecast.best_region.days_to_sell if forecast.best_region else "—"
         
-        # Build HTML as a single block
-        html = f'''
-<div style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 24px; border-radius: 16px; color: white; margin-bottom: 20px; position: relative; overflow: hidden;">
-    <div style="position: absolute; top: 0; right: 0; width: 200px; height: 200px; background: radial-gradient(circle, rgba(0, 180, 216, 0.15) 0%, transparent 70%); pointer-events: none;"></div>
-    
-    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
-        <div>
-            <div style="font-size: 18px; font-weight: 600; margin: 0 0 4px 0;">
-                {forecast.vehicle_type.icon} {forecast.vehicle_type.value} Demand Forecast
-            </div>
-            <div style="font-size: 13px; opacity: 0.8;">
-                {vehicle.display_name} · {vehicle.year}
-            </div>
-        </div>
-        <div>
-            <span style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 500; background: rgba(255, 255, 255, 0.1);">
-                {forecast.current_season.icon} {forecast.current_season.display_name}
-            </span>
-        </div>
-    </div>
-    
-    <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 8px; flex-wrap: wrap;">
-        <span style="padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; background: {demand_color};">
-            {forecast.national_demand.display_name}
-        </span>
-        <span style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 16px; font-size: 13px; font-weight: 600; background: rgba(255, 209, 102, 0.2); color: #ffd166;">
-            {trend_icon} {trend_sign}{forecast.trend_percentage}% this season
-        </span>
-    </div>
-    
-    <div style="background: rgba(255, 255, 255, 0.1); border-radius: 10px; height: 12px; margin: 16px 0; overflow: hidden;">
-        <div style="height: 100%; border-radius: 10px; width: {meter_width}%; background: linear-gradient(90deg, {demand_color} 0%, {Config.ACCENT} 100%);"></div>
-    </div>
-    
-    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 20px;">
-        <div style="text-align: center; padding: 12px; background: rgba(255, 255, 255, 0.05); border-radius: 10px;">
-            <div style="font-family: monospace; font-size: 24px; font-weight: 700; color: {Config.ACCENT};">{forecast.hotspot_count}</div>
-            <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.7; margin-top: 4px;">Hotspot Regions</div>
-        </div>
-        <div style="text-align: center; padding: 12px; background: rgba(255, 255, 255, 0.05); border-radius: 10px;">
-            <div style="font-family: monospace; font-size: 24px; font-weight: 700; color: {Config.ACCENT};">{days_to_sell}d</div>
-            <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.7; margin-top: 4px;">Est. Days to Sell</div>
-        </div>
-        <div style="text-align: center; padding: 12px; background: rgba(255, 255, 255, 0.05); border-radius: 10px;">
-            <div style="font-family: monospace; font-size: 24px; font-weight: 700; color: {Config.ACCENT};">+£{forecast.demand_bonus:,}</div>
-            <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.7; margin-top: 4px;">Demand Bonus</div>
-        </div>
-    </div>
-</div>
-'''
-        st.markdown(html, unsafe_allow_html=True)
+        # Card container
+        st.markdown(f"""<div style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); padding: 24px; border-radius: 16px; color: white; margin-bottom: 20px;">""", unsafe_allow_html=True)
+        
+        # Header row using columns
+        col1, col2 = st.columns([3, 1])
+        with col1:
+            st.markdown(f"**{forecast.vehicle_type.icon} {forecast.vehicle_type.value} Demand Forecast**")
+            st.caption(f"{vehicle.display_name} · {vehicle.year}")
+        with col2:
+            st.markdown(f"<span style='background: rgba(255,255,255,0.15); padding: 6px 12px; border-radius: 20px; font-size: 13px;'>{forecast.current_season.icon} {forecast.current_season.display_name}</span>", unsafe_allow_html=True)
+        
+        # Demand level and trend badges
+        st.markdown(f"""
+<span style="display: inline-block; padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 14px; text-transform: uppercase; background: {demand_color}; color: white; margin-right: 12px;">{forecast.national_demand.display_name}</span><span style="display: inline-block; padding: 6px 12px; border-radius: 16px; font-size: 13px; font-weight: 600; background: {trend_bg}; color: {trend_color};">{trend_icon} {trend_sign}{forecast.trend_percentage}% this season</span>
+""", unsafe_allow_html=True)
+        
+        # Progress meter
+        st.markdown(f"""
+<div style="background: rgba(255, 255, 255, 0.1); border-radius: 10px; height: 12px; margin: 16px 0; overflow: hidden;"><div style="height: 100%; border-radius: 10px; width: {meter_width}%; background: linear-gradient(90deg, {demand_color} 0%, #00b4d8 100%);"></div></div>
+""", unsafe_allow_html=True)
+        
+        # Stats row using columns
+        stat1, stat2, stat3 = st.columns(3)
+        with stat1:
+            st.markdown(f"""
+<div style="text-align: center; padding: 12px; background: rgba(255, 255, 255, 0.05); border-radius: 10px;"><div style="font-family: monospace; font-size: 24px; font-weight: 700; color: #00b4d8;">{forecast.hotspot_count}</div><div style="font-size: 11px; text-transform: uppercase; opacity: 0.7;">Hotspot Regions</div></div>
+""", unsafe_allow_html=True)
+        with stat2:
+            st.markdown(f"""
+<div style="text-align: center; padding: 12px; background: rgba(255, 255, 255, 0.05); border-radius: 10px;"><div style="font-family: monospace; font-size: 24px; font-weight: 700; color: #00b4d8;">{days_to_sell}d</div><div style="font-size: 11px; text-transform: uppercase; opacity: 0.7;">Est. Days to Sell</div></div>
+""", unsafe_allow_html=True)
+        with stat3:
+            st.markdown(f"""
+<div style="text-align: center; padding: 12px; background: rgba(255, 255, 255, 0.05); border-radius: 10px;"><div style="font-family: monospace; font-size: 24px; font-weight: 700; color: #00b4d8;">+£{forecast.demand_bonus:,}</div><div style="font-size: 11px; text-transform: uppercase; opacity: 0.7;">Demand Bonus</div></div>
+""", unsafe_allow_html=True)
+        
+        # Close container
+        st.markdown("</div>", unsafe_allow_html=True)
     
     @staticmethod
     def regional_hotspot(region: RegionalDemand, rank: int):
@@ -1707,32 +1694,13 @@ class Components:
         # Badge for top regions
         rank_badge = ""
         if rank == 1:
-            rank_badge = '<span style="background: #ffd166; color: #1a1a2e; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; margin-left: 8px;">🏆 BEST MATCH</span>'
+            rank_badge = " 🏆 BEST MATCH"
         elif rank == 2:
-            rank_badge = '<span style="background: #e2e8f0; color: #1a1a2e; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; margin-left: 8px;">2nd</span>'
+            rank_badge = " (2nd)"
         elif rank == 3:
-            rank_badge = '<span style="background: #e2e8f0; color: #1a1a2e; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; margin-left: 8px;">3rd</span>'
+            rank_badge = " (3rd)"
         
-        html = f'''
-<div style="background: white; border-radius: 12px; padding: 16px; margin: 10px 0; border-left: 4px solid {demand_color}; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
-    <div style="flex: 1;">
-        <div style="font-weight: 600; color: {Config.PRIMARY}; font-size: 15px; margin-bottom: 4px;">
-            {region.location}{rank_badge}
-        </div>
-        <div style="font-size: 13px; color: {Config.TEXT_MUTED};">
-            📍 {region.distance_miles:.0f} miles · 
-            🚗 {region.stock_level} in stock · 
-            👥 {region.buyers_waiting} buyers waiting · 
-            ⏱️ ~{region.days_to_sell} days to sell
-        </div>
-    </div>
-    <div style="text-align: right;">
-        <div style="font-family: monospace; font-size: 28px; font-weight: 700; color: {demand_color};">{region.demand_score}</div>
-        <div style="font-size: 11px; text-transform: uppercase; color: {Config.TEXT_MUTED};">Demand Score</div>
-    </div>
-</div>
-'''
-        st.markdown(html, unsafe_allow_html=True)
+        st.markdown(f"""<div style="background: white; border-radius: 12px; padding: 16px; margin: 10px 0; border-left: 4px solid {demand_color}; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.04);"><div style="flex: 1;"><div style="font-weight: 600; color: #0a2f4f; font-size: 15px; margin-bottom: 4px;">{region.location}{rank_badge}</div><div style="font-size: 13px; color: #6b7280;">📍 {region.distance_miles:.0f} mi · 🚗 {region.stock_level} stock · 👥 {region.buyers_waiting} waiting · ⏱️ ~{region.days_to_sell}d</div></div><div style="text-align: right;"><div style="font-family: monospace; font-size: 28px; font-weight: 700; color: {demand_color};">{region.demand_score}</div><div style="font-size: 11px; text-transform: uppercase; color: #6b7280;">Score</div></div></div>""", unsafe_allow_html=True)
     
     @staticmethod
     def ping_result(result: dict):
@@ -1741,33 +1709,17 @@ class Components:
         if best_location and best_location != 'N/A':
             best_location = best_location.replace('Sytner BMW ', '')
         
-        html = f'''
-<div style="background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); border: 2px solid {Config.SUCCESS}; border-radius: 12px; padding: 20px; margin-top: 16px;">
-    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
-        <span style="font-size: 24px;">📡</span>
-        <span style="font-weight: 600; color: {Config.PRIMARY}; font-size: 16px;">Network Pinged Successfully!</span>
-    </div>
-    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
-        <div style="background: white; padding: 12px; border-radius: 8px; text-align: center;">
-            <div style="font-family: monospace; font-size: 20px; font-weight: 700; color: {Config.PRIMARY};">{result['notifications_sent']}</div>
-            <div style="font-size: 12px; color: {Config.TEXT_MUTED};">Locations Notified</div>
-        </div>
-        <div style="background: white; padding: 12px; border-radius: 8px; text-align: center;">
-            <div style="font-family: monospace; font-size: 20px; font-weight: 700; color: {Config.PRIMARY};">{result['interested_buyers']}</div>
-            <div style="font-size: 12px; color: {Config.TEXT_MUTED};">Interested Buyers</div>
-        </div>
-        <div style="background: white; padding: 12px; border-radius: 8px; text-align: center;">
-            <div style="font-family: monospace; font-size: 20px; font-weight: 700; color: {Config.PRIMARY};">~{result['estimated_sale_days']}d</div>
-            <div style="font-size: 12px; color: {Config.TEXT_MUTED};">Est. Time to Sale</div>
-        </div>
-        <div style="background: white; padding: 12px; border-radius: 8px; text-align: center;">
-            <div style="font-family: monospace; font-size: 20px; font-weight: 700; color: {Config.PRIMARY};">✓</div>
-            <div style="font-size: 12px; color: {Config.TEXT_MUTED};">Best: {best_location}</div>
-        </div>
-    </div>
-</div>
-'''
-        st.markdown(html, unsafe_allow_html=True)
+        st.success("📡 **Network Pinged Successfully!**")
+        
+        col1, col2, col3, col4 = st.columns(4)
+        with col1:
+            st.metric("Locations Notified", result['notifications_sent'])
+        with col2:
+            st.metric("Interested Buyers", result['interested_buyers'])
+        with col3:
+            st.metric("Est. Sale Time", f"~{result['estimated_sale_days']}d")
+        with col4:
+            st.metric("Best Match", best_location)
 
 
 # ============================================================================
@@ -1989,12 +1941,8 @@ class Sections:
             st.info(season_insights[insight_key])
         
         # Regional hotspots section
-        st.markdown(f"""
-        <div style="background: white; padding: 24px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); margin: 20px 0; border: 1px solid rgba(0,0,0,0.04);">
-            <h4 style="color: {Config.PRIMARY}; margin: 0 0 8px 0;">🗺️ Regional Demand Hotspots</h4>
-            <p style="color: {Config.TEXT_MUTED}; font-size: 13px; margin: 0 0 16px 0;">Locations ranked by demand score — higher scores mean faster sales</p>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown("#### 🗺️ Regional Demand Hotspots")
+        st.caption("Locations ranked by demand score — higher scores mean faster sales")
         
         # Show top 5 regions
         for idx, region in enumerate(forecast.regional_demands[:5], 1):
@@ -2006,12 +1954,9 @@ class Sections:
                 Components.regional_hotspot(region, idx)
         
         # Ping Network Section
-        st.markdown(f"""
-        <div style="background: white; padding: 24px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); margin: 20px 0; border: 1px solid rgba(0,0,0,0.04);">
-            <h4 style="color: {Config.PRIMARY}; margin: 0 0 8px 0;">📡 Ping Network</h4>
-            <p style="color: {Config.TEXT_MUTED}; font-size: 13px; margin: 0;">Alert high-demand locations about this vehicle to find buyers faster</p>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown("---")
+        st.markdown("#### 📡 Ping Network")
+        st.caption("Alert high-demand locations about this vehicle to find buyers faster")
         
         col1, col2 = st.columns([2, 1])
         with col1:
@@ -2040,9 +1985,9 @@ class Sections:
             
             # Show which locations were pinged
             if st.session_state.ping_result.get("locations_pinged"):
-                st.markdown("**📍 Locations notified:**")
-                for loc in st.session_state.ping_result["locations_pinged"]:
-                    st.markdown(f"- ✓ {loc}")
+                with st.expander("📍 Locations notified"):
+                    for loc in st.session_state.ping_result["locations_pinged"]:
+                        st.markdown(f"✓ {loc}")
     
     @staticmethod
     def valuation(vehicle: Vehicle):
