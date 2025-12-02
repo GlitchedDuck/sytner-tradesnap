@@ -293,39 +293,51 @@ div[data-testid="stExpander"] {{
 }}
 
 /* Input styling */
+.stTextInput label {{
+    color: {TEXT_SECONDARY};
+    font-size: 14px;
+    margin-bottom: 8px;
+}}
+
 .stTextInput>div>div>input {{
     background-color: {CARD_BG};
     color: {TEXT_PRIMARY};
-    border: 2px solid rgba(255,255,255,0.3);
-    border-radius: 12px;
-    padding: 16px;
-    font-size: 18px;
+    border: 2px solid rgba(255,255,255,0.25);
+    border-radius: 10px;
+    padding: 16px 20px;
+    font-size: 17px;
 }}
 
 .stTextInput>div>div>input::placeholder {{
     color: {TEXT_SECONDARY};
+    opacity: 0.6;
 }}
 
-.stRadio>div {{
-    background-color: transparent;
-    padding: 0;
-    border-radius: 0;
-}}
-
-.stRadio label {{
+.stRadio>label {{
     color: {TEXT_PRIMARY};
     font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 12px;
 }}
 
 .stRadio > div[role="radiogroup"] {{
+    display: flex;
     gap: 12px;
 }}
 
 .stRadio > div[role="radiogroup"] > label {{
     background-color: {CARD_BG};
-    padding: 12px 20px;
-    border-radius: 8px;
+    padding: 14px 24px;
+    border-radius: 10px;
     border: 2px solid rgba(255,255,255,0.2);
+    flex: 1;
+    text-align: center;
+}}
+
+.stRadio > div[role="radiogroup"] > label[data-baseweb="radio"] {{
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }}
 
 /* Reset button */
@@ -374,7 +386,7 @@ def show_input_page():
     </div>
     """, unsafe_allow_html=True)
     
-    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown("<br><br>", unsafe_allow_html=True)
     
     # Input options
     option = st.radio(
@@ -395,14 +407,16 @@ def show_input_page():
         
         st.markdown("<br>", unsafe_allow_html=True)
         
-        if st.button("Look Up Vehicle", disabled=not manual_reg, use_container_width=True):
-            if manual_reg and len(manual_reg.strip()) >= 5:
-                st.session_state.reg = manual_reg.strip().upper().replace(" ", "")
-                st.session_state.image = None
-                st.session_state.show_summary = True
-                st.rerun()
-            else:
-                st.error("Please enter a valid registration")
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
+            if st.button("Look Up Vehicle", disabled=not manual_reg, use_container_width=True):
+                if manual_reg and len(manual_reg.strip()) >= 5:
+                    st.session_state.reg = manual_reg.strip().upper().replace(" ", "")
+                    st.session_state.image = None
+                    st.session_state.show_summary = True
+                    st.rerun()
+                else:
+                    st.error("Please enter a valid registration")
     
     elif option == "Take Photo":
         image = st.camera_input(
