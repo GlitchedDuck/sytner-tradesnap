@@ -174,8 +174,26 @@ def apply_custom_css():
     .badge-warning {{background-color: #ff9800;}}
     .badge-error {{background-color: #f44336;}}
     .badge-success {{background-color: #4caf50;}}
-    .element-container:has(> .stMarkdown > div:empty) {{
-        display: none;
+    
+    /* Hide empty containers and white bars */
+    .element-container:has(> .stMarkdown > div:empty),
+    .element-container:has(> .stMarkdown > div:only-child:empty) {{
+        display: none !important;
+    }}
+    
+    /* Remove extra padding from empty column containers */
+    [data-testid="column"]:empty {{
+        display: none !important;
+    }}
+    
+    /* Ensure content cards have no unexpected margins when empty */
+    .content-card:empty {{
+        display: none !important;
+    }}
+    
+    /* Remove default Streamlit spacing that creates white bars */
+    .block-container {{
+        padding-top: 2rem;
     }}
     </style>
     """, unsafe_allow_html=True)
@@ -191,11 +209,14 @@ def render_header():
 def render_reset_button():
     """Render reset button when on summary page"""
     if st.session_state.show_summary:
+        # Use container to center button without creating empty columns
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
             if st.button("Reset / Change Registration", use_container_width=True):
                 reset_all_state()
                 st.rerun()
+        # Add empty markdown to prevent white bar rendering
+        st.markdown("")
 
 def render_status_badges(history_flags, open_recalls):
     """Render status badges for vehicle"""
