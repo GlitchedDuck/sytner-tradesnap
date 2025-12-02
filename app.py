@@ -162,7 +162,8 @@ with st.expander("Recalls"):
 # -------------------------
 # Insurance Card (mock)
 # -------------------------
-st.markdown("<div class='content-card'><h4>Insurance (Mock)</h4>", unsafe_allow_html=True)
+st.markdown("<div class='content-card'>", unsafe_allow_html=True)
+st.markdown("<h4>Insurance (Mock)</h4>", unsafe_allow_html=True)
 st.info("Insurance quotes are mocked. Integrate aggregator APIs for live quotes.")
 if st.button('Get a mock insurance quote'):
     st.success('Sample quote: £320/year (3rd party, excess £250)')
@@ -171,7 +172,8 @@ st.markdown("</div>", unsafe_allow_html=True)
 # -------------------------
 # Snapshot Download
 # -------------------------
-st.markdown("<div class='content-card'><h4>Snapshot</h4>", unsafe_allow_html=True)
+st.markdown("<div class='content-card'>", unsafe_allow_html=True)
+st.markdown("<h4>Snapshot</h4>", unsafe_allow_html=True)
 snapshot = {
     "vehicle": vehicle,
     "mot_tax": mot_tax,
@@ -182,3 +184,4 @@ snapshot = {
 st.download_button("Download JSON snapshot", data=json.dumps(snapshot, indent=2),
                    file_name=f"{reg}_snapshot.json", mime='application/json')
 st.markdown("</div>", unsafe_allow_html=True)
+
