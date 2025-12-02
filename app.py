@@ -1,9 +1,9 @@
 import streamlit as st
 from PIL import Image, ImageOps
-import datetime, re, io, json
+import datetime, io, json
 
 # -------------------------
-# Page & Theme Config
+# Theme Config
 # -------------------------
 PRIMARY = "#0b3b6f"
 ACCENT = "#1e90ff"
@@ -16,11 +16,6 @@ st.markdown(f"""
 [data-testid="stAppViewContainer"] {{
     background-color: {PAGE_BG};
 }}
-.main > div {{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}}
 .header-card {{
     background-color: {PRIMARY};
     color: white;
@@ -30,8 +25,9 @@ st.markdown(f"""
     font-weight: 700;
     text-align: center;
     margin-bottom: 24px;
-    width: 100%;
     max-width: 600px;
+    margin-left:auto;
+    margin-right:auto;
 }}
 .content-card {{
     background-color: white;
@@ -39,8 +35,9 @@ st.markdown(f"""
     border-radius: 12px;
     box-shadow: 0 6px 18px rgba(0,0,0,0.06);
     margin-bottom: 16px;
-    width: 100%;
     max-width: 600px;
+    margin-left:auto;
+    margin-right:auto;
 }}
 .numberplate {{
     background-color: #fff;
@@ -53,6 +50,8 @@ st.markdown(f"""
     text-align: center;
     margin-bottom: 24px;
     width: fit-content;
+    margin-left:auto;
+    margin-right:auto;
 }}
 .stButton>button {{
     background-color: {ACCENT};
@@ -64,7 +63,7 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 # -------------------------
-# Mock Data Helpers
+# Mock helpers
 # -------------------------
 def lookup_vehicle_basic(reg):
     return {"reg": reg, "make":"BMW", "model":"3 Series", "year":2018, "vin":"WBA8BFAKEVIN12345", "mileage":54000}
@@ -127,76 +126,85 @@ if st.session_state.show_summary and st.session_state.reg:
     reg = st.session_state.reg
     image = st.session_state.image
 
-    # Reset / Change Reg button
-    if st.button("Change / Reset Registration"):
-        st.session_state.reg = None
-        st.session_state.image = None
-        st.session_state.show_summary = False
+    # Centered layout using a single column
+    cols = st.columns([1,6,1])
+    with cols[1]:
 
-    # Display numberplate
-    if image:
-        st.image(ImageOps.exif_transpose(Image.open(image)), width=320)
-    st.markdown(f"<div class='numberplate'>{reg}</div>", unsafe_allow_html=True)
+        # Reset / Change Reg button
+        if st.button("Change / Reset Registration"):
+            st.session_state.reg = None
+            st.session_state.image = None
+            st.session_state.show_summary = False
+            st.experimental_rerun = False  # safe no-op for newer Streamlit
 
-    # Fetch data
-    vehicle = lookup_vehicle_basic(reg)
-    mot_tax = lookup_mot_and_tax(reg)
-    recalls = lookup_recalls(reg)
-    history_flags = lookup_history_flags(reg)
+        # Display numberplate
+        if image:
+            st.image(ImageOps.exif_transpose(Image.open(image)), width=320)
+        st.markdown(f"<div class='numberplate'>{reg}</div>", unsafe_allow_html=True)
 
-    # Vehicle Summary Card
-    st.markdown("<div class='content-card'>", unsafe_allow_html=True)
-    st.markdown(f"""
-    <h4>Vehicle Summary</h4>
-    <p><strong>Make & Model:</strong> {vehicle['make']} {vehicle['model']}</p>
-    <p><strong>Year:</strong> {vehicle['year']}</p>
-    <p><strong>VIN:</strong> {vehicle['vin']}</p>
-    <p><strong>Mileage:</strong> {vehicle['mileage']:,} miles</p>
-    <p><strong>Next MOT:</strong> {mot_tax['mot_next_due']}</p>
-    """, unsafe_allow_html=True)
-    # Flags
-    if history_flags["mileage_anomaly"]:
-        st.warning(history_flags["note"])
-    st.markdown("</div>", unsafe_allow_html=True)
+        # Fetch data
+        vehicle = lookup_vehicle_basic(reg)
+        mot_tax = lookup_mot_and_tax(reg)
+        recalls = lookup_recalls(reg)
+        history_flags = lookup_history_flags(reg)
 
-    # Recalls Expander
-    with st.expander("Recalls"):
-        if any(r['open'] for r in recalls):
-            for r in recalls:
-                if r['open']:
-                    st.warning(f"Open recall: {r['summary']} — ID: {r['id']}")
-        else:
-            st.success("No open recalls found")
+        # Vehicle Summary Card
+        st.markdown("<div class='content-card'>", unsafe_allow_html=True)
+        st.markdown(f"""
+        <h4>Vehicle Summary</h4>
+        <p><strong>Make & Model:</strong> {vehicle['make']} {vehicle['model']}</p>
+        <p><strong>Year:</strong> {vehicle['year']}</p>
+        <p><strong>VIN:</strong> {vehicle['vin']}</p>
+        <p><strong>Mileage:</strong> {vehicle['mileage']:,} miles</p>
+        <p><strong>Next MOT:</strong> {mot_tax['mot_next_due']}</p>
+        """, unsafe_allow_html=True)
+        # Flags
+        if history_flags.get("write_off"):
+            st.error("This vehicle has a previous write-off record")
+        if history_flags.get("theft"):
+            st.error("This vehicle has a theft record")
+        if history_flags.get("mileage_anomaly"):
+            st.warning(history_flags.get("note"))
+        st.markdown("</div>", unsafe_allow_html=True)
 
-    # MOT History Expander
-    with st.expander("MOT History"):
-        for t in mot_tax['mot_history']:
-            st.write(f"- {t['date']}: **{t['result']}** — {t['mileage']} miles")
+        # Recalls Expander
+        with st.expander("Recalls"):
+            if any(r['open'] for r in recalls):
+                for r in recalls:
+                    if r['open']:
+                        st.warning(f"Open recall: {r['summary']} — ID: {r['id']}")
+            else:
+                st.success("No open recalls found")
 
-    # Valuation Card
-    condition = st.radio("Select condition", ["excellent","good","fair","poor"], index=1, horizontal=True)
-    value = estimate_value(vehicle["make"], vehicle["model"], vehicle["year"], vehicle["mileage"], condition)
-    st.markdown(f"<div class='content-card'><h4>Valuation</h4><p>£{value:,} ({condition.capitalize()})</p></div>", unsafe_allow_html=True)
+        # MOT History Expander
+        with st.expander("MOT History"):
+            for t in mot_tax['mot_history']:
+                st.write(f"- {t['date']}: **{t['result']}** — {t['mileage']} miles")
 
-    # Send to Buyer
-    if st.button("Send to Sytner Buyer"):
-        st.success("Sent successfully! Buyer: John Smith | 01234 567890")
+        # Valuation Card
+        condition = st.radio("Select condition", ["excellent","good","fair","poor"], index=1, horizontal=True)
+        value = estimate_value(vehicle["make"], vehicle["model"], vehicle["year"], vehicle["mileage"], condition)
+        st.markdown(f"<div class='content-card'><h4>Valuation</h4><p>£{value:,} ({condition.capitalize()})</p></div>", unsafe_allow_html=True)
 
-    # Insurance Expander
-    with st.expander("Insurance (Mocked)"):
-        st.info("Insurance quotes are mocked in this POC.")
-        if st.button("Get a mock insurance quote"):
-            st.success("Sample quote: £320/year (3rd party, excess £250)")
+        # Send to Buyer
+        if st.button("Send to Sytner Buyer"):
+            st.success("Sent successfully! Buyer: John Smith | 01234 567890")
 
-    # Snapshot Expander
-    with st.expander("Download JSON Snapshot"):
-        snapshot = {
-            'vehicle': vehicle,
-            'mot_tax': mot_tax,
-            'recalls': recalls,
-            'history_flags': history_flags,
-            'valuation': {'value': value, 'condition': condition},
-            'queried_at': datetime.datetime.utcnow().isoformat()
-        }
-        st.download_button('Download JSON snapshot', data=json.dumps(snapshot, indent=2),
-                           file_name=f"{reg}_snapshot.json", mime='application/json')
+        # Insurance Expander
+        with st.expander("Insurance (Mocked)"):
+            st.info("Insurance quotes are mocked in this POC.")
+            if st.button("Get a mock insurance quote"):
+                st.success("Sample quote: £320/year (3rd party, excess £250)")
+
+        # Snapshot Expander
+        with st.expander("Download JSON Snapshot"):
+            snapshot = {
+                'vehicle': vehicle,
+                'mot_tax': mot_tax,
+                'recalls': recalls,
+                'history_flags': history_flags,
+                'valuation': {'value': value, 'condition': condition},
+                'queried_at': datetime.datetime.now(datetime.timezone.utc).isoformat()
+            }
+            st.download_button('Download JSON snapshot', data=json.dumps(snapshot, indent=2),
+                               file_name=f"{reg}_snapshot.json", mime='application/json')
