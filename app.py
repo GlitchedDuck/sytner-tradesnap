@@ -597,35 +597,35 @@ class MockVehicleService(VehicleService):
                 "distance": 85,
             },
             {
-                "location": "Sytner BMW London - Park Lane",
+                "location": "Sytner BMW Leicester",
                 "base_modifier": 10,
                 "rural_bonus": False,
                 "affluent": True,
                 "distance": 120,
             },
             {
-                "location": "Sytner BMW Edinburgh",
+                "location": "Sytner BMW Tamworth",
                 "base_modifier": -5,
                 "rural_bonus": True,
                 "affluent": False,
                 "distance": 290,
             },
             {
-                "location": "Sytner BMW Leeds",
+                "location": "Sytner BMW Nottingham",
                 "base_modifier": 0,
                 "rural_bonus": True,
                 "affluent": False,
                 "distance": 120,
             },
             {
-                "location": "Sytner BMW Bristol",
+                "location": "Sytner BMW Coventry",
                 "base_modifier": 5,
                 "rural_bonus": True,
                 "affluent": True,
                 "distance": 90,
             },
             {
-                "location": "Sytner BMW Newcastle",
+                "location": "Sytner BMW Solihull",
                 "base_modifier": -10,
                 "rural_bonus": True,
                 "affluent": False,
@@ -2233,4 +2233,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
