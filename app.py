@@ -1,6 +1,7 @@
 import streamlit as st
 from PIL import Image, ImageOps
 import datetime, re, json
+import io
 
 # -------------------------
 # Mock / helper functions
@@ -27,10 +28,7 @@ def lookup_mot_and_tax(reg):
     }
 
 def lookup_recalls(reg):
-    # Example mock recall data
-    return [
-        {"id": "R-2023-001", "summary": "Airbag inflator recall — replace module", "open": True}
-    ]
+    return [{"id": "R-2023-001", "summary": "Airbag inflator recall — replace module", "open": True}]
 
 def lookup_history_flags(reg):
     return {
@@ -43,13 +41,11 @@ def lookup_history_flags(reg):
 def estimate_value(make, model, year, mileage, condition="good"):
     age = datetime.date.today().year - year
     base = 25000 - (age * 2000) - (mileage / 10)
-    cond_multiplier = {"excellent":1.05, "good":1.0, "fair":0.9, "poor":0.8}
+    cond_multiplier = {"excellent": 1.05, "good": 1.0, "fair": 0.9, "poor": 0.8}
     return max(100, int(base * cond_multiplier.get(condition, 1.0)))
 
-PLATE_REGEX = re.compile(r"[A-Z0-9]{5,10}", re.I)
-
 # -------------------------
-# Session state
+# Session state setup
 # -------------------------
 if "reg" not in st.session_state:
     st.session_state.reg = None
@@ -58,16 +54,15 @@ if "image" not in st.session_state:
 if "show_summary" not in st.session_state:
     st.session_state.show_summary = False
 
-# -------------------------
-# Page header
-# -------------------------
-st.title("AutoSense — Vehicle Check")
+st.set_page_config(page_title="Sytner AutoSense", page_icon="🚗", layout="centered")
 
 # -------------------------
-# Input page (if no reg yet)
+# Input page
 # -------------------------
 if not st.session_state.show_summary:
-    st.subheader("Enter registration or take a photo of the number‑plate")
+    st.title("AutoSense — Vehicle Check")
+    st.write("Enter vehicle registration/VIN or take a photo of the number plate.")
+
     option = st.radio("Input method", ["Manual entry", "Take photo"], index=0)
 
     if option == "Manual entry":
@@ -75,24 +70,26 @@ if not st.session_state.show_summary:
         if manual_reg:
             st.session_state.reg = manual_reg.strip().upper().replace(" ", "")
             st.session_state.show_summary = True
+            st.experimental_rerun()  # immediately show summary
 
     elif option == "Take photo":
         img = st.camera_input("Snap number plate photo")
         if img:
             st.session_state.image = img
-            # TODO: replace with real OCR in future
-            st.session_state.reg = "KT68XYZ"  # placeholder reg
+            # TODO: replace with real OCR to get reg
+            st.session_state.reg = "KT68XYZ"  # mock reg
             st.session_state.show_summary = True
+            st.experimental_rerun()  # immediately show summary
 
-    st.stop()
+    st.stop()  # stop here until reg is provided
 
 # -------------------------
-# Summary page (once reg is provided)
+# Summary page
 # -------------------------
 reg = st.session_state.reg
 image = st.session_state.image
 
-# Center content: use columns to create a centered middle column
+# Centered column layout
 _, center_col, _ = st.columns([1, 2, 1])
 
 with center_col:
@@ -115,7 +112,7 @@ with center_col:
     st.write(f"**Mileage:** {vehicle['mileage']:,} miles")
     st.write(f"**Next MOT due:** {mot_tax['mot_next_due']}")
 
-    # Flags / warnings
+    # Flags
     if flags.get("write_off"):
         st.error("⚠️ Write‑off record detected")
     if flags.get("theft"):
@@ -140,13 +137,13 @@ with center_col:
     value = estimate_value(vehicle["make"], vehicle["model"], vehicle["year"], vehicle["mileage"], condition)
     st.write(f"**Estimated Value:** £{value:,}")
 
-    # Send to Buyer button and mock details
+    # Send to Buyer
     if st.button("Send to Buyer"):
-        st.success("Sent to buyer — Buyer: John Smith | 01234 567890")
+        st.success("✅ Sent to buyer — Buyer: John Smith | 01234 567890")
 
     # Reset / Change registration
     if st.button("New / Change Registration"):
         st.session_state.reg = None
         st.session_state.image = None
         st.session_state.show_summary = False
-        st.experimental_rerun = False  # or simply rely on rerun logic
+        st.experimental_rerun()
