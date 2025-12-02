@@ -39,6 +39,8 @@ def estimate_value(make, model, year, mileage, condition="good"):
     cond_multiplier = {"excellent": 1.05, "good": 1.0, "fair": 0.9, "poor": 0.8}
     return max(100, int(base * cond_multiplier.get(condition, 1.0)))
 
+PLATE_REGEX = re.compile(r"[A-Z0-9]{5,10}", re.I)
+
 # -------------------------
 # Streamlit config + theming
 # -------------------------
@@ -51,19 +53,16 @@ st.markdown(f"""
 <style>
 [data-testid="stAppViewContainer"] {{
     background-color: {PAGE_BG};
-    display: flex;
-    justify-content: center;
 }}
 .header-card {{
     background-color: {PRIMARY};
     color: white;
     padding: 16px 24px;
     border-radius: 12px;
-    font-size: 24px;
+    font-size: 28px;
     font-weight: 700;
     text-align: center;
     margin-bottom: 24px;
-    width: 80%;
 }}
 .content-card {{
     background-color: white;
@@ -71,7 +70,6 @@ st.markdown(f"""
     border-radius: 12px;
     box-shadow: 0 6px 18px rgba(0,0,0,0.06);
     margin-bottom: 16px;
-    width: 80%;
 }}
 .content-card h4 {{
     margin-top: 0;
@@ -93,9 +91,6 @@ st.markdown(f"""
     color: {PRIMARY};
     text-align: center;
     margin-bottom: 24px;
-    width: fit-content;
-    margin-left: auto;
-    margin-right: auto;
 }}
 .badge {{
     padding: 4px 10px;
@@ -107,6 +102,11 @@ st.markdown(f"""
 .badge-warning {{background-color: #ff9800;}}
 .badge-error {{background-color: #f44336;}}
 .badge-info {{background-color: #0b3b6f;}}
+.centered {{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}}
 </style>
 """, unsafe_allow_html=True)
 
@@ -123,14 +123,12 @@ if "image" not in st.session_state: st.session_state.image = None
 if "show_summary" not in st.session_state: st.session_state.show_summary = False
 
 # -------------------------
-# Reset / Change Registration
+# Reset / Change Reg
 # -------------------------
 def reset_app():
     st.session_state.reg = None
     st.session_state.image = None
     st.session_state.show_summary = False
-
-st.button("Reset / Change Registration", on_click=reset_app)
 
 # -------------------------
 # Input page
@@ -144,13 +142,14 @@ if not st.session_state.show_summary:
         if manual_reg:
             st.session_state.reg = manual_reg.strip().upper().replace(" ", "")
             st.session_state.show_summary = True
-
+            st.experimental_rerun()
     elif option == "Take Photo":
-        image = st.camera_input("Take photo of the number plate (rear camera)")
+        image = st.camera_input("Take photo of the number plate (use rear camera if possible)")
         if image:
             st.session_state.image = image
             st.session_state.reg = "KT68XYZ"  # Mock OCR
             st.session_state.show_summary = True
+            st.experimental_rerun()
 
 # -------------------------
 # Summary page
@@ -158,6 +157,14 @@ if not st.session_state.show_summary:
 if st.session_state.show_summary and st.session_state.reg:
     reg = st.session_state.reg
     image = st.session_state.image
+
+    # Center container
+    st.markdown("<div class='centered'>", unsafe_allow_html=True)
+
+    # Reset button
+    if st.button("Reset / Change Registration"):
+        reset_app()
+        st.experimental_rerun()
 
     # Display numberplate
     if image:
@@ -200,8 +207,37 @@ if st.session_state.show_summary and st.session_state.reg:
     open_recalls = sum(1 for r in recalls if r["open"])
     if open_recalls:
         flag_list.append(f'<span class="badge badge-warning">{open_recalls} Open Recall(s)</span>')
-
     flags_html += " ".join(flag_list) + "</p>"
 
     st.markdown(summary_html + flags_html, unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)
+
+    # MOT History
+    with st.expander("MOT History"):
+        for t in mot_tax['mot_history']:
+            st.write(f"- {t['date']}: **{t['result']}** — {t['mileage']} miles")
+
+    # Recalls
+    with st.expander("Recalls"):
+        for r in recalls:
+            status = "Open ⚠️" if r['open'] else "Closed ✅"
+            st.write(f"- {r['summary']} — ID: {r['id']} ({status})")
+
+    # Insurance
+    with st.expander("Insurance (Mock)"):
+        st.info("Insurance quotes are mocked. Integrate aggregator APIs for live quotes.")
+        if st.button('Get a mock insurance quote'):
+            st.success('Sample quote: £320/year (3rd party, excess £250)')
+
+    # Valuation card with Send to Buyer
+    st.markdown("<div class='content-card'>", unsafe_allow_html=True)
+    st.markdown("<h4>Valuation</h4>", unsafe_allow_html=True)
+    condition = st.radio("Select condition", ["excellent", "good", "fair", "poor"], index=1, horizontal=True)
+    value = estimate_value(vehicle["make"], vehicle["model"], vehicle["year"], vehicle["mileage"], condition)
+    st.markdown(f"<p><strong>Estimated Value:</strong> £{value:,} ({condition.capitalize()})</p>", unsafe_allow_html=True)
+    if st.button("Send to Sytner Buyer"):
+        st.success("Sent successfully!")
+    st.markdown("<small>Buyer: John Smith | 01234 567890</small>", unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)
+
     st.markdown("</div>", unsafe_allow_html=True)
