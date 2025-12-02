@@ -296,20 +296,36 @@ div[data-testid="stExpander"] {{
 .stTextInput>div>div>input {{
     background-color: {CARD_BG};
     color: {TEXT_PRIMARY};
-    border: 1px solid rgba(255,255,255,0.2);
+    border: 2px solid rgba(255,255,255,0.3);
     border-radius: 12px;
     padding: 16px;
-    font-size: 16px;
+    font-size: 18px;
+}}
+
+.stTextInput>div>div>input::placeholder {{
+    color: {TEXT_SECONDARY};
 }}
 
 .stRadio>div {{
-    background-color: {CARD_BG};
-    padding: 16px;
-    border-radius: 12px;
+    background-color: transparent;
+    padding: 0;
+    border-radius: 0;
 }}
 
 .stRadio label {{
     color: {TEXT_PRIMARY};
+    font-size: 16px;
+}}
+
+.stRadio > div[role="radiogroup"] {{
+    gap: 12px;
+}}
+
+.stRadio > div[role="radiogroup"] > label {{
+    background-color: {CARD_BG};
+    padding: 12px 20px;
+    border-radius: 8px;
+    border: 2px solid rgba(255,255,255,0.2);
 }}
 
 /* Reset button */
@@ -358,25 +374,28 @@ def show_input_page():
     </div>
     """, unsafe_allow_html=True)
     
-    # Input card
-    st.markdown("<div class='info-card'>", unsafe_allow_html=True)
+    st.markdown("<br>", unsafe_allow_html=True)
     
+    # Input options
     option = st.radio(
         "Choose input method",
         ["Enter Registration", "Take Photo"],
         index=0,
-        horizontal=True,
-        label_visibility="collapsed"
+        horizontal=True
     )
+    
+    st.markdown("<br>", unsafe_allow_html=True)
 
     if option == "Enter Registration":
         manual_reg = st.text_input(
-            "Enter registration",
+            "Registration",
             placeholder="e.g. KT68 XYZ",
-            label_visibility="collapsed"
+            key="reg_input"
         )
         
-        if st.button("Look Up Vehicle", disabled=not manual_reg):
+        st.markdown("<br>", unsafe_allow_html=True)
+        
+        if st.button("Look Up Vehicle", disabled=not manual_reg, use_container_width=True):
             if manual_reg and len(manual_reg.strip()) >= 5:
                 st.session_state.reg = manual_reg.strip().upper().replace(" ", "")
                 st.session_state.image = None
@@ -387,9 +406,8 @@ def show_input_page():
     
     elif option == "Take Photo":
         image = st.camera_input(
-            "Take photo of the number plate",
-            help="Position the number plate clearly in the frame",
-            label_visibility="collapsed"
+            "Take photo",
+            help="Position the number plate clearly in the frame"
         )
         
         if image is not None:
@@ -402,8 +420,6 @@ def show_input_page():
                 st.rerun()
             else:
                 st.error("Could not read number plate. Please try again.")
-    
-    st.markdown("</div>", unsafe_allow_html=True)
 
 # -------------------------
 # Summary Page
