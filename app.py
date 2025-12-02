@@ -63,12 +63,28 @@ class Config:
     
     # Locations
     GARAGES = [
-        "Sytner BMW Birmingham - High St",
-        "Sytner BMW Manchester - Oxford Rd",
-        "Sytner BMW London - Park Lane",
-        "Sytner BMW Bristol - Temple Way",
-        "Sytner BMW Solihull - Stratford Rd",
-        "Sytner BMW Coventry - Ring Road",
+    "Sytner BMW Cardiff - Penarth Road",
+    "Sytner BMW Chigwell - Langston Road",
+    "Sytner BMW Coventry - Holyhead Road",
+    "Sytner BMW Harold Wood - Colchester Road",
+    "Sytner BMW High Wycombe - London Road",
+    "Sytner BMW Leicester - Meridian East",
+    "Sytner BMW Luton - Dunstable Road",
+    "Sytner BMW Maidenhead - Bath Road",
+    "Sytner BMW Newport - Usk Way",
+    "Sytner BMW Nottingham - Lenton Lane",
+    "Sytner BMW Oldbury - Wolverhampton Road",
+    "Sytner BMW Sheffield - Brightside Way",
+    "Sytner BMW Shrewsbury - Battlefield Road",
+    "Sytner BMW Solihull - Highlands Road",
+    "Sytner BMW Stevenage - Gunnels Wood Road",
+    "Sytner BMW Sunningdale - London Road",
+    "Sytner BMW Swansea - Carmarthen Road",
+    "Sytner BMW Tamworth - Winchester Road",
+    "Sytner BMW Tring - Cow Roast",
+    "Sytner BMW Warwick - Fusiliers Way",
+    "Sytner BMW Wolverhampton - Lever Street",
+    "Sytner BMW Worcester - Wainwright Road",
     ]
     
     TIME_SLOTS = ["09:00 AM", "11:00 AM", "02:00 PM", "04:00 PM"]
@@ -2217,3 +2233,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
