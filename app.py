@@ -207,10 +207,10 @@ def render_header():
     st.markdown(f"""
     <div class='header-card' style='background: linear-gradient(135deg, {PRIMARY} 0%, #1a4d7a 100%);'>
         <div style='display: flex; align-items: center; justify-content: center; gap: 12px;'>
-            <span style='font-size: 32px;'>🚗</span>
+            <span style='font-size: 32px;'>⚡</span>
             <div>
-                <div style='font-size: 28px; font-weight: 700;'>Sytner AutoSense</div>
-                <div style='font-size: 14px; opacity: 0.9; font-weight: 400;'>Staff Trade-In Portal</div>
+                <div style='font-size: 28px; font-weight: 700;'>Sytner TradeSnap</div>
+                <div style='font-size: 14px; opacity: 0.9; font-weight: 400;'>Snap it. Value it. Done.</div>
             </div>
         </div>
     </div>
@@ -222,7 +222,7 @@ def render_reset_button():
         # Use container to center button without creating empty columns
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
-            if st.button("Reset / Change Registration", use_container_width=True):
+            if st.button("⚡ New Vehicle Lookup", use_container_width=True):
                 reset_all_state()
                 st.rerun()
         # Add empty markdown to prevent white bar rendering
@@ -845,8 +845,8 @@ def render_summary_page():
 def main():
     """Main application entry point"""
     st.set_page_config(
-        page_title="Sytner AutoSense",
-        page_icon="🚗",
+        page_title="Sytner TradeSnap",
+        page_icon="⚡",
         layout="centered"
     )
     
