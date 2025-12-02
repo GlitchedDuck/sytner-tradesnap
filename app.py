@@ -204,7 +204,17 @@ def apply_custom_css():
 
 def render_header():
     """Render the application header"""
-    st.markdown("<div class='header-card'>Sytner AutoSense — POC</div>", unsafe_allow_html=True)
+    st.markdown(f"""
+    <div class='header-card' style='background: linear-gradient(135deg, {PRIMARY} 0%, #1a4d7a 100%);'>
+        <div style='display: flex; align-items: center; justify-content: center; gap: 12px;'>
+            <span style='font-size: 32px;'>🚗</span>
+            <div>
+                <div style='font-size: 28px; font-weight: 700;'>Sytner AutoSense</div>
+                <div style='font-size: 14px; opacity: 0.9; font-weight: 400;'>Staff Trade-In Portal</div>
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
 def render_reset_button():
     """Render reset button when on summary page"""
@@ -563,10 +573,10 @@ def render_valuation(vehicle):
     # Instant booking
     col1, col2 = st.columns(2)
     with col1:
-        st.markdown("**👤 Assigned Buyer:** John Smith")
+        st.markdown("**👤 Assigned Vehicle Buyer:** John Smith")
         st.caption("📞 01234 567890 | 📧 john.smith@sytner.co.uk")
     with col2:
-        if st.button("📅 Book Inspection Now", key="book_inspection", use_container_width=True, type="primary"):
+        if st.button("📅 Book Inspection Slot", key="book_inspection", use_container_width=True, type="primary"):
             st.session_state.show_booking = True
             st.rerun()
     
@@ -631,25 +641,89 @@ def render_additional_details(vehicle, mot_tax, history_flags, open_recalls):
 
 def render_input_page():
     """Render the vehicle input page"""
-    st.markdown("## Enter Vehicle Registration or Take Photo")
+    
+    # Hero section with value proposition
+    st.markdown(f"""
+    <div style='background: linear-gradient(135deg, {PRIMARY} 0%, {ACCENT} 100%); 
+                padding: 32px 24px; border-radius: 16px; margin-bottom: 32px; text-align: center;'>
+        <h1 style='color: white; margin: 0 0 12px 0; font-size: 32px;'>⚡ Instant Trade-In Valuation</h1>
+        <p style='color: rgba(255,255,255,0.95); font-size: 18px; margin: 0 0 20px 0;'>
+            Get competitive offers in seconds • Complete deals in minutes
+        </p>
+        <div style='display: flex; justify-content: center; gap: 24px; flex-wrap: wrap;'>
+            <div style='text-align: center;'>
+                <div style='font-size: 28px; font-weight: 700; color: white;'>30 mins</div>
+                <div style='font-size: 13px; color: rgba(255,255,255,0.9);'>Average completion</div>
+            </div>
+            <div style='text-align: center;'>
+                <div style='font-size: 28px; font-weight: 700; color: white;'>15+</div>
+                <div style='font-size: 13px; color: rgba(255,255,255,0.9);'>Network locations</div>
+            </div>
+            <div style='text-align: center;'>
+                <div style='font-size: 28px; font-weight: 700; color: white;'>£500+</div>
+                <div style='font-size: 13px; color: rgba(255,255,255,0.9);'>Bonus opportunities</div>
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Quick benefit cards
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.markdown("""
+        <div style='text-align: center; padding: 16px;'>
+            <div style='font-size: 40px; margin-bottom: 8px;'>🔍</div>
+            <div style='font-weight: 600; color: #0b3b6f; margin-bottom: 4px;'>Instant Check</div>
+            <div style='font-size: 13px; color: #666;'>Full vehicle history in seconds</div>
+        </div>
+        """, unsafe_allow_html=True)
+    with col2:
+        st.markdown("""
+        <div style='text-align: center; padding: 16px;'>
+            <div style='font-size: 40px; margin-bottom: 8px;'>💰</div>
+            <div style='font-weight: 600; color: #0b3b6f; margin-bottom: 4px;'>Best Offers</div>
+            <div style='font-size: 13px; color: #666;'>Compare across network</div>
+        </div>
+        """, unsafe_allow_html=True)
+    with col3:
+        st.markdown("""
+        <div style='text-align: center; padding: 16px;'>
+            <div style='font-size: 40px; margin-bottom: 8px;'>⚡</div>
+            <div style='font-weight: 600; color: #0b3b6f; margin-bottom: 4px;'>Same Day</div>
+            <div style='font-size: 13px; color: #666;'>Complete deal today</div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    st.markdown("<br>", unsafe_allow_html=True)
+    
+    # Main input section
+    st.markdown(f"""
+    <div style='text-align: center; margin-bottom: 24px;'>
+        <h2 style='color: {PRIMARY}; margin: 0 0 8px 0;'>Get Started</h2>
+        <p style='color: #666; font-size: 15px;'>Enter the customer's registration or scan their number plate</p>
+    </div>
+    """, unsafe_allow_html=True)
     
     option = st.radio(
         "Choose input method",
-        ["Enter Registration / VIN", "Take Photo"],
+        ["📝 Enter Registration / VIN", "📸 Scan Number Plate"],
         index=0,
-        horizontal=True
+        horizontal=True,
+        label_visibility="collapsed"
     )
 
-    if option == "Enter Registration / VIN":
+    if "📝" in option:
+        st.markdown("<br>", unsafe_allow_html=True)
         manual_reg = st.text_input(
             "Enter registration / VIN",
-            placeholder="e.g. KT68XYZ or VIN...",
-            help="Enter a UK registration or VIN number"
+            placeholder="e.g. KT68XYZ or WBA8BFAKEVIN12345",
+            help="Enter a UK registration or VIN number",
+            label_visibility="collapsed"
         )
         
-        col1, col2, col3 = st.columns([1, 1, 1])
+        col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
-            if st.button("Look Up Vehicle", disabled=not manual_reg, use_container_width=True):
+            if st.button("🚀 Look Up Vehicle", disabled=not manual_reg, use_container_width=True, type="primary"):
                 if validate_registration(manual_reg):
                     st.session_state.reg = manual_reg.strip().upper().replace(" ", "")
                     st.session_state.image = None
@@ -657,12 +731,31 @@ def render_input_page():
                     st.rerun()
                 else:
                     st.error("⚠️ Please enter a valid registration (minimum 5 characters)")
+        
+        # Quick examples
+        st.markdown("""
+        <div style='text-align: center; margin-top: 16px;'>
+            <p style='color: #999; font-size: 13px;'>💡 Try these examples: KT68XYZ • AB12CDE • WBA8B12345</p>
+        </div>
+        """, unsafe_allow_html=True)
     
-    else:  # Take Photo
+    else:  # Scan Number Plate
+        st.markdown("<br>", unsafe_allow_html=True)
+        
+        # Camera instructions
+        st.markdown(f"""
+        <div style='background-color: #e3f2fd; padding: 16px; border-radius: 8px; border-left: 4px solid {ACCENT}; margin-bottom: 16px;'>
+            <p style='margin: 0; font-size: 14px; color: #0b3b6f;'>
+                <strong>📷 Camera Tips:</strong> Position the plate clearly in frame • Ensure good lighting • Hold steady
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+        
         image = st.camera_input(
-            "Take photo of the number plate",
+            "Scan customer's number plate",
             key="camera",
-            help="Position the number plate clearly in the frame"
+            help="Position the number plate clearly in the frame",
+            label_visibility="collapsed"
         )
         
         if image:
@@ -678,6 +771,25 @@ def render_input_page():
                     st.error("⚠️ Could not read number plate. Please try again or enter manually.")
             except Exception as e:
                 st.error(f"⚠️ Error processing image: {str(e)}")
+    
+    # Trust indicators at bottom
+    st.markdown("<br><br>", unsafe_allow_html=True)
+    st.markdown(f"""
+    <div style='text-align: center; padding: 24px; background-color: white; border-radius: 12px; margin-top: 32px;'>
+        <p style='color: #999; font-size: 13px; margin: 0 0 12px 0;'>TRUSTED BY SYTNER STAFF NATIONWIDE</p>
+        <div style='display: flex; justify-content: center; gap: 32px; flex-wrap: wrap;'>
+            <div style='color: {PRIMARY};'>
+                <span style='font-weight: 600;'>✓</span> Full DVLA Integration
+            </div>
+            <div style='color: {PRIMARY};'>
+                <span style='font-weight: 600;'>✓</span> Real-time MOT Data
+            </div>
+            <div style='color: {PRIMARY};'>
+                <span style='font-weight: 600;'>✓</span> Secure & Compliant
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
 def render_summary_page():
     """Render the vehicle summary page"""
