@@ -17,14 +17,14 @@ def lookup_vehicle_basic(reg):
     }
 
 def lookup_mot_and_tax(reg):
-    today = datetime.date.today()
+    today_dt = datetime.date.today()
     return {
-        "mot_next_due": (today + datetime.timedelta(days=120)).isoformat(),
+        "mot_next_due": (today_dt + datetime.timedelta(days=120)).isoformat(),
         "mot_history": [
             {"date": "2024-08-17", "result": "Pass", "mileage": 52000},
             {"date": "2023-08-10", "result": "Advisory", "mileage": 48000},
         ],
-        "tax_expiry": (today + datetime.timedelta(days=30)).isoformat(),
+        "tax_expiry": (today_dt + datetime.timedelta(days=30)).isoformat(),
     }
 
 def lookup_recalls(reg_or_vin):
@@ -90,7 +90,8 @@ st.markdown(f"""
     font-weight: 700;
     color: {PRIMARY};
     text-align: center;
-    margin-bottom: 24px;
+    margin: 24px auto;
+    width: fit-content;
 }}
 .badge {{
     padding: 4px 10px;
@@ -130,7 +131,7 @@ if not st.session_state.show_summary:
             st.session_state.reg = manual_reg.strip().upper().replace(" ", "")
             st.session_state.show_summary = True
     elif option == "Take Photo":
-        image = st.camera_input("Take photo of the number plate", camera_facing_mode="environment")
+        image = st.camera_input("Take photo of the number plate (use rear camera on mobile)")
         if image:
             st.session_state.image = image
             st.session_state.reg = "KT68XYZ"  # Mock OCR
@@ -146,7 +147,7 @@ if st.session_state.show_summary and st.session_state.reg:
         st.session_state.image = None
         st.session_state.show_summary = False
         st.experimental_rerun()
-    
+
     reg = st.session_state.reg
     image = st.session_state.image
 
@@ -169,7 +170,7 @@ if st.session_state.show_summary and st.session_state.reg:
     }
 
     # Vehicle Summary with badges
-    st.markdown("<div class='content-card'>", unsafe_allow_html=True)
+    st.markdown("<div class='content-card' style='margin-left:auto;margin-right:auto;width:fit-content;'>", unsafe_allow_html=True)
     st.markdown("<h4>Vehicle Summary</h4>", unsafe_allow_html=True)
     summary_html = f"""
     <p><strong>Make & Model:</strong> {vehicle['make']} {vehicle['model']}</p>
@@ -188,11 +189,9 @@ if st.session_state.show_summary and st.session_state.reg:
         flag_list.append('<span class="badge badge-error">Theft</span>')
     if history_flags.get("mileage_anomaly"):
         flag_list.append('<span class="badge badge-warning">Mileage Anomaly</span>')
-    # Open recalls badge
     open_recalls = sum(1 for r in recalls if r["open"])
     if open_recalls:
         flag_list.append(f'<span class="badge badge-warning">{open_recalls} Open Recall(s)</span>')
-
     flags_html += " ".join(flag_list) + "</p>"
 
     st.markdown(summary_html + flags_html, unsafe_allow_html=True)
@@ -216,7 +215,7 @@ if st.session_state.show_summary and st.session_state.reg:
             st.success('Sample quote: £320/year (3rd party, excess £250)')
 
     # Valuation card with Send to Buyer
-    st.markdown("<div class='content-card'>", unsafe_allow_html=True)
+    st.markdown("<div class='content-card' style='margin-left:auto;margin-right:auto;width:fit-content;'>", unsafe_allow_html=True)
     st.markdown("<h4>Valuation</h4>", unsafe_allow_html=True)
     condition = st.radio("Select condition", ["excellent", "good", "fair", "poor"], index=1, horizontal=True)
     value = estimate_value(vehicle["make"], vehicle["model"], vehicle["year"], vehicle["mileage"], condition)
@@ -225,4 +224,3 @@ if st.session_state.show_summary and st.session_state.reg:
         st.success("Sent successfully!")
     st.markdown("<small>Buyer: John Smith | 01234 567890</small>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
-
