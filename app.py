@@ -583,14 +583,14 @@ class MockVehicleService(VehicleService):
         # Regional characteristics affect demand
         regions = [
             {
-                "location": "Sytner BMW Birmingham",
+                "location": "Sytner BMW Warwick",
                 "base_modifier": 0,
                 "rural_bonus": False,
                 "affluent": True,
                 "distance": 0,
             },
             {
-                "location": "Sytner BMW Manchester",
+                "location": "Sytner BMW Stevenage",
                 "base_modifier": 5,
                 "rural_bonus": False,
                 "affluent": True,
@@ -1983,7 +1983,7 @@ class Sections:
         st.markdown("#### 🏢 Best Offers Across Network")
         
         network_offers = [
-            {"location": "Sytner BMW Birmingham", "value": total_value, "distance": "Current", "is_best": True},
+            {"location": "Sytner BMW Tamworth", "value": total_value, "distance": "Current", "is_best": True},
             {"location": "Sytner BMW Solihull", "value": total_value - 300, "distance": "8 miles", "is_best": False},
             {"location": "Sytner BMW Coventry", "value": total_value - 500, "distance": "15 miles", "is_best": False},
         ]
@@ -2233,5 +2233,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
