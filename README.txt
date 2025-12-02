@@ -1,4 +1,4 @@
-Sytner AutoSense - Full POC (Streamlit)
+Sytner Tradesnap - Full POC (Streamlit)
 ======================================
 
 Files included:
@@ -35,3 +35,4 @@ Deploy to Streamlit Cloud:
 - Create a GitHub repo and push this folder.
 - On Streamlit Cloud, connect the repo and set the main file to app.py.
 - Ensure requirements.txt includes 'easyocr' if you want EasyOCR on the cloud (be mindful of torch installation).
+
