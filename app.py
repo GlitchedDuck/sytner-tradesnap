@@ -1,6 +1,6 @@
 import streamlit as st
 from PIL import Image, ImageOps
-import datetime, re, json
+import datetime, re
 
 # -------------------------
 # Mock / Helpers
@@ -38,8 +38,6 @@ def estimate_value(make, model, year, mileage, condition="good"):
     base = 25000 - (age * 2000) - (mileage / 10)
     cond_multiplier = {"excellent": 1.05, "good": 1.0, "fair": 0.9, "poor": 0.8}
     return max(100, int(base * cond_multiplier.get(condition, 1.0)))
-
-PLATE_REGEX = re.compile(r"[A-Z0-9]{5,10}", re.I)
 
 # -------------------------
 # Streamlit config + theming
@@ -116,14 +114,21 @@ st.markdown(f"<div class='header-card'>Sytner AutoSense — POC</div>", unsafe_a
 if "reg" not in st.session_state: st.session_state.reg = None
 if "image" not in st.session_state: st.session_state.image = None
 if "show_summary" not in st.session_state: st.session_state.show_summary = False
+if "reset_flag" not in st.session_state: st.session_state.reset_flag = False
 
 # -------------------------
-# Reset / Change Registration button (always visible)
+# Reset button (always visible)
 # -------------------------
 if st.button("Reset / Change Registration"):
     st.session_state.reg = None
     st.session_state.image = None
     st.session_state.show_summary = False
+    st.session_state.reset_flag = True
+
+# If reset flag is True, just rerun the app logic
+if st.session_state.reset_flag:
+    st.session_state.reset_flag = False
+    st.experimental_rerun()
 
 # -------------------------
 # Input page
@@ -197,32 +202,4 @@ if st.session_state.show_summary and st.session_state.reg:
     flags_html += " ".join(flag_list) + "</p>"
 
     st.markdown(summary_html + flags_html, unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True)
-
-    # MOT History
-    with st.expander("MOT History"):
-        for t in mot_tax['mot_history']:
-            st.write(f"- {t['date']}: **{t['result']}** — {t['mileage']} miles")
-
-    # Recalls
-    with st.expander("Recalls"):
-        for r in recalls:
-            status = "Open ⚠️" if r['open'] else "Closed ✅"
-            st.write(f"- {r['summary']} — ID: {r['id']} ({status})")
-
-    # Insurance
-    with st.expander("Insurance (Mock)"):
-        st.info("Insurance quotes are mocked. Integrate aggregator APIs for live quotes.")
-        if st.button('Get a mock insurance quote'):
-            st.success('Sample quote: £320/year (3rd party, excess £250)')
-
-    # Valuation card with Send to Buyer
-    st.markdown("<div class='content-card'>", unsafe_allow_html=True)
-    st.markdown("<h4>Valuation</h4>", unsafe_allow_html=True)
-    condition = st.radio("Select condition", ["excellent", "good", "fair", "poor"], index=1, horizontal=True)
-    value = estimate_value(vehicle["make"], vehicle["model"], vehicle["year"], vehicle["mileage"], condition)
-    st.markdown(f"<p><strong>Estimated Value:</strong> £{value:,} ({condition.capitalize()})</p>", unsafe_allow_html=True)
-    if st.button("Send to Sytner Buyer"):
-        st.success("Sent successfully!")
-    st.markdown("<small>Buyer: John Smith | 01234 567890</small>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
