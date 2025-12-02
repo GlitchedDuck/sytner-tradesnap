@@ -142,17 +142,45 @@ if st.session_state.reg:
     mot_tax = lookup_mot_and_tax(reg)
     recalls = lookup_recalls(reg)
 
-    # Vehicle Summary
-    st.markdown("<div class='content-card'>", unsafe_allow_html=True)
-    st.markdown("<h4>Vehicle Summary</h4>", unsafe_allow_html=True)
-    st.markdown(f"""
-    <p><strong>Make & Model:</strong> {vehicle['make']} {vehicle['model']}</p>
-    <p><strong>Year:</strong> {vehicle['year']}</p>
-    <p><strong>VIN:</strong> {vehicle['vin']}</p>
-    <p><strong>Mileage:</strong> {vehicle['mileage']:,} miles</p>
-    <p><strong>Next MOT:</strong> {mot_tax['mot_next_due']}</p>
-    """, unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True)
+# -------------------------
+# Vehicle Summary with Badges
+# -------------------------
+st.markdown("<div class='content-card'>", unsafe_allow_html=True)
+st.markdown("<h4>Vehicle Summary</h4>", unsafe_allow_html=True)
+
+# Basic info
+summary_html = f"""
+<p><strong>Make & Model:</strong> {vehicle['make']} {vehicle['model']}</p>
+<p><strong>Year:</strong> {vehicle['year']}</p>
+<p><strong>VIN:</strong> {vehicle['vin']}</p>
+<p><strong>Mileage:</strong> {vehicle['mileage']:,} miles</p>
+<p><strong>Next MOT:</strong> {mot_tax['mot_next_due']}</p>
+"""
+
+# Flags
+flags_html = "<p><strong>Status:</strong> "
+flag_list = []
+
+# Example mock flags
+history_flags = {
+    "write_off": False,
+    "theft": False,
+    "mileage_anomaly": True,
+    "note": "Mileage shows a 5,000 jump in 2021 record"
+}
+
+if history_flags.get("write_off"):
+    flag_list.append('<span style="background-color:#f44336;color:white;padding:3px 8px;border-radius:12px;margin-right:4px;">Write-off</span>')
+if history_flags.get("theft"):
+    flag_list.append('<span style="background-color:#d32f2f;color:white;padding:3px 8px;border-radius:12px;margin-right:4px;">Theft</span>')
+if history_flags.get("mileage_anomaly"):
+    flag_list.append(f'<span style="background-color:#ff9800;color:white;padding:3px 8px;border-radius:12px;margin-right:4px;">Mileage Anomaly</span>')
+
+flags_html += " ".join(flag_list) + "</p>"
+
+st.markdown(summary_html + flags_html, unsafe_allow_html=True)
+st.markdown("</div>", unsafe_allow_html=True)
+
 
     # MOT History
     with st.expander("MOT History"):
@@ -184,3 +212,4 @@ if st.session_state.reg:
 
     st.markdown("<small>Buyer: John Smith | 01234 567890</small>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
+
