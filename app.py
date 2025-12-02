@@ -143,10 +143,10 @@ header {{visibility: hidden;}}
 }}
 
 .card-title {{
-    font-size: 24px;
-    font-weight: 700;
+    font-size: 22px;
+    font-weight: 600;
     color: {TEXT_PRIMARY};
-    margin-bottom: 20px;
+    margin-bottom: 16px;
 }}
 
 .status-row {{
@@ -255,16 +255,15 @@ header {{visibility: hidden;}}
 }}
 
 .recall-title {{
-    font-size: 22px;
-    font-weight: 700;
+    font-size: 20px;
+    font-weight: 600;
     color: {TEXT_PRIMARY};
 }}
 
 .recall-subtitle {{
-    font-size: 16px;
+    font-size: 14px;
     color: {TEXT_SECONDARY};
     margin-top: 4px;
-    font-weight: 500;
 }}
 
 .chevron {{
