@@ -54,6 +54,11 @@ st.markdown(f"""
 [data-testid="stAppViewContainer"] {{
     background-color: {PAGE_BG};
 }}
+.main > div {{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}}
 .header-card {{
     background-color: {PRIMARY};
     color: white;
@@ -63,6 +68,8 @@ st.markdown(f"""
     font-weight: 700;
     text-align: center;
     margin-bottom: 24px;
+    width: 100%;
+    max-width: 600px;
 }}
 .content-card {{
     background-color: white;
@@ -70,16 +77,8 @@ st.markdown(f"""
     border-radius: 12px;
     box-shadow: 0 6px 18px rgba(0,0,0,0.06);
     margin-bottom: 16px;
-}}
-.content-card h4 {{
-    margin-top: 0;
-    margin-bottom: 8px;
-}}
-.stButton>button {{
-    background-color: {ACCENT};
-    color: white;
-    font-weight: 600;
-    border-radius: 8px;
+    width: 100%;
+    max-width: 600px;
 }}
 .numberplate {{
     background-color: #fff;
@@ -91,6 +90,7 @@ st.markdown(f"""
     color: {PRIMARY};
     text-align: center;
     margin-bottom: 24px;
+    width: fit-content;
 }}
 .badge {{
     padding: 4px 10px;
@@ -102,6 +102,12 @@ st.markdown(f"""
 .badge-warning {{background-color: #ff9800;}}
 .badge-error {{background-color: #f44336;}}
 .badge-info {{background-color: #0b3b6f;}}
+.stButton>button {{
+    background-color: {ACCENT};
+    color: white;
+    font-weight: 600;
+    border-radius: 8px;
+}}
 </style>
 """, unsafe_allow_html=True)
 
