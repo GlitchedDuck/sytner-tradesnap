@@ -140,6 +140,13 @@ if not st.session_state.show_summary:
 # Summary page
 # -------------------------
 if st.session_state.show_summary and st.session_state.reg:
+    # Reset button
+    if st.button("Change / Reset Registration"):
+        st.session_state.reg = None
+        st.session_state.image = None
+        st.session_state.show_summary = False
+        st.experimental_rerun()
+    
     reg = st.session_state.reg
     image = st.session_state.image
 
@@ -218,3 +225,4 @@ if st.session_state.show_summary and st.session_state.reg:
         st.success("Sent successfully!")
     st.markdown("<small>Buyer: John Smith | 01234 567890</small>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
+
