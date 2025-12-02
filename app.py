@@ -118,15 +118,13 @@ if "image" not in st.session_state: st.session_state.image = None
 if "show_summary" not in st.session_state: st.session_state.show_summary = False
 
 # -------------------------
-# Reset / Change Registration
+# Reset / Change Registration button (always visible if reg or image exists)
 # -------------------------
-if st.session_state.show_summary:
+if st.session_state.reg or st.session_state.image:
     if st.button("Reset / Change Registration"):
-        # Clear session variables
         st.session_state.reg = None
         st.session_state.image = None
         st.session_state.show_summary = False
-        # Do NOT stop here; allow input page to show immediately
 
 # -------------------------
 # Input page
@@ -193,11 +191,13 @@ if st.session_state.show_summary and st.session_state.reg:
         flag_list.append('<span class="badge badge-error">Theft</span>')
     if history_flags.get("mileage_anomaly"):
         flag_list.append('<span class="badge badge-warning">Mileage Anomaly</span>')
+    # Open recalls badge
     open_recalls = sum(1 for r in recalls if r["open"])
     if open_recalls:
         flag_list.append(f'<span class="badge badge-warning">{open_recalls} Open Recall(s)</span>')
 
     flags_html += " ".join(flag_list) + "</p>"
+
     st.markdown(summary_html + flags_html, unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
@@ -228,4 +228,3 @@ if st.session_state.show_summary and st.session_state.reg:
         st.success("Sent successfully!")
     st.markdown("<small>Buyer: John Smith | 01234 567890</small>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
-
