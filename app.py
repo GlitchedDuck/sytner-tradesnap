@@ -646,7 +646,7 @@ def render_input_page():
     st.markdown(f"""
     <div style='background: linear-gradient(135deg, {PRIMARY} 0%, {ACCENT} 100%); 
                 padding: 32px 24px; border-radius: 16px; margin-bottom: 32px; text-align: center;'>
-        <h1 style='color: white; margin: 0 0 12px 0; font-size: 32px;'>⚡ Instant Trade-In Valuation</h1>
+        <h1 style='color: white; margin: 0 0 12px 0; font-size: 32px;'>Instant Trade-In Valuation</h1>
         <p style='color: rgba(255,255,255,0.95); font-size: 18px; margin: 0 0 20px 0;'>
             Get competitive offers in seconds • Complete deals in minutes
         </p>
@@ -672,24 +672,21 @@ def render_input_page():
     with col1:
         st.markdown("""
         <div style='text-align: center; padding: 16px;'>
-            <div style='font-size: 40px; margin-bottom: 8px;'>🔍</div>
-            <div style='font-weight: 600; color: #0b3b6f; margin-bottom: 4px;'>Instant Check</div>
+            <div style='font-weight: 600; color: #0b3b6f; margin-bottom: 4px; font-size: 16px;'>Instant Check</div>
             <div style='font-size: 13px; color: #666;'>Full vehicle history in seconds</div>
         </div>
         """, unsafe_allow_html=True)
     with col2:
         st.markdown("""
         <div style='text-align: center; padding: 16px;'>
-            <div style='font-size: 40px; margin-bottom: 8px;'>💰</div>
-            <div style='font-weight: 600; color: #0b3b6f; margin-bottom: 4px;'>Best Offers</div>
+            <div style='font-weight: 600; color: #0b3b6f; margin-bottom: 4px; font-size: 16px;'>Best Offers</div>
             <div style='font-size: 13px; color: #666;'>Compare across network</div>
         </div>
         """, unsafe_allow_html=True)
     with col3:
         st.markdown("""
         <div style='text-align: center; padding: 16px;'>
-            <div style='font-size: 40px; margin-bottom: 8px;'>⚡</div>
-            <div style='font-weight: 600; color: #0b3b6f; margin-bottom: 4px;'>Same Day</div>
+            <div style='font-weight: 600; color: #0b3b6f; margin-bottom: 4px; font-size: 16px;'>Same Day</div>
             <div style='font-size: 13px; color: #666;'>Complete deal today</div>
         </div>
         """, unsafe_allow_html=True)
@@ -704,15 +701,18 @@ def render_input_page():
     </div>
     """, unsafe_allow_html=True)
     
-    option = st.radio(
-        "Choose input method",
-        ["📝 Enter Registration / VIN", "📸 Scan Number Plate"],
-        index=0,
-        horizontal=True,
-        label_visibility="collapsed"
-    )
+    # Center the radio buttons
+    col_spacer1, col_radio, col_spacer2 = st.columns([1, 2, 1])
+    with col_radio:
+        option = st.radio(
+            "Choose input method",
+            ["Enter Registration / VIN", "Scan Number Plate"],
+            index=0,
+            horizontal=True,
+            label_visibility="collapsed"
+        )
 
-    if "📝" in option:
+    if "Enter Registration" in option:
         st.markdown("<br>", unsafe_allow_html=True)
         manual_reg = st.text_input(
             "Enter registration / VIN",
@@ -723,7 +723,7 @@ def render_input_page():
         
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
-            if st.button("🚀 Look Up Vehicle", disabled=not manual_reg, use_container_width=True, type="primary"):
+            if st.button("Look Up Vehicle", disabled=not manual_reg, use_container_width=True, type="primary"):
                 if validate_registration(manual_reg):
                     st.session_state.reg = manual_reg.strip().upper().replace(" ", "")
                     st.session_state.image = None
@@ -735,7 +735,7 @@ def render_input_page():
         # Quick examples
         st.markdown("""
         <div style='text-align: center; margin-top: 16px;'>
-            <p style='color: #999; font-size: 13px;'>💡 Try these examples: KT68XYZ • AB12CDE • WBA8B12345</p>
+            <p style='color: #999; font-size: 13px;'>Try these examples: KT68XYZ • AB12CDE • WBA8B12345</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -746,7 +746,7 @@ def render_input_page():
         st.markdown(f"""
         <div style='background-color: #e3f2fd; padding: 16px; border-radius: 8px; border-left: 4px solid {ACCENT}; margin-bottom: 16px;'>
             <p style='margin: 0; font-size: 14px; color: #0b3b6f;'>
-                <strong>📷 Camera Tips:</strong> Position the plate clearly in frame • Ensure good lighting • Hold steady
+                <strong>Camera Tips:</strong> Position the plate clearly in frame • Ensure good lighting • Hold steady
             </p>
         </div>
         """, unsafe_allow_html=True)
