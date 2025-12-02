@@ -1,6 +1,6 @@
 import streamlit as st
 from PIL import Image, ImageOps
-import datetime, re
+import datetime, re, json
 
 # -------------------------
 # Mock / Helpers
@@ -17,14 +17,14 @@ def lookup_vehicle_basic(reg):
     }
 
 def lookup_mot_and_tax(reg):
-    today_dt = datetime.date.today()
+    today = datetime.date.today()
     return {
-        "mot_next_due": (today_dt + datetime.timedelta(days=120)).isoformat(),
+        "mot_next_due": (today + datetime.timedelta(days=120)).isoformat(),
         "mot_history": [
             {"date": "2024-08-17", "result": "Pass", "mileage": 52000},
             {"date": "2023-08-10", "result": "Advisory", "mileage": 48000},
         ],
-        "tax_expiry": (today_dt + datetime.timedelta(days=30)).isoformat(),
+        "tax_expiry": (today + datetime.timedelta(days=30)).isoformat(),
     }
 
 def lookup_recalls(reg_or_vin):
@@ -45,9 +45,9 @@ PLATE_REGEX = re.compile(r"[A-Z0-9]{5,10}", re.I)
 # Streamlit config + theming
 # -------------------------
 st.set_page_config(page_title="Sytner AutoSense", page_icon="🚗", layout="centered")
-PRIMARY = "#0b3b6f"   # Sytner dark blue
-ACCENT = "#1e90ff"    # Accent blue
-PAGE_BG = "#e6f0fa"   # Light Sytner background
+PRIMARY = "#0b3b6f"
+ACCENT = "#1e90ff"
+PAGE_BG = "#e6f0fa"
 
 st.markdown(f"""
 <style>
@@ -57,53 +57,47 @@ st.markdown(f"""
 .header-card {{
     background-color: {PRIMARY};
     color: white;
-    padding: 20px 30px;
+    padding: 16px 24px;
     border-radius: 12px;
-    font-size: 28px;
+    font-size: 24px;
     font-weight: 700;
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 24px;
 }}
 .content-card {{
     background-color: white;
-    padding: 20px 24px;
+    padding: 16px 20px;
     border-radius: 12px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-    margin-bottom: 18px;
-    margin-left: auto;
-    margin-right: auto;
-    width: fit-content;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+    margin-bottom: 16px;
 }}
 .content-card h4 {{
     margin-top: 0;
-    margin-bottom: 12px;
-    color: {PRIMARY};
+    margin-bottom: 8px;
 }}
 .stButton>button {{
     background-color: {ACCENT};
     color: white;
     font-weight: 600;
     border-radius: 8px;
-    padding: 8px 24px;
 }}
 .numberplate {{
     background-color: #fff;
     border: 2px solid {PRIMARY};
     border-radius: 12px;
-    padding: 14px 24px;
-    font-size: 32px;
+    padding: 12px 20px;
+    font-size: 28px;
     font-weight: 700;
     color: {PRIMARY};
     text-align: center;
-    margin: 24px auto;
-    width: fit-content;
+    margin-bottom: 24px;
 }}
 .badge {{
-    padding: 5px 12px;
-    border-radius: 14px;
+    padding: 4px 10px;
+    border-radius: 12px;
     color: white;
-    margin-right: 6px;
-    font-size: 13px;
+    margin-right: 4px;
+    font-size: 12px;
 }}
 .badge-warning {{background-color: #ff9800;}}
 .badge-error {{background-color: #f44336;}}
@@ -128,15 +122,16 @@ if "show_summary" not in st.session_state: st.session_state.show_summary = False
 # -------------------------
 if not st.session_state.show_summary:
     st.markdown("## Enter Vehicle Registration or Take Photo")
-    option = st.radio("Choose input method", ["Enter Registration / VIN", "Take Photo"], index=0)
+    option = st.radio("Choose input method", ["Enter Registration / VIN", "Take Photo"], index=0, horizontal=True)
 
     if option == "Enter Registration / VIN":
         manual_reg = st.text_input("Enter registration / VIN", placeholder="KT68XYZ or VIN...")
         if manual_reg:
             st.session_state.reg = manual_reg.strip().upper().replace(" ", "")
             st.session_state.show_summary = True
+
     elif option == "Take Photo":
-        image = st.camera_input("Take photo of the number plate (use rear camera on mobile)")
+        image = st.camera_input("Take photo of the number plate", key="camera_input")  # rear-facing handled by default if device
         if image:
             st.session_state.image = image
             st.session_state.reg = "KT68XYZ"  # Mock OCR
@@ -146,15 +141,15 @@ if not st.session_state.show_summary:
 # Summary page
 # -------------------------
 if st.session_state.show_summary and st.session_state.reg:
+    reg = st.session_state.reg
+    image = st.session_state.image
+
     # Reset button
-    if st.button("Change / Reset Registration"):
+    if st.button("Reset / Change Registration"):
         st.session_state.reg = None
         st.session_state.image = None
         st.session_state.show_summary = False
-        st.experimental_rerun()
-
-    reg = st.session_state.reg
-    image = st.session_state.image
+        st.info("Please enter a new registration or take a photo.")
 
     # Display numberplate
     if image:
@@ -194,9 +189,11 @@ if st.session_state.show_summary and st.session_state.reg:
         flag_list.append('<span class="badge badge-error">Theft</span>')
     if history_flags.get("mileage_anomaly"):
         flag_list.append('<span class="badge badge-warning">Mileage Anomaly</span>')
+    # Open recalls badge
     open_recalls = sum(1 for r in recalls if r["open"])
     if open_recalls:
         flag_list.append(f'<span class="badge badge-warning">{open_recalls} Open Recall(s)</span>')
+
     flags_html += " ".join(flag_list) + "</p>"
 
     st.markdown(summary_html + flags_html, unsafe_allow_html=True)
