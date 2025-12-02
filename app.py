@@ -135,12 +135,16 @@ if not st.session_state.show_summary:
         if manual_reg:
             st.session_state.reg = manual_reg.strip().upper().replace(" ", "")
             st.session_state.show_summary = True
+            st.experimental_rerun()  # Force rerun to show summary immediately
+
     elif option == "Take Photo":
         image = st.camera_input("Take photo of the number plate", camera_facing_mode="environment")
         if image:
             st.session_state.image = image
-            st.session_state.reg = "KT68XYZ"  # Mock OCR
+            # For now, mock OCR extraction
+            st.session_state.reg = "KT68XYZ"
             st.session_state.show_summary = True
+            st.experimental_rerun()  # Force rerun to show summary immediately
 
 # -------------------------
 # Summary page
@@ -148,6 +152,13 @@ if not st.session_state.show_summary:
 if st.session_state.show_summary and st.session_state.reg:
     reg = st.session_state.reg
     image = st.session_state.image
+
+    # Change / Reset button
+    if st.button("Change / Reset Registration"):
+        st.session_state.reg = None
+        st.session_state.image = None
+        st.session_state.show_summary = False
+        st.experimental_rerun()
 
     # Display numberplate
     if image:
@@ -224,3 +235,4 @@ if st.session_state.show_summary and st.session_state.reg:
         st.success("Sent successfully!")
     st.markdown("<small>Buyer: John Smith | 01234 567890</small>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
+
