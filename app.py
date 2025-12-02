@@ -298,10 +298,76 @@ def show_summary_page():
         if not recalls:
             st.success("No recalls found for this vehicle")
         else:
-            for recall in recalls:
-                status = "⚠️ **Open**" if recall['open'] else "✅ Closed"
-                st.markdown(f"- {recall['summary']}")
-                st.markdown(f"  - ID: `{recall['id']}` — Status: {status}")
+            for idx, recall in enumerate(recalls):
+                st.markdown("---" if idx > 0 else "")
+                
+                col1, col2 = st.columns([3, 1])
+                with col1:
+                    status = "⚠️ **Open**" if recall['open'] else "✅ Closed"
+                    st.markdown(f"**{recall['summary']}**")
+                    st.markdown(f"ID: `{recall['id']}` — Status: {status}")
+                
+                with col2:
+                    if recall['open']:
+                        if st.button("📅 Book In", key=f"book_recall_{idx}"):
+                            st.session_state[f"booking_recall_{idx}"] = True
+                
+                # Booking form for open recalls
+                if recall['open'] and st.session_state.get(f"booking_recall_{idx}", False):
+                    st.markdown("##### Book Recall Repair")
+                    
+                    # Select garage
+                    garage = st.selectbox(
+                        "Select Sytner Garage",
+                        [
+                            "Sytner BMW Birmingham",
+                            "Sytner BMW Manchester",
+                            "Sytner BMW London",
+                            "Sytner BMW Bristol"
+                        ],
+                        key=f"garage_{idx}"
+                    )
+                    
+                    # Date picker
+                    min_date = datetime.date.today() + datetime.timedelta(days=1)
+                    max_date = datetime.date.today() + datetime.timedelta(days=60)
+                    
+                    booking_date = st.date_input(
+                        "Preferred Date",
+                        min_value=min_date,
+                        max_value=max_date,
+                        key=f"date_{idx}"
+                    )
+                    
+                    # Time slot
+                    time_slot = st.selectbox(
+                        "Preferred Time",
+                        ["9:00 AM", "11:00 AM", "2:00 PM", "4:00 PM"],
+                        key=f"time_{idx}"
+                    )
+                    
+                    # Contact details
+                    col_a, col_b = st.columns(2)
+                    with col_a:
+                        customer_name = st.text_input("Your Name", key=f"name_{idx}")
+                    with col_b:
+                        customer_phone = st.text_input("Phone Number", key=f"phone_{idx}")
+                    
+                    # Submit buttons
+                    col_x, col_y, col_z = st.columns([1, 1, 1])
+                    with col_x:
+                        if st.button("✅ Confirm Booking", key=f"confirm_{idx}", use_container_width=True):
+                            if customer_name and customer_phone:
+                                st.success(f"✅ Recall repair booked at **{garage}** on **{booking_date}** at **{time_slot}**")
+                                st.info(f"📧 Confirmation sent to customer. Reference: RCL-{recall['id']}-{idx}")
+                                st.session_state[f"booking_recall_{idx}"] = False
+                                st.balloons()
+                            else:
+                                st.error("Please fill in all required fields")
+                    with col_y:
+                        if st.button("❌ Cancel", key=f"cancel_{idx}", use_container_width=True):
+                            st.session_state[f"booking_recall_{idx}"] = False
+                            st.rerun()
     
     # Insurance
     with st.expander("🛡️ Insurance Quote", expanded=False):
