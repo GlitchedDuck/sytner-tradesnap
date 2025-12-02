@@ -151,6 +151,17 @@ def apply_custom_css():
         color: white;
         font-weight: 600;
         border-radius: 8px;
+        border: none;
+        padding: 0.5rem 1rem;
+        font-size: 16px;
+    }}
+    .stButton>button:hover {{
+        background-color: #1873cc;
+        border: none;
+    }}
+    .stButton>button:disabled {{
+        background-color: #cccccc;
+        color: #666666;
     }}
     .numberplate {{
         background-color: #fff;
@@ -194,6 +205,17 @@ def apply_custom_css():
     /* Remove default Streamlit spacing that creates white bars */
     .block-container {{
         padding-top: 2rem;
+    }}
+    
+    /* Better input styling */
+    .stTextInput input {{
+        font-size: 16px;
+        padding: 12px;
+    }}
+    
+    .stTextInput input::placeholder {{
+        color: #888 !important;
+        opacity: 1;
     }}
     </style>
     """, unsafe_allow_html=True)
@@ -718,7 +740,7 @@ def render_input_page():
             label_visibility="collapsed"
         )
         
-        st.markdown("<br>", unsafe_allow_html=True)
+        st.markdown("<div style='height: 8px;'></div>", unsafe_allow_html=True)
         
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
