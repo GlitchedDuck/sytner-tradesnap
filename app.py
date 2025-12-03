@@ -208,6 +208,29 @@ def apply_custom_css():
         background-color: #cccccc !important;
         color: #666666 !important;
     }}
+    
+    /* Form submit buttons - same styling as regular buttons */
+    .stFormSubmitButton>button {{
+        background-color: {ACCENT} !important;
+        color: white !important;
+        font-weight: 600;
+        border-radius: 8px;
+        border: none !important;
+        padding: 0.5rem 1rem;
+        font-size: 16px;
+    }}
+    .stFormSubmitButton>button:hover {{
+        background-color: #1873cc !important;
+        color: white !important;
+    }}
+    .stFormSubmitButton>button[kind="primary"] {{
+        background-color: {ACCENT} !important;
+        color: white !important;
+    }}
+    .stFormSubmitButton>button[kind="secondary"] {{
+        background-color: #6c757d !important;
+        color: white !important;
+    }}
     .numberplate {{
         background-color: #FFC600;
         border: 4px solid #000000;
@@ -256,8 +279,8 @@ def apply_custom_css():
         padding-top: 2rem;
     }}
     
-    /* Better input styling */
-    .stTextInput input {{
+    /* Number plate specific styling - only applies to inputs with specific key */
+    div[data-testid="stTextInput"]:has(input[placeholder*="AB12"]) input {{
         font-size: 28px;
         padding: 16px 20px;
         font-weight: 700;
@@ -274,7 +297,7 @@ def apply_custom_css():
         margin: 0 auto;
     }}
     
-    .stTextInput input::placeholder {{
+    div[data-testid="stTextInput"]:has(input[placeholder*="AB12"]) input::placeholder {{
         color: #666 !important;
         opacity: 0.6;
         letter-spacing: 2px;
@@ -282,14 +305,26 @@ def apply_custom_css():
         font-weight: 600;
     }}
     
-    .stTextInput > div {{
+    /* Center the number plate input container */
+    div[data-testid="stTextInput"]:has(input[placeholder*="AB12"]) > div {{
         display: flex;
         justify-content: center;
     }}
     
-    .stTextInput > div > div {{
+    div[data-testid="stTextInput"]:has(input[placeholder*="AB12"]) > div > div {{
         max-width: 400px;
         width: 100%;
+    }}
+    
+    /* Regular text inputs - normal styling */
+    .stTextInput input {{
+        font-size: 16px;
+        padding: 12px;
+    }}
+    
+    .stTextInput input::placeholder {{
+        color: #888 !important;
+        opacity: 1;
     }}
     </style>
     """, unsafe_allow_html=True)
