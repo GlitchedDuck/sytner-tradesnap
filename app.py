@@ -13,30 +13,11 @@ PAGE_BG = "#e6f0fa"
 
 PLATE_REGEX = re.compile(r"[A-Z0-9]{5,10}", re.I)
 
-# Real Sytner BMW Locations from the provided image
 GARAGES = [
-    "Sytner BMW Cardiff - 285-287 Penarth Road, Cardiff",
-    "Sytner BMW Chigwell - Langston Road, Loughton, Essex",
-    "Sytner BMW Coventry - 128 Holyhead Road, Coventry",
-    "Sytner BMW Harold Wood - A12 Colchester Road, Romford, Essex",
-    "Sytner BMW High Wycombe - 575-647 London Road, High Wycombe",
-    "Sytner BMW Leicester - Meridian East, Leicester",
-    "Sytner BMW Luton - 501 Dunstable Road, Luton, Bedfordshire",
-    "Sytner BMW Maidenhead - Bath Road, Maidenhead, Berkshire",
-    "Sytner BMW Newport - Oak Way, The Old Town Dock, Newport",
-    "Sytner BMW Nottingham - Lenton Lane, Nottingham",
-    "Sytner BMW Oldbury - 919 Wolverhampton Road, Oldbury",
-    "Sytner BMW Sheffield - Brightside Way, Sheffield, South Yorkshire",
-    "Sytner BMW Shrewsbury - 70 Battlefield Road, Shrewsbury",
-    "Sytner BMW Solihull - 520 Highlands Road, Shirley, Solihull",
-    "Sytner BMW Stevenage - Arlington Business Park, Gunnels Wood Road",
-    "Sytner BMW Sunningdale - Station Road, Sunningdale, Berkshire",
-    "Sytner BMW Swansea - 375 Carmarthen Road, Cwmrhydyceirw, Swansea",
-    "Sytner BMW Tamworth - Winchester Rd, Tamworth, West Midlands",
-    "Sytner BMW Tring - Cow Roast, Tring, Hertfordshire",
-    "Sytner BMW Warwick - Fusiliers Way, Warwick",
-    "Sytner BMW Wolverhampton - Lever Street, Wolverhampton",
-    "Sytner BMW Worcester - Knightsbridge Park, Wallingford Road, Worcester"
+    "Sytner BMW Birmingham - High St",
+    "Sytner BMW Manchester - Oxford Rd",
+    "Sytner BMW London - Park Lane",
+    "Sytner BMW Bristol - Temple Way"
 ]
 
 TIME_SLOTS = ["09:00 AM", "11:00 AM", "02:00 PM", "04:00 PM"]
@@ -150,20 +131,19 @@ def apply_custom_css():
     .header-card {{
         background-color: {PRIMARY};
         color: white;
-        padding: 20px 24px;
+        padding: 16px 24px;
         border-radius: 12px;
-        font-size: 26px;
+        font-size: 24px;
         font-weight: 700;
         text-align: center;
         margin-bottom: 24px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }}
     .content-card {{
         background-color: white;
-        padding: 20px 24px;
+        padding: 16px 20px;
         border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        margin-bottom: 20px;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+        margin-bottom: 16px;
         color: {PRIMARY};
     }}
     .stButton>button {{
@@ -172,359 +152,587 @@ def apply_custom_css():
         font-weight: 600;
         border-radius: 8px;
         border: none !important;
-        padding: 0.6rem 1.2rem;
+        padding: 0.5rem 1rem;
         font-size: 16px;
-        transition: all 0.2s ease;
     }}
     .stButton>button:hover {{
         background-color: #1873cc !important;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        border: none !important;
+        color: white !important;
+    }}
+    .stButton>button:focus {{
+        background-color: #1873cc !important;
+        border: none !important;
+        box-shadow: none !important;
+        color: white !important;
+    }}
+    .stButton>button:active {{
+        background-color: #1565b8 !important;
+        border: none !important;
+        color: white !important;
+    }}
+    .stButton>button[kind="primary"] {{
+        background-color: {ACCENT} !important;
+    }}
+    .stButton>button[kind="primary"]:hover {{
+        background-color: #1873cc !important;
+        color: white !important;
+    }}
+    .stButton>button[kind="primary"]:focus {{
+        background-color: #1873cc !important;
+        color: white !important;
+    }}
+    .stButton>button[kind="primary"]:active {{
+        background-color: #1565b8 !important;
+        color: white !important;
+    }}
+    .stButton>button:disabled {{
+        background-color: #cccccc !important;
+        color: #666666 !important;
     }}
     .numberplate {{
         background-color: #fff;
-        border: 3px solid {PRIMARY};
+        border: 2px solid {PRIMARY};
         border-radius: 12px;
-        padding: 16px 24px;
-        font-size: 32px;
+        padding: 12px 20px;
+        font-size: 28px;
         font-weight: 700;
         color: {PRIMARY};
         text-align: center;
         margin-bottom: 24px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        letter-spacing: 2px;
     }}
     .badge {{
-        padding: 6px 12px;
-        border-radius: 20px;
+        padding: 4px 10px;
+        border-radius: 12px;
         color: white;
-        margin-right: 8px;
-        font-size: 13px;
+        margin-right: 4px;
+        font-size: 12px;
         display: inline-block;
-        font-weight: 600;
     }}
     .badge-warning {{background-color: #ff9800;}}
+    .badge-error {{background-color: #f44336;}}
     .badge-success {{background-color: #4caf50;}}
-    .badge-danger {{background-color: #f44336;}}
-    .badge-info {{background-color: {ACCENT};}}
-    .stat-box {{
-        background: linear-gradient(135deg, {PRIMARY} 0%, {ACCENT} 100%);
-        color: white;
-        padding: 20px;
-        border-radius: 12px;
-        text-align: center;
-        margin-bottom: 16px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    
+    /* Hide empty containers and white bars */
+    .element-container:has(> .stMarkdown > div:empty),
+    .element-container:has(> .stMarkdown > div:only-child:empty) {{
+        display: none !important;
     }}
-    .icon {{
-        font-size: 24px;
-        margin-right: 8px;
-        vertical-align: middle;
+    
+    /* Remove extra padding from empty column containers */
+    [data-testid="column"]:empty {{
+        display: none !important;
     }}
-    hr {{
-        margin: 24px 0;
-        border: none;
-        border-top: 2px solid #e0e0e0;
+    
+    /* Ensure content cards have no unexpected margins when empty */
+    .content-card:empty {{
+        display: none !important;
+    }}
+    
+    /* Remove default Streamlit spacing that creates white bars */
+    .block-container {{
+        padding-top: 2rem;
+    }}
+    
+    /* Better input styling */
+    .stTextInput input {{
+        font-size: 16px;
+        padding: 12px;
+    }}
+    
+    .stTextInput input::placeholder {{
+        color: #888 !important;
+        opacity: 1;
     }}
     </style>
     """, unsafe_allow_html=True)
 
 # ============================================================================
-# RENDERING FUNCTIONS
+# UI COMPONENTS
 # ============================================================================
 
 def render_header():
-    """Render application header"""
+    """Render the application header"""
     st.markdown(f"""
-    <div class='header-card'>
-        <span class='icon'>⚡</span> Sytner TradeSnap <span class='icon'>🚗</span>
+    <div class='header-card' style='background: linear-gradient(135deg, {PRIMARY} 0%, #1a4d7a 100%);'>
+        <div style='display: flex; align-items: center; justify-content: center;'>
+            <div style='text-align: center;'>
+                <div style='font-size: 28px; font-weight: 700;'>Sytner TradeSnap</div>
+                <div style='font-size: 14px; opacity: 0.9; font-weight: 400;'>Snap it. Value it. Done.</div>
+            </div>
+        </div>
     </div>
     """, unsafe_allow_html=True)
 
 def render_reset_button():
-    """Render reset button"""
+    """Render reset button when on summary page"""
     if st.session_state.show_summary:
+        # Use container to center button without creating empty columns
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
-            if st.button("🔄 Check Another Vehicle", use_container_width=True):
+            if st.button("New Vehicle Lookup", use_container_width=True):
                 reset_all_state()
                 st.rerun()
+        # Add empty markdown to prevent white bar rendering
+        st.markdown("")
+
+def render_status_badges(history_flags, open_recalls):
+    """Render status badges for vehicle"""
+    flags_html = "<p><strong>Status Flags:</strong> "
+    flag_list = []
+    
+    if history_flags.get("write_off"):
+        flag_list.append('<span class="badge badge-error">Write-off</span>')
+    if history_flags.get("theft"):
+        flag_list.append('<span class="badge badge-error">Theft Record</span>')
+    if history_flags.get("mileage_anomaly"):
+        flag_list.append('<span class="badge badge-warning">Mileage Anomaly</span>')
+    if open_recalls:
+        flag_list.append(f'<span class="badge badge-warning">{open_recalls} Open Recall(s)</span>')
+    
+    if not flag_list:
+        flag_list.append('<span class="badge badge-success">No Issues Found</span>')
+
+    flags_html += " ".join(flag_list) + "</p>"
+    st.markdown(flags_html, unsafe_allow_html=True)
 
 def render_vehicle_summary(vehicle, mot_tax, history_flags, open_recalls):
-    """Render main vehicle summary section"""
-    st.markdown(f"""
-    <div class='content-card'>
-        <h3 style='margin-top: 0; color: {PRIMARY};'>
-            <span class='icon'>🚗</span> Vehicle Overview
-        </h3>
-        <p style='font-size: 20px; margin: 12px 0;'>
-            <strong>{vehicle['year']} {vehicle['make']} {vehicle['model']}</strong>
-        </p>
-        <p style='color: #666; margin: 8px 0;'>
-            <span class='icon'>🔢</span> <strong>VIN:</strong> {vehicle['vin']}
-        </p>
-        <p style='color: #666; margin: 8px 0;'>
-            <span class='icon'>📏</span> <strong>Mileage:</strong> {vehicle['mileage']:,} miles
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # Status badges
+    """Render the main vehicle summary card"""
     st.markdown("<div class='content-card'>", unsafe_allow_html=True)
-    st.markdown(f"<h3 style='margin-top: 0; color: {PRIMARY};'><span class='icon'>✅</span> Status Checks</h3>", unsafe_allow_html=True)
+    st.markdown("<h4>Vehicle Summary</h4>", unsafe_allow_html=True)
     
-    badges = []
-    if not history_flags.get('write_off'):
-        badges.append("<span class='badge badge-success'>✓ No Write-off</span>")
-    else:
-        badges.append("<span class='badge badge-danger'>⚠ Write-off Recorded</span>")
+    col1, col2 = st.columns(2)
+    with col1:
+        st.markdown(f"**Make & Model:** {vehicle['make']} {vehicle['model']}")
+        st.markdown(f"**Year:** {vehicle['year']}")
+        st.markdown(f"**Mileage:** {vehicle['mileage']:,} miles")
+    with col2:
+        st.markdown(f"**VIN:** {vehicle['vin']}")
+        st.markdown(f"**Next MOT:** {mot_tax['mot_next_due']}")
+        st.markdown(f"**Tax Expiry:** {mot_tax['tax_expiry']}")
+
+    st.markdown("---")
+    render_status_badges(history_flags, open_recalls)
     
-    if not history_flags.get('theft'):
-        badges.append("<span class='badge badge-success'>✓ Not Stolen</span>")
-    else:
-        badges.append("<span class='badge badge-danger'>⚠ Theft Record</span>")
+    if history_flags.get("note"):
+        st.info(f"ℹ️ {history_flags['note']}")
     
-    if open_recalls > 0:
-        badges.append(f"<span class='badge badge-warning'>⚠ {open_recalls} Open Recall(s)</span>")
-    else:
-        badges.append("<span class='badge badge-success'>✓ No Open Recalls</span>")
-    
-    if history_flags.get('mileage_anomaly'):
-        badges.append("<span class='badge badge-warning'>⚠ Mileage Anomaly</span>")
-    else:
-        badges.append("<span class='badge badge-success'>✓ Clean Mileage</span>")
-    
-    st.markdown("<div style='margin: 16px 0;'>" + "".join(badges) + "</div>", unsafe_allow_html=True)
-    
-    # MOT and Tax info
-    st.markdown("<hr>", unsafe_allow_html=True)
-    mot_date = datetime.datetime.fromisoformat(mot_tax['mot_next_due']).strftime('%d %B %Y')
-    tax_date = datetime.datetime.fromisoformat(mot_tax['tax_expiry']).strftime('%d %B %Y')
-    
-    st.markdown(f"""
-    <div style='display: flex; gap: 24px; flex-wrap: wrap;'>
-        <div style='flex: 1; min-width: 200px;'>
-            <p style='margin: 0; color: #666; font-size: 14px;'>
-                <span class='icon'>🔍</span> <strong>MOT Due:</strong>
-            </p>
-            <p style='margin: 4px 0 0 0; font-size: 16px; font-weight: 600; color: {PRIMARY};'>
-                {mot_date}
-            </p>
-        </div>
-        <div style='flex: 1; min-width: 200px;'>
-            <p style='margin: 0; color: #666; font-size: 14px;'>
-                <span class='icon'>💳</span> <strong>Tax Expiry:</strong>
-            </p>
-            <p style='margin: 4px 0 0 0; font-size: 16px; font-weight: 600; color: {PRIMARY};'>
-                {tax_date}
-            </p>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
 def render_mot_history(mot_history):
-    """Render MOT history section"""
-    with st.expander("📋 MOT History", expanded=False):
+    """Render MOT history expander"""
+    with st.expander("📋 MOT History"):
         if mot_history:
-            for record in mot_history:
-                result_icon = "✅" if record['result'] == "Pass" else "⚠️"
-                result_color = "#4caf50" if record['result'] == "Pass" else "#ff9800"
-                st.markdown(f"""
-                <div style='background-color: #f5f5f5; padding: 12px 16px; border-radius: 8px; margin-bottom: 12px; border-left: 4px solid {result_color};'>
-                    <div style='display: flex; justify-content: space-between; align-items: center;'>
-                        <div>
-                            <strong>{result_icon} {record['result']}</strong> - {record['date']}
-                        </div>
-                        <div style='color: #666;'>
-                            <span class='icon'>📏</span> {record['mileage']:,} miles
-                        </div>
-                    </div>
-                </div>
-                """, unsafe_allow_html=True)
+            for entry in mot_history:
+                result_icon = "✅" if entry['result'] == "Pass" else "⚠️"
+                st.markdown(f"{result_icon} **{entry['date']}**: {entry['result']} — {entry['mileage']:,} miles")
         else:
-            st.info("ℹ️ No MOT history available")
+            st.info("No MOT history available")
+
+def render_booking_form(recall, recall_key):
+    """Render the booking form for a recall"""
+    st.markdown("##### Book Recall Repair")
+    
+    garage = st.selectbox(
+        "Select Sytner Garage",
+        GARAGES,
+        key=f"garage_{recall_key}"
+    )
+    
+    col_a, col_b = st.columns(2)
+    with col_a:
+        min_date = datetime.date.today() + datetime.timedelta(days=1)
+        max_date = datetime.date.today() + datetime.timedelta(days=60)
+        booking_date = st.date_input(
+            "Preferred Date",
+            min_value=min_date,
+            max_value=max_date,
+            value=min_date,
+            key=f"date_{recall_key}"
+        )
+    with col_b:
+        time_slot = st.selectbox("Time Slot", TIME_SLOTS, key=f"time_{recall_key}")
+    
+    col_c, col_d = st.columns(2)
+    with col_c:
+        customer_name = st.text_input(
+            "Customer Name *",
+            key=f"name_{recall_key}",
+            placeholder="John Smith"
+        )
+    with col_d:
+        customer_phone = st.text_input(
+            "Phone Number *",
+            key=f"phone_{recall_key}",
+            placeholder="07700 900000"
+        )
+    
+    customer_email = st.text_input(
+        "Email Address (optional)",
+        key=f"email_{recall_key}",
+        placeholder="customer@example.com"
+    )
+    
+    col_x, col_y = st.columns(2)
+    with col_x:
+        if st.button("Confirm Booking", key=f"confirm_{recall_key}", use_container_width=True):
+            if not customer_name or not validate_phone(customer_phone):
+                st.error("⚠️ Please fill in all required fields with valid information")
+            else:
+                booking_ref = f"RCL-{recall['id']}-{datetime.datetime.now().strftime('%Y%m%d%H%M')}"
+                st.success(f"""
+                ✅ **Booking Confirmed!**
+                
+                **Reference:** {booking_ref}  
+                **Garage:** {garage}  
+                **Date & Time:** {booking_date.strftime('%d %B %Y')} at {time_slot}  
+                **Customer:** {customer_name} | {customer_phone}
+                
+                📧 Confirmation email sent to customer
+                """)
+                
+                if recall_key in st.session_state.booking_forms:
+                    del st.session_state.booking_forms[recall_key]
+                st.balloons()
+    
+    with col_y:
+        if st.button("Cancel", key=f"cancel_{recall_key}", use_container_width=True):
+            if recall_key in st.session_state.booking_forms:
+                del st.session_state.booking_forms[recall_key]
+            st.rerun()
 
 def render_recalls(recalls):
-    """Render recalls section"""
-    with st.expander(f"⚠️ Safety Recalls ({sum(1 for r in recalls if r['open'])} Open)", expanded=False):
-        if recalls:
-            for recall in recalls:
-                status_icon = "🔴" if recall['open'] else "✅"
-                status_text = "OPEN" if recall['open'] else "COMPLETED"
-                status_color = "#f44336" if recall['open'] else "#4caf50"
-                
-                st.markdown(f"""
-                <div style='background-color: #f5f5f5; padding: 12px 16px; border-radius: 8px; margin-bottom: 12px; border-left: 4px solid {status_color};'>
-                    <div style='margin-bottom: 8px;'>
-                        <strong>{status_icon} {status_text}</strong>
-                        <span style='color: #666; margin-left: 12px;'>{recall['id']}</span>
-                    </div>
-                    <div style='color: #666;'>
-                        {recall['summary']}
-                    </div>
-                </div>
-                """, unsafe_allow_html=True)
-        else:
-            st.success("✅ No outstanding recalls found")
-
-def render_valuation(vehicle):
-    """Render valuation section with part exchange booking"""
-    with st.expander("💰 Instant Valuation & Part Exchange", expanded=False):
-        st.markdown(f"<p style='color: #666; margin-bottom: 16px;'><span class='icon'>💡</span> Get an instant estimate based on current market data</p>", unsafe_allow_html=True)
+    """Render recalls expander with booking functionality"""
+    open_recalls = sum(1 for r in recalls if r["open"])
+    
+    with st.expander(f"🔔 Recalls ({len(recalls)} total, {open_recalls} open)"):
+        if not recalls:
+            st.success("✅ No recalls found for this vehicle")
+            return
         
-        condition = st.selectbox(
-            "Vehicle Condition",
-            ["Excellent", "Good", "Fair", "Poor"],
-            index=1,
-            key="condition_select"
-        )
-        
-        if st.button("📊 Get Valuation", key="valuation_btn"):
-            valuation = estimate_value(
-                vehicle['make'],
-                vehicle['model'],
-                vehicle['year'],
-                vehicle['mileage'],
-                condition.lower()
-            )
+        for idx, recall in enumerate(recalls):
+            recall_key = f"recall_{recall['id']}"
             
-            st.markdown(f"""
-            <div class='stat-box'>
-                <div style='font-size: 18px; margin-bottom: 8px;'>Estimated Value</div>
-                <div style='font-size: 42px; font-weight: 700;'>£{valuation:,}</div>
-                <div style='font-size: 14px; margin-top: 8px; opacity: 0.9;'>Based on {condition} condition</div>
-            </div>
-            """, unsafe_allow_html=True)
+            col1, col2 = st.columns([3, 1])
+            with col1:
+                status = "⚠️ **OPEN**" if recall['open'] else "✅ Closed"
+                st.markdown(f"**{recall['summary']}**")
+                st.caption(f"ID: `{recall['id']}` — Status: {status}")
             
-            st.markdown("<hr>", unsafe_allow_html=True)
+            with col2:
+                if recall['open']:
+                    if st.button("📅 Book Repair", key=f"book_btn_{recall_key}"):
+                        if recall_key in st.session_state.booking_forms:
+                            del st.session_state.booking_forms[recall_key]
+                        else:
+                            st.session_state.booking_forms[recall_key] = True
+                        st.rerun()
             
-            # Part Exchange Booking Form
-            st.markdown(f"""
-            <h4 style='color: {PRIMARY}; margin: 20px 0 16px 0;'>
-                <span class='icon'>📅</span> Book Part Exchange Appointment
-            </h4>
-            """, unsafe_allow_html=True)
+            if recall['open'] and st.session_state.booking_forms.get(recall_key):
+                render_booking_form(recall, recall_key)
             
-            with st.form(key="px_form"):
-                col1, col2 = st.columns(2)
-                with col1:
-                    customer_name = st.text_input("Customer Name", placeholder="John Smith")
-                    customer_email = st.text_input("Email", placeholder="john@example.com")
-                with col2:
-                    customer_phone = st.text_input("Phone", placeholder="07700 900000")
-                    preferred_garage = st.selectbox("Preferred Location", GARAGES)
-                
-                preferred_date = st.date_input("Preferred Date", min_value=datetime.date.today())
-                preferred_time = st.selectbox("Preferred Time", TIME_SLOTS)
-                
-                notes = st.text_area("Additional Notes", placeholder="Any specific requirements or questions...")
-                
-                submitted = st.form_submit_button("✅ Confirm Appointment", use_container_width=True)
-                
-                if submitted:
-                    if customer_name and customer_phone:
-                        st.success(f"""
-                        ✅ **Appointment Confirmed!**
-                        
-                        📧 Confirmation sent to: {customer_email}  
-                        📍 Location: {preferred_garage}  
-                        📅 Date: {preferred_date.strftime('%d %B %Y')}  
-                        🕒 Time: {preferred_time}  
-                        💰 Estimated Value: £{valuation:,}
-                        """)
-                    else:
-                        st.error("❌ Please provide customer name and phone number")
+            if idx < len(recalls) - 1:
+                st.markdown("---")
 
-def render_additional_details(vehicle, mot_tax, history_flags, open_recalls):
-    """Render additional details section"""
-    with st.expander("📊 Full Vehicle Report", expanded=False):
+def render_upgrade_options(vehicle):
+    """Show what customers could upgrade to with their trade-in"""
+    st.markdown("#### What Could You Drive Away In?")
+    st.markdown("*Based on your trade-in value + typical finance options*")
+    
+    trade_in_value = estimate_value(vehicle["make"], vehicle["model"], vehicle["year"], vehicle["mileage"])
+    
+    # Mock upgrade vehicles
+    upgrade_options = [
+        {
+            "model": "BMW 5 Series 530e M Sport",
+            "year": 2023,
+            "price": 45000,
+            "monthly": 520,
+            "deposit_needed": 45000 - trade_in_value
+        },
+        {
+            "model": "BMW X3 xDrive30e",
+            "year": 2024,
+            "price": 52000,
+            "monthly": 580,
+            "deposit_needed": 52000 - trade_in_value
+        },
+        {
+            "model": "BMW 4 Series 420i Coupe",
+            "year": 2023,
+            "price": 38000,
+            "monthly": 420,
+            "deposit_needed": 38000 - trade_in_value
+        }
+    ]
+    
+    for car in upgrade_options:
         st.markdown(f"""
-        <div style='background-color: #f8f9fa; padding: 20px; border-radius: 8px;'>
-            <h4 style='color: {PRIMARY}; margin-top: 0;'><span class='icon'>📄</span> Complete Summary</h4>
-            
-            <div style='margin: 16px 0;'>
-                <strong>Vehicle Details:</strong>
-                <ul style='margin: 8px 0; padding-left: 20px;'>
-                    <li>Registration: {vehicle['reg']}</li>
-                    <li>VIN: {vehicle['vin']}</li>
-                    <li>Make & Model: {vehicle['make']} {vehicle['model']}</li>
-                    <li>Year: {vehicle['year']}</li>
-                    <li>Mileage: {vehicle['mileage']:,} miles</li>
-                </ul>
-            </div>
-            
-            <div style='margin: 16px 0;'>
-                <strong>Status Summary:</strong>
-                <ul style='margin: 8px 0; padding-left: 20px;'>
-                    <li>Write-off: {'Yes ⚠️' if history_flags.get('write_off') else 'No ✅'}</li>
-                    <li>Stolen: {'Yes ⚠️' if history_flags.get('theft') else 'No ✅'}</li>
-                    <li>Open Recalls: {open_recalls}</li>
-                    <li>Mileage Issues: {'Yes ⚠️' if history_flags.get('mileage_anomaly') else 'No ✅'}</li>
-                </ul>
-            </div>
-            
-            <div style='margin: 16px 0;'>
-                <strong>MOT & Tax:</strong>
-                <ul style='margin: 8px 0; padding-left: 20px;'>
-                    <li>Next MOT: {mot_tax['mot_next_due']}</li>
-                    <li>Tax Expiry: {mot_tax['tax_expiry']}</li>
-                </ul>
-            </div>
+        <div style='background-color: #f8f9fa; padding: 16px; border-radius: 8px; margin: 12px 0; border-left: 4px solid {PRIMARY};'>
+            <p style='margin: 0; font-size: 18px;'><strong>{car['model']}</strong> ({car['year']})</p>
+            <p style='margin: 8px 0; color: #666;'>
+                <strong>£{car['price']:,}</strong> | 
+                £{car['deposit_needed']:,} additional needed | 
+                From <strong>£{car['monthly']}/month</strong>
+            </p>
+            <p style='margin: 8px 0 0 0; font-size: 13px; color: {ACCENT};'>
+                Your £{trade_in_value:,} trade-in covers {int((trade_in_value/car['price'])*100)}% of the price
+            </p>
         </div>
         """, unsafe_allow_html=True)
+    
+    st.info("Speak to our sales team about part-exchange deals and finance options")
+
+def render_inspection_booking(vehicle, offer_value):
+    """Render instant inspection booking form"""
+    st.markdown("---")
+    st.markdown("### Book Instant Inspection")
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        today = datetime.date.today()
+        inspection_date = st.date_input(
+            "Inspection Date",
+            min_value=today,
+            max_value=today + datetime.timedelta(days=7),
+            value=today,
+            key="inspection_date"
+        )
+    with col2:
+        time_slot = st.selectbox(
+            "Available Time Slots",
+            ["Next Available (30 mins)", "11:00 AM", "02:00 PM", "04:00 PM"],
+            key="inspection_time"
+        )
+    
+    col3, col4 = st.columns(2)
+    with col3:
+        customer_name = st.text_input("Your Name *", placeholder="John Smith", key="inspection_name")
+    with col4:
+        customer_phone = st.text_input("Phone Number *", placeholder="07700 900000", key="inspection_phone")
+    
+    customer_email = st.text_input("Email *", placeholder="customer@example.com", key="inspection_email")
+    
+    st.markdown(f"""
+    <div style='background-color: #e3f2fd; padding: 12px; border-radius: 8px; margin: 12px 0;'>
+        <p style='margin: 0; font-size: 14px;'><strong>What happens next:</strong></p>
+        <ul style='margin: 8px 0 0 0; font-size: 13px;'>
+            <li>Inspection takes 15-20 minutes</li>
+            <li>Instant offer confirmation</li>
+            <li>Payment within 24 hours (or immediate bank transfer)</li>
+            <li>All paperwork handled on-site</li>
+        </ul>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    col_x, col_y = st.columns(2)
+    with col_x:
+        if st.button("✅ Confirm Inspection", key="confirm_inspection", use_container_width=True, type="primary"):
+            if customer_name and customer_phone and customer_email:
+                booking_ref = f"INS-{datetime.datetime.now().strftime('%Y%m%d%H%M')}"
+                st.success(f"""
+                ✅ **Inspection Booked!**
+                
+                **Reference:** {booking_ref}  
+                **Vehicle:** {vehicle['make']} {vehicle['model']} ({vehicle['reg']})  
+                **Offer Value:** £{offer_value:,}  
+                **Date:** {inspection_date.strftime('%d %B %Y')} at {time_slot}  
+                
+                📧 Confirmation sent to {customer_email}
+                📱 SMS reminder will be sent 1 hour before
+                """)
+                st.balloons()
+                del st.session_state.show_booking
+            else:
+                st.error("⚠️ Please fill in all required fields")
+    
+    with col_y:
+        if st.button("Cancel", key="cancel_inspection", use_container_width=True):
+            del st.session_state.show_booking
+            st.rerun()
+
+def render_valuation(vehicle):
+    """Render valuation card with deal accelerator"""
+    st.markdown("<div class='content-card'>", unsafe_allow_html=True)
+    st.markdown("<h4>Instant Trade-In Valuation</h4>", unsafe_allow_html=True)
+    
+    condition = st.radio(
+        "Select vehicle condition",
+        ["excellent", "good", "fair", "poor"],
+        index=1,
+        horizontal=True,
+        help="Select the overall condition of the vehicle"
+    )
+    
+    value = estimate_value(vehicle["make"], vehicle["model"], vehicle["year"], vehicle["mileage"], condition)
+    
+    st.markdown(f"""
+    <p style='font-size: 20px;'><strong>Instant Trade-In Value:</strong> 
+    <span style='color: {PRIMARY}; font-size: 28px; font-weight: 700;'>£{value:,}</span></p>
+    <p style='color: #666;'><em>Condition: {condition.capitalize()}</em></p>
+    """, unsafe_allow_html=True)
+    
+    # Deal Accelerator
+    st.markdown("---")
+    st.markdown("### Deal Accelerator")
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        st.markdown("**Stock Priority Bonus:**")
+        st.success("+£500 - We need this model!")
+    with col2:
+        st.markdown("**Same-Day Completion:**")
+        st.info("+£200 if completed today")
+    
+    total_value = value + 700
+    st.markdown(f"""
+    <div style='background-color: #fff3cd; padding: 16px; border-radius: 8px; border-left: 4px solid #ffc107; margin: 16px 0;'>
+        <p style='margin: 0; font-size: 16px;'><strong>Total Offer:</strong> 
+        <span style='color: {PRIMARY}; font-size: 32px; font-weight: 700;'>£{total_value:,}</span></p>
+        <p style='margin: 8px 0 0 0; color: #666; font-size: 14px;'><em>Valid for 48 hours | Instant payment available</em></p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("---")
+    
+    # Network comparison
+    st.markdown("#### Best Offers Across Sytner Network")
+    network_data = [
+        {"location": "Sytner BMW Birmingham", "offer": total_value, "distance": "Current", "badge": "Best Offer"},
+        {"location": "Sytner BMW Solihull", "offer": total_value - 300, "distance": "8 miles", "badge": ""},
+        {"location": "Sytner BMW Coventry", "offer": total_value - 500, "distance": "15 miles", "badge": ""},
+    ]
+    
+    for loc in network_data:
+        col_a, col_b, col_c = st.columns([2, 1, 1])
+        with col_a:
+            badge = f" - {loc['badge']}" if loc['badge'] else ""
+            st.markdown(f"{loc['location']}{badge}")
+        with col_b:
+            st.markdown(f"**£{loc['offer']:,}**")
+        with col_c:
+            st.markdown(f"*{loc['distance']}*")
+    
+    st.markdown("---")
+    
+    # Instant booking
+    col1, col2 = st.columns(2)
+    with col1:
+        st.markdown("**Assigned Vehicle Buyer:** John Smith")
+        st.caption("📞 01234 567890 | 📧 john.smith@sytner.co.uk")
+    with col2:
+        if st.button("Book Inspection Slot", key="book_inspection", use_container_width=True, type="primary"):
+            st.session_state.show_booking = True
+            st.rerun()
+    
+    if st.session_state.get("show_booking"):
+        render_inspection_booking(vehicle, total_value)
+    
+    st.markdown("</div>", unsafe_allow_html=True)
+
+def render_additional_details(vehicle, mot_tax, history_flags, open_recalls):
+    """Render additional details expander"""
+    with st.expander("🔍 View Additional Details"):
+        st.markdown("### Complete Vehicle Information")
+        
+        tab1, tab2, tab3, tab4 = st.tabs(["📊 Specifications", "📜 History", "⚠️ Alerts", "🚗 Upgrade Options"])
+        
+        with tab1:
+            st.markdown(f"""
+            - **Registration:** {vehicle['reg']}
+            - **Make & Model:** {vehicle['make']} {vehicle['model']}
+            - **Year:** {vehicle['year']}
+            - **VIN:** {vehicle['vin']}
+            - **Current Mileage:** {vehicle['mileage']:,} miles
+            - **Next MOT Due:** {mot_tax['mot_next_due']}
+            - **Tax Expiry:** {mot_tax['tax_expiry']}
+            """)
+        
+        with tab2:
+            st.markdown("**MOT Test History:**")
+            for entry in mot_tax['mot_history']:
+                st.markdown(f"- {entry['date']}: **{entry['result']}** at {entry['mileage']:,} miles")
+            
+            if history_flags.get("note"):
+                st.warning(f"⚠️ {history_flags['note']}")
+        
+        with tab3:
+            alert_count = sum([
+                history_flags.get("write_off", False),
+                history_flags.get("theft", False),
+                history_flags.get("mileage_anomaly", False),
+                open_recalls > 0
+            ])
+            
+            if alert_count > 0:
+                st.warning(f"⚠️ {alert_count} alert(s) found for this vehicle")
+                if history_flags.get("write_off"):
+                    st.error("🚨 Vehicle has a write-off record")
+                if history_flags.get("theft"):
+                    st.error("🚨 Vehicle has a theft record")
+                if history_flags.get("mileage_anomaly"):
+                    st.warning("⚠️ Mileage discrepancy detected")
+                if open_recalls > 0:
+                    st.warning(f"⚠️ {open_recalls} open safety recall(s)")
+            else:
+                st.success("✅ No alerts found for this vehicle")
+        
+        with tab4:
+            render_upgrade_options(vehicle)
 
 # ============================================================================
-# PAGE RENDERING
+# PAGE RENDERERS
 # ============================================================================
 
 def render_input_page():
-    """Render the input page"""
-    # Hero section with stats
+    """Render the vehicle input page"""
+    
+    # Hero section with value proposition
     st.markdown(f"""
-    <div class='stat-box' style='margin-bottom: 24px;'>
-        <h2 style='margin: 0 0 20px 0; font-size: 24px;'>Quick Vehicle Check & Part Exchange</h2>
-        <div style='display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px;'>
+    <div style='background: linear-gradient(135deg, {PRIMARY} 0%, {ACCENT} 100%); 
+                padding: 40px 24px; border-radius: 16px; margin-bottom: 32px; text-align: center;'>
+        <h1 style='color: white; margin: 0 0 16px 0; font-size: 36px; font-weight: 700;'>Instant Trade-In Valuation</h1>
+        <p style='color: rgba(255,255,255,0.95); font-size: 18px; margin: 0 0 28px 0; font-weight: 400;'>
+            Get competitive offers in seconds • Complete deals in minutes
+        </p>
+        <div style='display: flex; justify-content: center; gap: 32px; flex-wrap: wrap;'>
             <div style='text-align: center;'>
-                <div style='font-size: 32px; font-weight: 700;'>⚡ 30s</div>
-                <div style='font-size: 14px; opacity: 0.9; margin-top: 4px;'>Average Check Time</div>
+                <div style='font-size: 32px; font-weight: 700; color: white;'>30 mins</div>
+                <div style='font-size: 14px; color: rgba(255,255,255,0.9); margin-top: 4px;'>Average completion</div>
             </div>
             <div style='text-align: center;'>
-                <div style='font-size: 32px; font-weight: 700;'>📍 22</div>
-                <div style='font-size: 14px; opacity: 0.9; margin-top: 4px;'>UK Locations</div>
+                <div style='font-size: 32px; font-weight: 700; color: white;'>15+</div>
+                <div style='font-size: 14px; color: rgba(255,255,255,0.9); margin-top: 4px;'>Network locations</div>
             </div>
             <div style='text-align: center;'>
-                <div style='font-size: 32px; font-weight: 700;'>💰 £500+</div>
-                <div style='font-size: 14px; opacity: 0.9; margin-top: 4px;'>Avg. Bonus Value</div>
+                <div style='font-size: 32px; font-weight: 700; color: white;'>£500+</div>
+                <div style='font-size: 14px; color: rgba(255,255,255,0.9); margin-top: 4px;'>Bonus opportunities</div>
             </div>
         </div>
     </div>
     """, unsafe_allow_html=True)
     
-    # Quick benefits
+    # Quick benefit cards
     col1, col2, col3 = st.columns(3)
     with col1:
         st.markdown("""
-        <div class='content-card' style='text-align: center; min-height: 120px;'>
-            <div style='font-size: 32px; margin-bottom: 8px;'>⚡</div>
-            <div style='font-weight: 600; color: #0b3b6f; margin-bottom: 8px;'>Instant Check</div>
-            <div style='font-size: 14px; color: #666;'>Full history in seconds</div>
+        <div style='text-align: center; padding: 20px 16px;'>
+            <div style='font-weight: 600; color: #0b3b6f; margin-bottom: 8px; font-size: 17px;'>Instant Check</div>
+            <div style='font-size: 14px; color: #666; line-height: 1.5;'>Full vehicle history in seconds</div>
         </div>
         """, unsafe_allow_html=True)
     with col2:
         st.markdown("""
-        <div class='content-card' style='text-align: center; min-height: 120px;'>
-            <div style='font-size: 32px; margin-bottom: 8px;'>💰</div>
-            <div style='font-weight: 600; color: #0b3b6f; margin-bottom: 8px;'>Best Offers</div>
-            <div style='font-size: 14px; color: #666;'>Competitive valuations</div>
+        <div style='text-align: center; padding: 20px 16px;'>
+            <div style='font-weight: 600; color: #0b3b6f; margin-bottom: 8px; font-size: 17px;'>Best Offers</div>
+            <div style='font-size: 14px; color: #666; line-height: 1.5;'>Compare across network</div>
         </div>
         """, unsafe_allow_html=True)
     with col3:
         st.markdown("""
-        <div class='content-card' style='text-align: center; min-height: 120px;'>
-            <div style='font-size: 32px; margin-bottom: 8px;'>📅</div>
-            <div style='font-weight: 600; color: #0b3b6f; margin-bottom: 8px;'>Same Day</div>
-            <div style='font-size: 14px; color: #666;'>Complete deal today</div>
+        <div style='text-align: center; padding: 20px 16px;'>
+            <div style='font-weight: 600; color: #0b3b6f; margin-bottom: 8px; font-size: 17px;'>Same Day</div>
+            <div style='font-size: 14px; color: #666; line-height: 1.5;'>Complete deal today</div>
         </div>
         """, unsafe_allow_html=True)
     
@@ -532,22 +740,18 @@ def render_input_page():
     
     # Main input section
     st.markdown(f"""
-    <div class='content-card' style='text-align: center;'>
-        <h2 style='color: {PRIMARY}; margin: 0 0 12px 0; font-size: 26px;'>
-            <span class='icon'>🚀</span> Get Started
-        </h2>
-        <p style='color: #666; font-size: 16px; margin-bottom: 20px;'>
-            Enter registration or scan number plate
-        </p>
+    <div style='text-align: center; margin-bottom: 32px;'>
+        <h2 style='color: {PRIMARY}; margin: 0 0 12px 0; font-size: 28px;'>Get Started</h2>
+        <p style='color: #666; font-size: 16px;'>Enter the customer's registration or scan their number plate</p>
     </div>
     """, unsafe_allow_html=True)
     
-    # Input method selection
+    # Center the radio buttons with more spacing
     col_spacer1, col_radio, col_spacer2 = st.columns([1, 2, 1])
     with col_radio:
         option = st.radio(
             "Choose input method",
-            ["📝 Enter Registration", "📸 Scan Number Plate"],
+            ["Enter Registration / VIN", "Scan Number Plate"],
             index=0,
             horizontal=True,
             label_visibility="collapsed"
@@ -557,44 +761,46 @@ def render_input_page():
 
     if "Enter Registration" in option:
         manual_reg = st.text_input(
-            "Enter registration",
+            "Enter registration / VIN",
             placeholder="e.g. KT68XYZ or WBA8BFAKEVIN12345",
+            help="Enter a UK registration or VIN number",
             label_visibility="collapsed"
         )
         
-        st.markdown("<div style='height: 12px;'></div>", unsafe_allow_html=True)
+        st.markdown("<div style='height: 8px;'></div>", unsafe_allow_html=True)
         
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
-            if st.button("🔍 Look Up Vehicle", disabled=not manual_reg, use_container_width=True, type="primary"):
+            if st.button("Look Up Vehicle", disabled=not manual_reg, use_container_width=True, type="primary"):
                 if validate_registration(manual_reg):
                     st.session_state.reg = manual_reg.strip().upper().replace(" ", "")
                     st.session_state.image = None
                     st.session_state.show_summary = True
                     st.rerun()
                 else:
-                    st.error("❌ Please enter a valid registration")
+                    st.error("Please enter a valid registration (minimum 5 characters)")
         
+        # Quick examples - more prominent
         st.markdown("""
         <div style='text-align: center; margin-top: 20px;'>
-            <p style='color: #999; font-size: 14px;'>
-                💡 <strong>Try:</strong> KT68XYZ • AB12CDE • WBA8B12345
-            </p>
+            <p style='color: #999; font-size: 14px;'><strong>Try these examples:</strong> KT68XYZ • AB12CDE • WBA8B12345</p>
         </div>
         """, unsafe_allow_html=True)
     
     else:  # Scan Number Plate
+        # Camera instructions
         st.markdown(f"""
         <div style='background-color: #e3f2fd; padding: 16px; border-radius: 8px; border-left: 4px solid {ACCENT}; margin-bottom: 20px;'>
             <p style='margin: 0; font-size: 14px; color: #0b3b6f;'>
-                <span class='icon'>💡</span> <strong>Tips:</strong> Clear frame • Good lighting • Hold steady
+                <strong>Camera Tips:</strong> Position the plate clearly in frame • Ensure good lighting • Hold steady
             </p>
         </div>
         """, unsafe_allow_html=True)
         
         image = st.camera_input(
-            "Scan number plate",
+            "Scan customer's number plate",
             key="camera",
+            help="Position the number plate clearly in the frame",
             label_visibility="collapsed"
         )
         
@@ -608,26 +814,24 @@ def render_input_page():
                     st.session_state.show_summary = True
                     st.rerun()
                 else:
-                    st.error("❌ Could not read plate. Try again or enter manually.")
+                    st.error("Could not read number plate. Please try again or enter manually.")
             except Exception as e:
-                st.error(f"⚠️ Error: {str(e)}")
+                st.error(f"Error processing image: {str(e)}")
     
-    # Trust indicators
-    st.markdown("<br><br>", unsafe_allow_html=True)
+    # Trust indicators at bottom - cleaner styling
+    st.markdown("<br><br><br>", unsafe_allow_html=True)
     st.markdown(f"""
-    <div class='content-card' style='text-align: center;'>
-        <p style='color: #999; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 16px 0; font-weight: 600;'>
-            Trusted by Sytner Staff Nationwide
-        </p>
-        <div style='display: flex; justify-content: center; gap: 32px; flex-wrap: wrap;'>
+    <div style='text-align: center; padding: 28px 24px; background-color: white; border-radius: 12px; margin-top: 40px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);'>
+        <p style='color: #999; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 16px 0; font-weight: 600;'>Trusted by Sytner Staff Nationwide</p>
+        <div style='display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;'>
             <div style='color: {PRIMARY}; font-size: 14px;'>
-                <span style='color: #4caf50;'>✅</span> DVLA Integrated
+                <span style='font-weight: 600; color: #4caf50;'>✓</span> Full DVLA Integration
             </div>
             <div style='color: {PRIMARY}; font-size: 14px;'>
-                <span style='color: #4caf50;'>✅</span> Real-time MOT
+                <span style='font-weight: 600; color: #4caf50;'>✓</span> Real-time MOT Data
             </div>
             <div style='color: {PRIMARY}; font-size: 14px;'>
-                <span style='color: #4caf50;'>✅</span> Secure Data
+                <span style='font-weight: 600; color: #4caf50;'>✓</span> Secure & Compliant
             </div>
         </div>
     </div>
@@ -649,13 +853,13 @@ def render_summary_page():
 
     # Fetch vehicle data
     try:
-        with st.spinner("🔄 Fetching vehicle information..."):
+        with st.spinner("Fetching vehicle information..."):
             vehicle = lookup_vehicle_basic(reg)
             mot_tax = lookup_mot_and_tax(reg)
             recalls = lookup_recalls(reg)
             history_flags = get_history_flags(reg)
     except Exception as e:
-        st.error(f"⚠️ Error: {str(e)}")
+        st.error(f"⚠️ Error fetching vehicle data: {str(e)}")
         st.stop()
 
     # Render all sections
@@ -665,16 +869,17 @@ def render_summary_page():
     render_mot_history(mot_tax['mot_history'])
     render_recalls(recalls)
     
-    with st.expander("🛡️ Insurance Quote", expanded=False):
-        st.info("💡 Connect to insurance API for live quotes")
-        if st.button('📊 Get Sample Quote', key="insurance_quote"):
-            st.success("""
-            **Sample Quote:**  
-            💰 £320/year (Third Party, Fire & Theft)  
-            🔹 Excess: £250  
-            🔹 No Claims: Year 1  
-            🔹 Mileage: 10,000/year
-            """)
+    with st.expander("🛡️ Insurance Quote"):
+        st.info("💡 Insurance quotes are mocked. Integrate with aggregator APIs for live quotes.")
+        if st.button('Get Mock Insurance Quote', key="insurance_quote"):
+            with st.spinner("Fetching quotes..."):
+                st.success("""
+                **Sample Quote:**  
+                💰 £320/year (Third Party, Fire & Theft)  
+                🔹 Excess: £250  
+                🔹 No Claims Bonus: Year 1  
+                🔹 Mileage: 10,000/year
+                """)
     
     render_valuation(vehicle)
     render_additional_details(vehicle, mot_tax, history_flags, open_recalls)
@@ -686,10 +891,9 @@ def render_summary_page():
 def main():
     """Main application entry point"""
     st.set_page_config(
-        page_title="Sytner TradeSnap ⚡",
+        page_title="Sytner TradeSnap",
         page_icon="⚡",
-        layout="centered",
-        initial_sidebar_state="collapsed"
+        layout="centered"
     )
     
     init_session_state()
