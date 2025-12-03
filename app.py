@@ -1040,79 +1040,159 @@ def render_inspection_booking(vehicle, offer_value):
 def render_valuation(vehicle):
     """Render valuation card with deal accelerator"""
     st.markdown("<div class='content-card'>", unsafe_allow_html=True)
-    st.markdown("<h4>Instant Trade-In Valuation</h4>", unsafe_allow_html=True)
+    st.markdown("<h4>💰 Estimated Trade-In Value</h4>", unsafe_allow_html=True)
     
-    condition = st.radio(
-        "Select vehicle condition",
-        ["excellent", "good", "fair", "poor"],
-        index=1,
-        horizontal=True,
-        help="Select the overall condition of the vehicle"
-    )
-    
-    value = estimate_value(vehicle["make"], vehicle["model"], vehicle["year"], vehicle["mileage"], condition)
-    
-    st.markdown(f"""
-    <p style='font-size: 20px;'><strong>Instant Trade-In Value:</strong> 
-    <span style='color: {PRIMARY}; font-size: 28px; font-weight: 700;'>£{value:,}</span></p>
-    <p style='color: #666;'><em>Condition: {condition.capitalize()}</em></p>
+    st.markdown("""
+    <p style='color: #666; font-size: 14px; margin-bottom: 16px;'>
+        Based on current market data. Final valuation subject to vehicle inspection by Sytner buyer.
+    </p>
     """, unsafe_allow_html=True)
+    
+    # Calculate value range
+    base_value = estimate_value(vehicle["make"], vehicle["model"], vehicle["year"], vehicle["mileage"], "good")
+    min_value = int(base_value * 0.85)  # Fair condition
+    max_value = int(base_value * 1.05)  # Excellent condition
+    mid_value = base_value
+    
+    # Display value range
+    st.markdown(f"""
+    <div style='background: linear-gradient(135deg, {PRIMARY} 0%, {ACCENT} 100%); 
+                padding: 24px; border-radius: 12px; text-align: center; color: white; margin-bottom: 20px;'>
+        <div style='font-size: 16px; opacity: 0.9; margin-bottom: 8px;'>Your Vehicle Could Be Worth</div>
+        <div style='font-size: 42px; font-weight: 700; margin: 12px 0;'>£{min_value:,} - £{max_value:,}</div>
+        <div style='font-size: 14px; opacity: 0.85;'>
+            Typical value: £{mid_value:,} • Based on {vehicle['year']} {vehicle['make']} {vehicle['model']}
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Value breakdown
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.markdown(f"""
+        <div style='text-align: center; padding: 16px; background-color: #f8f9fa; border-radius: 8px;'>
+            <div style='font-size: 20px; font-weight: 600; color: {PRIMARY};'>£{min_value:,}</div>
+            <div style='font-size: 13px; color: #666; margin-top: 4px;'>Fair Condition</div>
+        </div>
+        """, unsafe_allow_html=True)
+    with col2:
+        st.markdown(f"""
+        <div style='text-align: center; padding: 16px; background-color: #e3f2fd; border-radius: 8px;'>
+            <div style='font-size: 20px; font-weight: 600; color: {PRIMARY};'>£{mid_value:,}</div>
+            <div style='font-size: 13px; color: #666; margin-top: 4px;'>Good Condition</div>
+        </div>
+        """, unsafe_allow_html=True)
+    with col3:
+        st.markdown(f"""
+        <div style='text-align: center; padding: 16px; background-color: #f8f9fa; border-radius: 8px;'>
+            <div style='font-size: 20px; font-weight: 600; color: {PRIMARY};'>£{max_value:,}</div>
+            <div style='font-size: 13px; color: #666; margin-top: 4px;'>Excellent Condition</div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    st.markdown("<br>", unsafe_allow_html=True)
     
     # Deal Accelerator
     st.markdown("---")
-    st.markdown("### Deal Accelerator")
+    st.markdown("### 🚀 Deal Accelerator Bonuses")
     
     col1, col2 = st.columns(2)
     with col1:
-        st.markdown("**Stock Priority Bonus:**")
-        st.success("+£500 - We need this model!")
+        st.markdown(f"""
+        <div style='background-color: #e8f5e9; padding: 16px; border-radius: 8px; border-left: 4px solid #4caf50;'>
+            <div style='font-size: 16px; font-weight: 600; color: #2e7d32; margin-bottom: 4px;'>
+                📦 Stock Priority Bonus
+            </div>
+            <div style='font-size: 24px; font-weight: 700; color: #1b5e20;'>+£500</div>
+            <div style='font-size: 13px; color: #666; margin-top: 4px;'>We need this model!</div>
+        </div>
+        """, unsafe_allow_html=True)
     with col2:
-        st.markdown("**Same-Day Completion:**")
-        st.info("+£200 if completed today")
+        st.markdown(f"""
+        <div style='background-color: #e3f2fd; padding: 16px; border-radius: 8px; border-left: 4px solid {ACCENT};'>
+            <div style='font-size: 16px; font-weight: 600; color: #1565c0; margin-bottom: 4px;'>
+                ⚡ Same-Day Completion
+            </div>
+            <div style='font-size: 24px; font-weight: 700; color: #0d47a1;'>+£200</div>
+            <div style='font-size: 13px; color: #666; margin-top: 4px;'>If completed today</div>
+        </div>
+        """, unsafe_allow_html=True)
     
-    total_value = value + 700
+    # Total potential offer
+    total_min = min_value + 700
+    total_max = max_value + 700
+    
     st.markdown(f"""
-    <div style='background-color: #fff3cd; padding: 16px; border-radius: 8px; border-left: 4px solid #ffc107; margin: 16px 0;'>
-        <p style='margin: 0; font-size: 16px;'><strong>Total Offer:</strong> 
-        <span style='color: {PRIMARY}; font-size: 32px; font-weight: 700;'>£{total_value:,}</span></p>
-        <p style='margin: 8px 0 0 0; color: #666; font-size: 14px;'><em>Valid for 48 hours | Instant payment available</em></p>
+    <div style='background-color: #fff3cd; padding: 20px; border-radius: 12px; border-left: 4px solid #ffc107; margin: 20px 0;'>
+        <div style='text-align: center;'>
+            <div style='font-size: 16px; color: #666; margin-bottom: 8px;'><strong>Potential Total Offer (with bonuses)</strong></div>
+            <div style='font-size: 36px; font-weight: 700; color: {PRIMARY};'>£{total_min:,} - £{total_max:,}</div>
+            <div style='font-size: 14px; color: #666; margin-top: 8px;'>
+                <em>Valid for 48 hours • Instant payment available</em>
+            </div>
+        </div>
     </div>
     """, unsafe_allow_html=True)
     
     st.markdown("---")
     
     # Network comparison
-    st.markdown("#### Best Offers Across Sytner Network")
+    st.markdown("#### 🏆 Best Offers Across Sytner Network")
+    
+    st.markdown("""
+    <p style='color: #666; font-size: 14px; margin-bottom: 16px;'>
+        Estimated offers based on typical market conditions at each location
+    </p>
+    """, unsafe_allow_html=True)
+    
     network_data = [
-        {"location": "Sytner BMW Birmingham", "offer": total_value, "distance": "Current", "badge": "Best Offer"},
-        {"location": "Sytner BMW Solihull", "offer": total_value - 300, "distance": "8 miles", "badge": ""},
-        {"location": "Sytner BMW Coventry", "offer": total_value - 500, "distance": "15 miles", "badge": ""},
+        {"location": "Sytner BMW Solihull", "offer_min": total_min, "offer_max": total_max, "distance": "Current Location", "badge": "🏆 Best Offer"},
+        {"location": "Sytner BMW Birmingham", "offer_min": total_min - 200, "offer_max": total_max - 200, "distance": "8 miles", "badge": ""},
+        {"location": "Sytner BMW Coventry", "offer_min": total_min - 400, "offer_max": total_max - 400, "distance": "15 miles", "badge": ""},
     ]
     
     for loc in network_data:
-        col_a, col_b, col_c = st.columns([2, 1, 1])
-        with col_a:
-            badge = f" - {loc['badge']}" if loc['badge'] else ""
-            st.markdown(f"{loc['location']}{badge}")
-        with col_b:
-            st.markdown(f"**£{loc['offer']:,}**")
-        with col_c:
-            st.markdown(f"*{loc['distance']}*")
+        badge_html = f"<span style='color: #ffa726; margin-left: 8px;'>{loc['badge']}</span>" if loc['badge'] else ""
+        st.markdown(f"""
+        <div style='background-color: #f8f9fa; padding: 12px 16px; border-radius: 8px; margin: 8px 0; 
+                    display: flex; justify-content: space-between; align-items: center;'>
+            <div>
+                <strong>{loc['location']}</strong>{badge_html}
+                <div style='font-size: 13px; color: #666; margin-top: 4px;'>{loc['distance']}</div>
+            </div>
+            <div style='text-align: right;'>
+                <div style='font-size: 18px; font-weight: 600; color: {PRIMARY};'>£{loc['offer_min']:,} - £{loc['offer_max']:,}</div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
     
     st.markdown("---")
     
-    # Instant booking
+    # Contact buyer section
+    st.markdown(f"""
+    <div style='background-color: #e8f5e9; padding: 20px; border-radius: 12px; margin-top: 20px;'>
+        <h4 style='margin: 0 0 12px 0; color: #2e7d32;'>📞 Ready for Your Official Valuation?</h4>
+        <p style='margin: 0 0 16px 0; color: #666; font-size: 14px;'>
+            Connect with a Sytner buyer for a professional inspection and final offer. 
+            Our buyers will assess the actual condition and provide you with a confirmed price.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
     col1, col2 = st.columns(2)
     with col1:
-        st.markdown("**Assigned Vehicle Buyer:** John Smith")
-        st.caption("📞 01234 567890 | 📧 john.smith@sytner.co.uk")
+        st.markdown("""
+        <div style='font-size: 14px; color: #666;'>
+            <strong>What happens next:</strong><br>
+            ✓ Professional vehicle inspection<br>
+            ✓ Instant confirmed offer<br>
+            ✓ Payment within 24 hours<br>
+            ✓ All paperwork handled
+        </div>
+        """, unsafe_allow_html=True)
     with col2:
-        if st.button("Book Inspection Slot", key="book_inspection", use_container_width=True, type="primary"):
-            st.session_state.show_booking = True
-            st.rerun()
-    
-    if st.session_state.get("show_booking"):
-        render_inspection_booking(vehicle, total_value)
+        if st.button("👤 Contact Sytner Buyer", key="scroll_to_buyer", use_container_width=True, type="primary"):
+            st.info("💡 Scroll up to the 'Contact Sytner Vehicle Buyer' section to ping a buyer in your area!")
     
     st.markdown("</div>", unsafe_allow_html=True)
 
