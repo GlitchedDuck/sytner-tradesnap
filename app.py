@@ -209,15 +209,19 @@ def apply_custom_css():
         color: #666666 !important;
     }}
     .numberplate {{
-        background-color: #fff;
-        border: 2px solid {PRIMARY};
-        border-radius: 12px;
-        padding: 12px 20px;
-        font-size: 28px;
-        font-weight: 700;
-        color: {PRIMARY};
+        background-color: #FFC600;
+        border: 4px solid #000000;
+        border-radius: 8px;
+        padding: 20px 32px;
+        font-size: 48px;
+        font-weight: 900;
+        color: #000000;
         text-align: center;
-        margin-bottom: 24px;
+        margin: 24px auto;
+        letter-spacing: 8px;
+        box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+        max-width: 500px;
+        font-family: 'Charles Wright', Arial, sans-serif;
     }}
     .badge {{
         padding: 4px 10px;
