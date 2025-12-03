@@ -1168,32 +1168,6 @@ def render_valuation(vehicle):
     
     st.markdown("---")
     
-    # Contact buyer section
-    st.markdown(f"""
-    <div style='background-color: #e8f5e9; padding: 20px; border-radius: 12px; margin-top: 20px;'>
-        <h4 style='margin: 0 0 12px 0; color: #2e7d32;'>📞 Ready for Your Official Valuation?</h4>
-        <p style='margin: 0 0 16px 0; color: #666; font-size: 14px;'>
-            Connect with a Sytner buyer for a professional inspection and final offer. 
-            Our buyers will assess the actual condition and provide you with a confirmed price.
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    col1, col2 = st.columns(2)
-    with col1:
-        st.markdown("""
-        <div style='font-size: 14px; color: #666;'>
-            <strong>What happens next:</strong><br>
-            ✓ Professional vehicle inspection<br>
-            ✓ Instant confirmed offer<br>
-            ✓ Payment within 24 hours<br>
-            ✓ All paperwork handled
-        </div>
-        """, unsafe_allow_html=True)
-    with col2:
-        if st.button("👤 Contact Sytner Buyer", key="scroll_to_buyer", use_container_width=True, type="primary"):
-            st.info("💡 Scroll up to the 'Contact Sytner Vehicle Buyer' section to ping a buyer in your area!")
-    
     st.markdown("</div>", unsafe_allow_html=True)
 
 def render_additional_details(vehicle, mot_tax, history_flags, open_recalls):
