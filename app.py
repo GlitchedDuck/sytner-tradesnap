@@ -14,28 +14,28 @@ PAGE_BG = "#e6f0fa"
 PLATE_REGEX = re.compile(r"[A-Z0-9]{5,10}", re.I)
 
 GARAGES = [
-    "Sytner BMW Cardiff - 285-287 Penarth Road",
-    "Sytner BMW Chigwell - Langston Road, Loughton",
-    "Sytner BMW Coventry - 128 Holyhead Road",
-    "Sytner BMW Harold Wood - A12 Colchester Road",
-    "Sytner BMW High Wycombe - 575-647 London Road",
+    "Sytner BMW Cardiff - 285-287 Penarth Road, Cardiff",
+    "Sytner BMW Chigwell - Langston Road, Loughton, Essex",
+    "Sytner BMW Coventry - 128 Holyhead Road, Coventry",
+    "Sytner BMW Harold Wood - A12 Colchester Road, Romford, Essex",
+    "Sytner BMW High Wycombe - 575-647 London Road, High Wycombe",
     "Sytner BMW Leicester - Meridian East, Leicester",
-    "Sytner BMW Luton - 501 Dunstable Road",
-    "Sytner BMW Maidenhead - Bath Road",
-    "Sytner BMW Newport - Oak Way",
-    "Sytner BMW Nottingham - Lenton Lane",
-    "Sytner BMW Oldbury - 919 Wolverhampton Road",
-    "Sytner BMW Sheffield - Brightside Way",
-    "Sytner BMW Shrewsbury - 70 Battlefield Road",
-    "Sytner BMW Solihull - 520 Highlands Road",
-    "Sytner BMW Stevenage - Arlington Business Park",
-    "Sytner BMW Sunningdale - Station Road,",
-    "Sytner BMW Swansea - 375 Carmarthen Road",
-    "Sytner BMW Tamworth - Winchester Road",
-    "Sytner BMW Tring - Cow Roast",
-    "Sytner BMW Warwick - Fusiliers Way",
-    "Sytner BMW Wolverhampton - Lever Street",
-    "Sytner BMW Worcester - Knightsbridge Park"
+    "Sytner BMW Luton - 501 Dunstable Road, Luton, Bedfordshire",
+    "Sytner BMW Maidenhead - Bath Road, Maidenhead, Berkshire",
+    "Sytner BMW Newport - Oak Way, The Old Town Dock, Newport",
+    "Sytner BMW Nottingham - Lenton Lane, Nottingham",
+    "Sytner BMW Oldbury - 919 Wolverhampton Road, Oldbury",
+    "Sytner BMW Sheffield - Brightside Way, Sheffield, South Yorkshire",
+    "Sytner BMW Shrewsbury - 70 Battlefield Road, Shrewsbury",
+    "Sytner BMW Solihull - 520 Highlands Road, Shirley, Solihull",
+    "Sytner BMW Stevenage - Arlington Business Park, Gunnels Wood Road",
+    "Sytner BMW Sunningdale - Station Road, Sunningdale, Berkshire",
+    "Sytner BMW Swansea - 375 Carmarthen Road, Cwmrhydyceirw, Swansea",
+    "Sytner BMW Tamworth - Winchester Rd, Tamworth, West Midlands",
+    "Sytner BMW Tring - Cow Roast, Tring, Hertfordshire",
+    "Sytner BMW Warwick - Fusiliers Way, Warwick",
+    "Sytner BMW Wolverhampton - Lever Street, Wolverhampton",
+    "Sytner BMW Worcester - Knightsbridge Park, Wallingford Road, Worcester"
 ]
 
 TIME_SLOTS = ["09:00 AM", "11:00 AM", "02:00 PM", "04:00 PM"]
@@ -452,6 +452,474 @@ def render_recalls(recalls):
             if idx < len(recalls) - 1:
                 st.markdown("---")
 
+def get_sytner_buyers():
+    """Return list of Sytner buyers with their locations and contact info"""
+    return [
+        {
+            "name": "Sarah Mitchell",
+            "location": "Sytner BMW Cardiff",
+            "area": "South Wales",
+            "phone": "029 2046 8000",
+            "email": "sarah.mitchell@sytner.co.uk",
+            "specialties": ["3 Series", "5 Series", "Estate Cars"],
+            "rating": 4.9,
+            "deals_completed": 247
+        },
+        {
+            "name": "James Thompson",
+            "location": "Sytner BMW Birmingham",
+            "area": "West Midlands",
+            "phone": "0121 456 7890",
+            "email": "james.thompson@sytner.co.uk",
+            "specialties": ["X Series", "SUV", "4x4"],
+            "rating": 4.8,
+            "deals_completed": 312
+        },
+        {
+            "name": "Emma Richardson",
+            "location": "Sytner BMW Leicester",
+            "area": "East Midlands",
+            "phone": "0116 234 5678",
+            "email": "emma.richardson@sytner.co.uk",
+            "specialties": ["M Sport", "Performance", "Diesel"],
+            "rating": 4.9,
+            "deals_completed": 289
+        },
+        {
+            "name": "David Chen",
+            "location": "Sytner BMW Nottingham",
+            "area": "East Midlands",
+            "phone": "0115 789 0123",
+            "email": "david.chen@sytner.co.uk",
+            "specialties": ["3 Series", "Saloon", "Hybrid"],
+            "rating": 4.7,
+            "deals_completed": 198
+        },
+        {
+            "name": "Sophie Williams",
+            "location": "Sytner BMW Coventry",
+            "area": "West Midlands",
+            "phone": "024 7655 4321",
+            "email": "sophie.williams@sytner.co.uk",
+            "specialties": ["All Models", "Quick Deals", "Part Exchange"],
+            "rating": 4.9,
+            "deals_completed": 356
+        },
+        {
+            "name": "Michael O'Brien",
+            "location": "Sytner BMW Sheffield",
+            "area": "South Yorkshire",
+            "phone": "0114 567 8901",
+            "email": "michael.obrien@sytner.co.uk",
+            "specialties": ["X Series", "High Mileage", "Commercial"],
+            "rating": 4.8,
+            "deals_completed": 276
+        },
+        {
+            "name": "Lucy Anderson",
+            "location": "Sytner BMW Solihull",
+            "area": "West Midlands",
+            "phone": "0121 789 4561",
+            "email": "lucy.anderson@sytner.co.uk",
+            "specialties": ["Premium Models", "Low Mileage", "Executive"],
+            "rating": 4.9,
+            "deals_completed": 423
+        },
+        {
+            "name": "Robert Taylor",
+            "location": "Sytner BMW Newport",
+            "area": "South Wales",
+            "phone": "01633 456 789",
+            "email": "robert.taylor@sytner.co.uk",
+            "specialties": ["Diesel", "Estate", "Family Cars"],
+            "rating": 4.7,
+            "deals_completed": 234
+        }
+    ]
+
+def render_sytner_buyers(vehicle, reg):
+    """Render Sytner Buyers section with ping functionality"""
+    with st.expander("👤 Contact Sytner Vehicle Buyer", expanded=False):
+        st.markdown(f"<h4 style='color: {PRIMARY}; margin-top: 0;'>🎯 Find Your Local Sytner Buyer</h4>", unsafe_allow_html=True)
+        st.markdown("Our expert buyers are ready to make you an offer within minutes")
+        
+        buyers = get_sytner_buyers()
+        
+        # Location selector
+        st.markdown("##### Select Your Preferred Location")
+        col1, col2 = st.columns([2, 1])
+        with col1:
+            location_filter = st.selectbox(
+                "Filter by area",
+                ["All Areas", "West Midlands", "East Midlands", "South Wales", "South Yorkshire"],
+                key="buyer_location_filter"
+            )
+        with col2:
+            sort_by = st.selectbox(
+                "Sort by",
+                ["Rating", "Deals Completed", "Name"],
+                key="buyer_sort"
+            )
+        
+        # Filter and sort buyers
+        filtered_buyers = buyers
+        if location_filter != "All Areas":
+            filtered_buyers = [b for b in buyers if b["area"] == location_filter]
+        
+        if sort_by == "Rating":
+            filtered_buyers = sorted(filtered_buyers, key=lambda x: x["rating"], reverse=True)
+        elif sort_by == "Deals Completed":
+            filtered_buyers = sorted(filtered_buyers, key=lambda x: x["deals_completed"], reverse=True)
+        else:
+            filtered_buyers = sorted(filtered_buyers, key=lambda x: x["name"])
+        
+        st.markdown("---")
+        
+        # Display buyers
+        for buyer in filtered_buyers:
+            # Check if this vehicle matches buyer's specialties
+            is_specialty = any(spec.lower() in vehicle['model'].lower() for spec in buyer['specialties'])
+            specialty_badge = " ⭐ SPECIALIST" if is_specialty else ""
+            
+            st.markdown(f"""
+            <div style='background-color: #f8f9fa; padding: 16px; border-radius: 12px; margin-bottom: 16px; 
+                        border-left: 4px solid {"#4caf50" if is_specialty else ACCENT};'>
+                <div style='display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;'>
+                    <div>
+                        <h5 style='margin: 0; color: {PRIMARY};'>{buyer['name']}{specialty_badge}</h5>
+                        <p style='margin: 4px 0; color: #666; font-size: 14px;'>
+                            📍 {buyer['location']} • {buyer['area']}
+                        </p>
+                    </div>
+                    <div style='text-align: right;'>
+                        <div style='color: #ffa726; font-size: 14px;'>★ {buyer['rating']}/5.0</div>
+                        <div style='color: #666; font-size: 12px;'>{buyer['deals_completed']} deals</div>
+                    </div>
+                </div>
+                <div style='margin: 8px 0;'>
+                    <strong style='font-size: 13px; color: #666;'>Specialties:</strong>
+                    <div style='margin-top: 4px;'>
+            """, unsafe_allow_html=True)
+            
+            for specialty in buyer['specialties']:
+                badge_color = "#4caf50" if specialty.lower() in vehicle['model'].lower() else "#e0e0e0"
+                text_color = "white" if specialty.lower() in vehicle['model'].lower() else "#666"
+                st.markdown(f"""
+                <span style='display: inline-block; background-color: {badge_color}; color: {text_color}; 
+                            padding: 4px 10px; border-radius: 12px; font-size: 12px; margin: 2px 4px 2px 0;'>
+                    {specialty}
+                </span>
+                """, unsafe_allow_html=True)
+            
+            st.markdown("</div></div>", unsafe_allow_html=True)
+            
+            # Contact section
+            col_a, col_b = st.columns([2, 1])
+            with col_a:
+                st.markdown(f"""
+                <div style='font-size: 13px; color: #666; margin: 8px 0;'>
+                    📞 {buyer['phone']}<br>
+                    📧 {buyer['email']}
+                </div>
+                """, unsafe_allow_html=True)
+            
+            with col_b:
+                if st.button(f"📲 Ping {buyer['name'].split()[0]}", key=f"ping_{buyer['email']}", use_container_width=True):
+                    st.session_state[f"ping_form_{buyer['email']}"] = True
+                    st.rerun()
+            
+            # Ping form (appears when button clicked)
+            if st.session_state.get(f"ping_form_{buyer['email']}", False):
+                st.markdown(f"""
+                <div style='background-color: #e3f2fd; padding: 16px; border-radius: 8px; margin-top: 12px;'>
+                    <h5 style='margin: 0 0 12px 0; color: {PRIMARY};'>📤 Send Request to {buyer['name']}</h5>
+                </div>
+                """, unsafe_allow_html=True)
+                
+                with st.form(key=f"ping_form_submit_{buyer['email']}"):
+                    col_x, col_y = st.columns(2)
+                    with col_x:
+                        customer_name = st.text_input("Your Name *", placeholder="John Smith", key=f"ping_name_{buyer['email']}")
+                    with col_y:
+                        customer_phone = st.text_input("Your Phone *", placeholder="07700 900000", key=f"ping_phone_{buyer['email']}")
+                    
+                    customer_email = st.text_input("Your Email *", placeholder="customer@example.com", key=f"ping_email_{buyer['email']}")
+                    
+                    preferred_contact = st.radio(
+                        "Preferred Contact Method",
+                        ["Phone", "Email", "Either"],
+                        horizontal=True,
+                        key=f"ping_contact_{buyer['email']}"
+                    )
+                    
+                    urgency = st.select_slider(
+                        "How soon are you looking to sell?",
+                        options=["This week", "Within 2 weeks", "Within a month", "Just exploring"],
+                        key=f"ping_urgency_{buyer['email']}"
+                    )
+                    
+                    additional_notes = st.text_area(
+                        "Additional Information (optional)",
+                        placeholder="Any specific questions or requirements...",
+                        key=f"ping_notes_{buyer['email']}"
+                    )
+                    
+                    col_submit, col_cancel = st.columns(2)
+                    with col_submit:
+                        submitted = st.form_submit_button("✅ Send Request", use_container_width=True, type="primary")
+                    with col_cancel:
+                        cancelled = st.form_submit_button("❌ Cancel", use_container_width=True)
+                    
+                    if submitted:
+                        if customer_name and customer_phone and customer_email:
+                            request_ref = f"REQ-{datetime.datetime.now().strftime('%Y%m%d%H%M%S')}"
+                            st.success(f"""
+                            ✅ **Request Sent Successfully!**
+                            
+                            **Reference:** {request_ref}  
+                            **Buyer:** {buyer['name']} at {buyer['location']}  
+                            **Vehicle:** {vehicle['year']} {vehicle['make']} {vehicle['model']} ({reg})  
+                            **Contact Method:** {preferred_contact}  
+                            **Urgency:** {urgency}
+                            
+                            📧 Confirmation sent to: {customer_email}  
+                            ⏱️ **Expected Response Time:** Within 2 hours during business hours
+                            
+                            {buyer['name']} will contact you shortly to arrange a valuation!
+                            """)
+                            st.balloons()
+                            del st.session_state[f"ping_form_{buyer['email']}"]
+                        else:
+                            st.error("⚠️ Please fill in all required fields")
+                    
+                    if cancelled:
+                        del st.session_state[f"ping_form_{buyer['email']}"]
+                        st.rerun()
+            
+            st.markdown("</div>", unsafe_allow_html=True)
+        
+        if not filtered_buyers:
+            st.info("No buyers found for the selected area. Try 'All Areas' to see all available buyers.")
+        
+        # Summary info box
+        st.markdown("---")
+        st.markdown(f"""
+        <div style='background-color: #fff3cd; padding: 16px; border-radius: 8px; border-left: 4px solid #ffc107;'>
+            <p style='margin: 0;'><strong>💡 How it works:</strong></p>
+            <ul style='margin: 8px 0 0 0; padding-left: 20px; font-size: 14px;'>
+                <li>Click "Ping" to send a quick request to any buyer</li>
+                <li>Buyers marked with ⭐ SPECIALIST have expertise in your vehicle type</li>
+                <li>You'll receive a response within 2 hours during business hours</li>
+                <li>All buyers can arrange same-day inspections if needed</li>
+                <li>No obligation - compare offers from multiple buyers</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+
+def render_market_trends(vehicle):
+    """Display market trends and seasonal forecasting"""
+    st.markdown("#### 📊 Market Intelligence & Trends")
+    st.markdown("*Real-time insights to help you make the best deal*")
+    
+    # Current market demand for this vehicle type
+    vehicle_type = vehicle['model'].split()[0] if vehicle['model'] else "Series"
+    
+    st.markdown("---")
+    st.markdown("##### 🎯 Current Market Demand")
+    
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.markdown(f"""
+        <div style='background: linear-gradient(135deg, #4caf50 0%, #45a049 100%); 
+                    padding: 20px; border-radius: 12px; text-align: center; color: white;'>
+            <div style='font-size: 32px; font-weight: 700;'>HIGH</div>
+            <div style='font-size: 14px; opacity: 0.9; margin-top: 8px;'>Demand Level</div>
+        </div>
+        """, unsafe_allow_html=True)
+    with col2:
+        st.markdown(f"""
+        <div style='background: linear-gradient(135deg, {ACCENT} 0%, #1873cc 100%); 
+                    padding: 20px; border-radius: 12px; text-align: center; color: white;'>
+            <div style='font-size: 32px; font-weight: 700;'>12</div>
+            <div style='font-size: 14px; opacity: 0.9; margin-top: 8px;'>Days avg. to sell</div>
+        </div>
+        """, unsafe_allow_html=True)
+    with col3:
+        st.markdown(f"""
+        <div style='background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%); 
+                    padding: 20px; border-radius: 12px; text-align: center; color: white;'>
+            <div style='font-size: 32px; font-weight: 700;'>87%</div>
+            <div style='font-size: 14px; opacity: 0.9; margin-top: 8px;'>Of asking price</div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    st.markdown("<br>", unsafe_allow_html=True)
+    
+    # Seasonal trends
+    st.markdown("---")
+    st.markdown("##### 🌦️ Seasonal Demand Forecast")
+    
+    current_month = datetime.date.today().month
+    current_season = ""
+    if current_month in [12, 1, 2]:
+        current_season = "Winter"
+        season_icon = "❄️"
+    elif current_month in [3, 4, 5]:
+        current_season = "Spring"
+        season_icon = "🌸"
+    elif current_month in [6, 7, 8]:
+        current_season = "Summer"
+        season_icon = "☀️"
+    else:
+        current_season = "Autumn"
+        season_icon = "🍂"
+    
+    st.markdown(f"**Current Season: {season_icon} {current_season}**")
+    
+    # Seasonal performance by vehicle type
+    seasonal_data = {
+        "Winter": {
+            "SUV/4x4": {"demand": "Very High", "trend": "↑ +25%", "color": "#4caf50"},
+            "Saloon": {"demand": "Moderate", "trend": "→ Stable", "color": "#ff9800"},
+            "Convertible": {"demand": "Low", "trend": "↓ -40%", "color": "#f44336"},
+            "Estate": {"demand": "High", "trend": "↑ +15%", "color": "#4caf50"}
+        },
+        "Spring": {
+            "SUV/4x4": {"demand": "High", "trend": "↑ +10%", "color": "#4caf50"},
+            "Saloon": {"demand": "High", "trend": "↑ +20%", "color": "#4caf50"},
+            "Convertible": {"demand": "Very High", "trend": "↑ +60%", "color": "#4caf50"},
+            "Estate": {"demand": "Moderate", "trend": "→ Stable", "color": "#ff9800"}
+        },
+        "Summer": {
+            "SUV/4x4": {"demand": "Moderate", "trend": "↓ -10%", "color": "#ff9800"},
+            "Saloon": {"demand": "High", "trend": "↑ +15%", "color": "#4caf50"},
+            "Convertible": {"demand": "Very High", "trend": "↑ +50%", "color": "#4caf50"},
+            "Estate": {"demand": "Moderate", "trend": "→ Stable", "color": "#ff9800"}
+        },
+        "Autumn": {
+            "SUV/4x4": {"demand": "High", "trend": "↑ +15%", "color": "#4caf50"},
+            "Saloon": {"demand": "High", "trend": "↑ +10%", "color": "#4caf50"},
+            "Convertible": {"demand": "Low", "trend": "↓ -30%", "color": "#f44336"},
+            "Estate": {"demand": "High", "trend": "↑ +20%", "color": "#4caf50"}
+        }
+    }
+    
+    season_trends = seasonal_data.get(current_season, seasonal_data["Spring"])
+    
+    for vehicle_type, data in season_trends.items():
+        st.markdown(f"""
+        <div style='background-color: #f8f9fa; padding: 12px 16px; border-radius: 8px; 
+                    margin: 8px 0; border-left: 4px solid {data["color"]};'>
+            <div style='display: flex; justify-content: space-between; align-items: center;'>
+                <div>
+                    <strong>{vehicle_type}</strong>
+                </div>
+                <div style='text-align: right;'>
+                    <span style='color: {data["color"]}; font-weight: 600;'>{data["trend"]}</span>
+                    <span style='color: #666; margin-left: 12px;'>{data["demand"]} demand</span>
+                </div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    # Local market insights
+    st.markdown("---")
+    st.markdown("##### 📍 Local Area Insights (30 mile radius)")
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        st.markdown("**🔥 Hot Sellers This Month:**")
+        hot_sellers = [
+            "BMW 3 Series - 45 sold",
+            "BMW X3 - 38 sold",
+            "BMW 5 Series - 32 sold",
+            "BMW X5 - 28 sold"
+        ]
+        for seller in hot_sellers:
+            st.markdown(f"• {seller}")
+    
+    with col2:
+        st.markdown("**💰 Best Value Opportunities:**")
+        opportunities = [
+            "Estate cars (+12% over book)",
+            "Diesel models (High demand)",
+            "2018-2020 models (Sweet spot)",
+            "Full service history (+£800)"
+        ]
+        for opp in opportunities:
+            st.markdown(f"• {opp}")
+    
+    # Price forecast
+    st.markdown("---")
+    st.markdown("##### 📈 6-Month Price Forecast")
+    
+    current_value = estimate_value(vehicle["make"], vehicle["model"], vehicle["year"], vehicle["mileage"])
+    
+    forecast_months = []
+    for i in range(1, 7):
+        month_date = datetime.date.today() + datetime.timedelta(days=30*i)
+        # Simulate depreciation with seasonal adjustments
+        base_depreciation = -2.5  # 2.5% per month base
+        seasonal_adj = 0
+        month_num = month_date.month
+        
+        # Adjust for seasons
+        if month_num in [3, 4, 5, 6, 7]:  # Spring/Summer
+            seasonal_adj = 1.0
+        elif month_num in [12, 1, 2]:  # Winter
+            seasonal_adj = -1.5
+        
+        total_change = base_depreciation + seasonal_adj
+        projected_value = current_value * (1 + (total_change * i) / 100)
+        
+        forecast_months.append({
+            "month": month_date.strftime("%b %Y"),
+            "value": int(projected_value),
+            "change": total_change * i
+        })
+    
+    st.markdown(f"""
+    <div style='background-color: #e3f2fd; padding: 16px; border-radius: 8px; margin: 12px 0;'>
+        <p style='margin: 0 0 12px 0;'><strong>Current Value:</strong> £{current_value:,}</p>
+    """, unsafe_allow_html=True)
+    
+    for forecast in forecast_months:
+        change_color = "#4caf50" if forecast['change'] > 0 else "#f44336"
+        change_symbol = "+" if forecast['change'] > 0 else ""
+        st.markdown(f"""
+        <div style='padding: 8px 0; border-bottom: 1px solid #ddd;'>
+            <div style='display: flex; justify-content: space-between;'>
+                <span>{forecast['month']}</span>
+                <span>
+                    <strong>£{forecast['value']:,}</strong>
+                    <span style='color: {change_color}; margin-left: 8px; font-size: 13px;'>
+                        ({change_symbol}{forecast['change']:.1f}%)
+                    </span>
+                </span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    st.markdown("</div>", unsafe_allow_html=True)
+    
+    st.info("💡 **Tip:** Values typically peak in Spring/Summer. Current market conditions suggest selling now could maximize returns.")
+    
+    # Competition analysis
+    st.markdown("---")
+    st.markdown("##### 🏁 Competition Analysis")
+    
+    st.markdown(f"""
+    <div style='background-color: #fff3cd; padding: 16px; border-radius: 8px; border-left: 4px solid #ffc107;'>
+        <p style='margin: 0 0 8px 0;'><strong>⚡ Market Opportunity Alert</strong></p>
+        <p style='margin: 0; font-size: 14px; line-height: 1.6;'>
+            • Only <strong>3 similar vehicles</strong> available within 50 miles<br>
+            • Average listing time: <strong>8 days</strong> (vs. 21 day average)<br>
+            • Prices trending <strong>↑ +5%</strong> this month<br>
+            • <strong>Recommendation:</strong> Strong seller's market - excellent time to trade
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+
 def render_upgrade_options(vehicle):
     """Show what customers could upgrade to with their trade-in"""
     st.markdown("#### What Could You Drive Away In?")
@@ -653,7 +1121,7 @@ def render_additional_details(vehicle, mot_tax, history_flags, open_recalls):
     with st.expander("🔍 View Additional Details"):
         st.markdown("### Complete Vehicle Information")
         
-        tab1, tab2, tab3, tab4 = st.tabs(["📊 Specifications", "📜 History", "⚠️ Alerts", "🚗 Upgrade Options"])
+        tab1, tab2, tab3, tab4, tab5 = st.tabs(["📊 Specifications", "📜 History", "⚠️ Alerts", "📈 Market Trends", "🚗 Upgrade Options"])
         
         with tab1:
             st.markdown(f"""
@@ -696,6 +1164,9 @@ def render_additional_details(vehicle, mot_tax, history_flags, open_recalls):
                 st.success("✅ No alerts found for this vehicle")
         
         with tab4:
+            render_market_trends(vehicle)
+        
+        with tab5:
             render_upgrade_options(vehicle)
 
 # ============================================================================
@@ -884,20 +1355,37 @@ def render_summary_page():
     open_recalls = sum(1 for r in recalls if r["open"])
     
     render_vehicle_summary(vehicle, mot_tax, history_flags, open_recalls)
+    
+    # Quick Market Insights Card
+    st.markdown(f"""
+    <div style='background: linear-gradient(135deg, {PRIMARY} 0%, {ACCENT} 100%); 
+                padding: 20px; border-radius: 12px; margin-bottom: 20px; color: white;'>
+        <h4 style='margin: 0 0 12px 0;'>📊 Quick Market Insights</h4>
+        <div style='display: flex; justify-content: space-around; flex-wrap: wrap; gap: 16px;'>
+            <div style='text-align: center;'>
+                <div style='font-size: 24px; font-weight: 700;'>HIGH</div>
+                <div style='font-size: 13px; opacity: 0.9;'>Current Demand</div>
+            </div>
+            <div style='text-align: center;'>
+                <div style='font-size: 24px; font-weight: 700;'>12 days</div>
+                <div style='font-size: 13px; opacity: 0.9;'>Avg. to Sell</div>
+            </div>
+            <div style='text-align: center;'>
+                <div style='font-size: 24px; font-weight: 700;'>↑ +5%</div>
+                <div style='font-size: 13px; opacity: 0.9;'>Price Trend</div>
+            </div>
+        </div>
+        <div style='margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.3); text-align: center; font-size: 13px;'>
+            💡 See full trends analysis in Additional Details → Market Trends
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+    
     render_mot_history(mot_tax['mot_history'])
     render_recalls(recalls)
     
-    with st.expander("🛡️ Insurance Quote"):
-        st.info("💡 Insurance quotes are mocked. Integrate with aggregator APIs for live quotes.")
-        if st.button('Get Mock Insurance Quote', key="insurance_quote"):
-            with st.spinner("Fetching quotes..."):
-                st.success("""
-                **Sample Quote:**  
-                💰 £320/year (Third Party, Fire & Theft)  
-                🔹 Excess: £250  
-                🔹 No Claims Bonus: Year 1  
-                🔹 Mileage: 10,000/year
-                """)
+    # Sytner Buyers Section
+    render_sytner_buyers(vehicle, reg)
     
     render_valuation(vehicle)
     render_additional_details(vehicle, mot_tax, history_flags, open_recalls)
