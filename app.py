@@ -254,13 +254,38 @@ def apply_custom_css():
     
     /* Better input styling */
     .stTextInput input {{
-        font-size: 16px;
-        padding: 12px;
+        font-size: 28px;
+        padding: 16px 20px;
+        font-weight: 700;
+        text-align: center;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        background-color: #FFC600;
+        color: #000000;
+        border: 3px solid #000000;
+        border-radius: 8px;
+        font-family: 'Charles Wright', Arial, sans-serif;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        max-width: 400px;
+        margin: 0 auto;
     }}
     
     .stTextInput input::placeholder {{
-        color: #888 !important;
-        opacity: 1;
+        color: #666 !important;
+        opacity: 0.6;
+        letter-spacing: 2px;
+        font-size: 20px;
+        font-weight: 600;
+    }}
+    
+    .stTextInput > div {{
+        display: flex;
+        justify-content: center;
+    }}
+    
+    .stTextInput > div > div {{
+        max-width: 400px;
+        width: 100%;
     }}
     </style>
     """, unsafe_allow_html=True)
@@ -1303,30 +1328,40 @@ def render_input_page():
     st.markdown("<br>", unsafe_allow_html=True)
 
     if "Enter Registration" in option:
-        manual_reg = st.text_input(
-            "Enter registration / VIN",
-            placeholder="e.g. KT68XYZ or WBA8BFAKEVIN12345",
-            help="Enter a UK registration or VIN number",
-            label_visibility="collapsed"
-        )
+        # Number plate style input
+        st.markdown("""
+        <div style='text-align: center; margin-bottom: 12px;'>
+            <p style='font-size: 14px; color: #666; margin: 0;'>Enter registration number</p>
+        </div>
+        """, unsafe_allow_html=True)
         
-        st.markdown("<div style='height: 8px;'></div>", unsafe_allow_html=True)
+        col_spacer1, col_input, col_spacer2 = st.columns([1, 1, 1])
+        with col_input:
+            manual_reg = st.text_input(
+                "Enter registration",
+                placeholder="AB12 CDE",
+                help="Enter a UK registration number",
+                label_visibility="collapsed",
+                max_chars=15
+            )
         
-        col1, col2, col3 = st.columns([1, 2, 1])
+        st.markdown("<div style='height: 16px;'></div>", unsafe_allow_html=True)
+        
+        col1, col2, col3 = st.columns([1, 1.5, 1])
         with col2:
-            if st.button("Look Up Vehicle", disabled=not manual_reg, use_container_width=True, type="primary"):
+            if st.button("🔍 Look Up Vehicle", disabled=not manual_reg, use_container_width=True, type="primary"):
                 if validate_registration(manual_reg):
                     st.session_state.reg = manual_reg.strip().upper().replace(" ", "")
                     st.session_state.image = None
                     st.session_state.show_summary = True
                     st.rerun()
                 else:
-                    st.error("Please enter a valid registration (minimum 5 characters)")
+                    st.error("❌ Please enter a valid registration")
         
-        # Quick examples - more prominent
+        # Quick examples
         st.markdown("""
-        <div style='text-align: center; margin-top: 20px;'>
-            <p style='color: #999; font-size: 14px;'><strong>Try these examples:</strong> KT68XYZ • AB12CDE • WBA8B12345</p>
+        <div style='text-align: center; margin-top: 24px;'>
+            <p style='color: #999; font-size: 13px;'>💡 <strong>Try:</strong> KT68XYZ • AB12CDE • BD51SMR</p>
         </div>
         """, unsafe_allow_html=True)
     
