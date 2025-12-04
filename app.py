@@ -723,8 +723,6 @@ def get_sytner_buyers():
 
 def render_sytner_buyers(vehicle, reg):
     """Render location-based buyer assignment with GPS auto-detection"""
-    st.markdown(f"<h4 style='color: {PRIMARY}; margin-top: 0;'>🎯 Contact Your Local Buyer</h4>", unsafe_allow_html=True)
-    st.markdown("Connect the customer with our expert buyers for fast valuation (2hr response)")
     
     buyers = get_sytner_buyers()
     
@@ -1659,3 +1657,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
