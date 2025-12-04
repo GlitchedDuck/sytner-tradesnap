@@ -1273,6 +1273,133 @@ def render_valuation_tab(vehicle):
             <div style='font-size: 13px; color: #666; margin-top: 4px;'>Excellent Condition</div>
         </div>
         """, unsafe_allow_html=True)
+    
+    # Upgrade options section
+    st.markdown("<br><br>", unsafe_allow_html=True)
+    st.markdown("---")
+    st.markdown("### 🚗 What Could You Drive Away In?")
+    st.markdown("*See what your trade-in could get you into with Sytner finance options*")
+    
+    trade_in_value = mid_value  # Use good condition value
+    
+    # Available upgrade vehicles with realistic BMW pricing
+    upgrade_options = [
+        {
+            "model": "BMW 3 Series 320d M Sport",
+            "year": 2023,
+            "price": 38000,
+            "image_icon": "🚘"
+        },
+        {
+            "model": "BMW X3 xDrive20d M Sport",
+            "year": 2023,
+            "price": 48000,
+            "image_icon": "🚙"
+        },
+        {
+            "model": "BMW 5 Series 530e M Sport",
+            "year": 2024,
+            "price": 52000,
+            "image_icon": "🚗"
+        },
+        {
+            "model": "BMW X5 xDrive40i M Sport",
+            "year": 2024,
+            "price": 68000,
+            "image_icon": "🚙"
+        }
+    ]
+    
+    for car in upgrade_options:
+        # Calculate values
+        remaining_amount = car['price'] - trade_in_value
+        trade_in_percentage = int((trade_in_value / car['price']) * 100)
+        
+        # Typical finance: 10% deposit, 4.9% APR, 48 months
+        deposit = int(car['price'] * 0.10)
+        amount_to_finance = car['price'] - deposit - trade_in_value
+        
+        # Monthly payment calculation (simplified)
+        monthly_rate = 0.049 / 12
+        num_payments = 48
+        if amount_to_finance > 0:
+            monthly_payment = int((amount_to_finance * monthly_rate * (1 + monthly_rate)**num_payments) / 
+                                ((1 + monthly_rate)**num_payments - 1))
+        else:
+            monthly_payment = 0
+        
+        # Color coding based on affordability
+        if trade_in_percentage >= 40:
+            border_color = "#4caf50"  # Green - great deal
+        elif trade_in_percentage >= 25:
+            border_color = ACCENT  # Blue - good deal
+        else:
+            border_color = "#ff9800"  # Orange - stretch
+        
+        st.markdown(f"""
+        <div style='background-color: #f8f9fa; padding: 20px; border-radius: 12px; margin: 16px 0; 
+                    border-left: 6px solid {border_color}; box-shadow: 0 2px 4px rgba(0,0,0,0.08);'>
+            <div style='display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;'>
+                <div>
+                    <div style='font-size: 20px; font-weight: 700; color: {PRIMARY}; margin-bottom: 4px;'>
+                        {car['image_icon']} {car['model']}
+                    </div>
+                    <div style='font-size: 14px; color: #666;'>{car['year']} Model • £{car['price']:,}</div>
+                </div>
+                <div style='text-align: right;'>
+                    <div style='background-color: {border_color}; color: white; padding: 6px 12px; 
+                                border-radius: 20px; font-weight: 700; font-size: 14px;'>
+                        {trade_in_percentage}% Covered
+                    </div>
+                </div>
+            </div>
+            
+            <div style='background-color: white; padding: 16px; border-radius: 8px; margin-top: 12px;'>
+                <div style='display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;'>
+                    <div style='text-align: center;'>
+                        <div style='font-size: 11px; color: #999; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;'>
+                            Your Trade-In Covers
+                        </div>
+                        <div style='font-size: 22px; font-weight: 700; color: #4caf50;'>
+                            £{trade_in_value:,}
+                        </div>
+                    </div>
+                    <div style='text-align: center; border-left: 1px solid #e0e0e0; border-right: 1px solid #e0e0e0;'>
+                        <div style='font-size: 11px; color: #999; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;'>
+                            Additional Needed
+                        </div>
+                        <div style='font-size: 22px; font-weight: 700; color: {PRIMARY};'>
+                            £{remaining_amount:,}
+                        </div>
+                    </div>
+                    <div style='text-align: center;'>
+                        <div style='font-size: 11px; color: #999; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;'>
+                            Est. Monthly*
+                        </div>
+                        <div style='font-size: 22px; font-weight: 700; color: {ACCENT};'>
+                            £{monthly_payment}/mo
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style='margin-top: 12px; padding-top: 12px; border-top: 1px solid #e0e0e0;'>
+                <div style='font-size: 12px; color: #666; line-height: 1.5;'>
+                    💡 With £{deposit:,} deposit + your trade-in • 48-month term @ 4.9% APR (indicative)
+                </div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div style='background-color: #fff3cd; padding: 16px; border-radius: 8px; border-left: 4px solid #ffc107; margin-top: 24px;'>
+        <p style='margin: 0; font-size: 13px; color: #666;'>
+            <strong>*Finance Example:</strong> Monthly payments are indicative based on typical Sytner finance terms. 
+            Actual rates depend on credit approval, deposit amount, and term length. Speak to our sales team for a personalized quote.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+
 
 def render_deal_accelerator_tab(vehicle):
     """Render deal accelerator bonuses in tab"""
