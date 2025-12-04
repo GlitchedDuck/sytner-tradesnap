@@ -1137,41 +1137,41 @@ def render_summary_page():
     """, unsafe_allow_html=True)
     
     # Main tabbed interface for detailed information
-    tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
-        "📋 MOT History",
-        "⚠️ Recalls",
+    tab1, tab2, tab3, tab4, tab5 = st.tabs([
+        "📋 MOT & Recalls",
         "👤 Contact Buyer",
-        "💰 Valuation",
-        "🚀 Deal Accelerator",
-        "🏆 Network Offers",
-        "📈 Market Trends"
+        "💰 Trade-In Value",
+        "🏆 Best Offers",
+        "📈 Market Intel"
     ])
     
     with tab1:
+        st.markdown("### 📋 MOT Test History")
         render_mot_history_tab(mot_tax['mot_history'])
-    
-    with tab2:
+        st.markdown("<br>", unsafe_allow_html=True)
+        st.markdown("---")
         render_recalls_tab(recalls, vehicle, reg)
     
-    with tab3:
+    with tab2:
         render_buyer_contact_tab(vehicle, reg)
     
-    with tab4:
+    with tab3:
         render_valuation_tab(vehicle)
-    
-    with tab5:
+        st.markdown("<br>", unsafe_allow_html=True)
+        st.markdown("---")
+        st.markdown("### 🚀 Deal Accelerator Bonuses")
         render_deal_accelerator_tab(vehicle)
     
-    with tab6:
+    with tab4:
         render_network_offers_tab(vehicle)
     
-    with tab7:
+    with tab5:
         render_market_trends_tab(vehicle)
+
 
 # New tab rendering functions
 def render_mot_history_tab(mot_history):
     """Render MOT history in tab"""
-    st.markdown("### 📋 MOT Test History")
     if mot_history:
         for record in mot_history:
             result_icon = "✅" if record['result'] == "Pass" else "⚠️"
@@ -1276,7 +1276,6 @@ def render_valuation_tab(vehicle):
 
 def render_deal_accelerator_tab(vehicle):
     """Render deal accelerator bonuses in tab"""
-    st.markdown("### 🚀 Deal Accelerator Bonuses")
     st.markdown("*Maximize your offer with these available bonuses*")
     
     col1, col2 = st.columns(2)
