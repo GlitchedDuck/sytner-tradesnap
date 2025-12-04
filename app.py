@@ -568,6 +568,270 @@ def render_input_page():
     </div>
     """, unsafe_allow_html=True)
 
+def get_sytner_buyers():
+    """Return list of Sytner buyers with their locations and contact info"""
+    return [
+        {
+            "name": "Sarah Mitchell",
+            "location": "Sytner BMW Cardiff",
+            "area": "South Wales",
+            "phone": "029 2046 8000",
+            "email": "sarah.mitchell@sytner.co.uk",
+            "specialties": ["3 Series", "5 Series", "Estate Cars"],
+            "rating": 4.9,
+            "deals_completed": 247
+        },
+        {
+            "name": "James Thompson",
+            "location": "Sytner BMW Birmingham",
+            "area": "West Midlands",
+            "phone": "0121 456 7890",
+            "email": "james.thompson@sytner.co.uk",
+            "specialties": ["X Series", "SUV", "4x4"],
+            "rating": 4.8,
+            "deals_completed": 312
+        },
+        {
+            "name": "Emma Richardson",
+            "location": "Sytner BMW Leicester",
+            "area": "East Midlands",
+            "phone": "0116 234 5678",
+            "email": "emma.richardson@sytner.co.uk",
+            "specialties": ["M Sport", "Performance", "Diesel"],
+            "rating": 4.9,
+            "deals_completed": 289
+        },
+        {
+            "name": "David Chen",
+            "location": "Sytner BMW Nottingham",
+            "area": "East Midlands",
+            "phone": "0115 789 0123",
+            "email": "david.chen@sytner.co.uk",
+            "specialties": ["3 Series", "Saloon", "Hybrid"],
+            "rating": 4.7,
+            "deals_completed": 198
+        },
+        {
+            "name": "Sophie Williams",
+            "location": "Sytner BMW Coventry",
+            "area": "West Midlands",
+            "phone": "024 7655 4321",
+            "email": "sophie.williams@sytner.co.uk",
+            "specialties": ["All Models", "Quick Deals", "Part Exchange"],
+            "rating": 4.9,
+            "deals_completed": 356
+        },
+        {
+            "name": "Michael O'Brien",
+            "location": "Sytner BMW Sheffield",
+            "area": "South Yorkshire",
+            "phone": "0114 567 8901",
+            "email": "michael.obrien@sytner.co.uk",
+            "specialties": ["X Series", "High Mileage", "Commercial"],
+            "rating": 4.8,
+            "deals_completed": 276
+        },
+        {
+            "name": "Lucy Anderson",
+            "location": "Sytner BMW Solihull",
+            "area": "West Midlands",
+            "phone": "0121 789 4561",
+            "email": "lucy.anderson@sytner.co.uk",
+            "specialties": ["Premium Models", "Low Mileage", "Executive"],
+            "rating": 4.9,
+            "deals_completed": 423
+        },
+        {
+            "name": "Robert Taylor",
+            "location": "Sytner BMW Newport",
+            "area": "South Wales",
+            "phone": "01633 456 789",
+            "email": "robert.taylor@sytner.co.uk",
+            "specialties": ["Diesel", "Estate", "Family Cars"],
+            "rating": 4.7,
+            "deals_completed": 234
+        }
+    ]
+
+def render_sytner_buyers(vehicle, reg):
+    """Render Sytner Buyers section with ping functionality"""
+    with st.expander("👤 Contact Sytner Vehicle Buyer", expanded=False):
+        st.markdown(f"<h4 style='color: {PRIMARY}; margin-top: 0;'>🎯 Find Your Local Sytner Buyer</h4>", unsafe_allow_html=True)
+        st.markdown("Our expert buyers are ready to make you an offer within minutes")
+        
+        buyers = get_sytner_buyers()
+        
+        # Location selector
+        st.markdown("##### Select Your Preferred Location")
+        col1, col2 = st.columns([2, 1])
+        with col1:
+            location_filter = st.selectbox(
+                "Filter by area",
+                ["All Areas", "West Midlands", "East Midlands", "South Wales", "South Yorkshire"],
+                key="buyer_location_filter"
+            )
+        with col2:
+            sort_by = st.selectbox(
+                "Sort by",
+                ["Rating", "Deals Completed", "Name"],
+                key="buyer_sort"
+            )
+        
+        # Filter and sort buyers
+        filtered_buyers = buyers
+        if location_filter != "All Areas":
+            filtered_buyers = [b for b in buyers if b["area"] == location_filter]
+        
+        if sort_by == "Rating":
+            filtered_buyers = sorted(filtered_buyers, key=lambda x: x["rating"], reverse=True)
+        elif sort_by == "Deals Completed":
+            filtered_buyers = sorted(filtered_buyers, key=lambda x: x["deals_completed"], reverse=True)
+        else:
+            filtered_buyers = sorted(filtered_buyers, key=lambda x: x["name"])
+        
+        st.markdown("---")
+        
+        # Display buyers
+        for buyer in filtered_buyers:
+            # Check if this vehicle matches buyer's specialties
+            is_specialty = any(spec.lower() in vehicle['model'].lower() for spec in buyer['specialties'])
+            specialty_badge = " ⭐ SPECIALIST" if is_specialty else ""
+            
+            st.markdown(f"""
+            <div style='background-color: #f8f9fa; padding: 16px; border-radius: 12px; margin-bottom: 16px; 
+                        border-left: 4px solid {"#4caf50" if is_specialty else ACCENT};'>
+                <div style='display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;'>
+                    <div>
+                        <h5 style='margin: 0; color: {PRIMARY};'>{buyer['name']}{specialty_badge}</h5>
+                        <p style='margin: 4px 0; color: #666; font-size: 14px;'>
+                            📍 {buyer['location']} • {buyer['area']}
+                        </p>
+                    </div>
+                    <div style='text-align: right;'>
+                        <div style='color: #ffa726; font-size: 14px;'>★ {buyer['rating']}/5.0</div>
+                        <div style='color: #666; font-size: 12px;'>{buyer['deals_completed']} deals</div>
+                    </div>
+                </div>
+                <div style='margin: 8px 0;'>
+                    <strong style='font-size: 13px; color: #666;'>Specialties:</strong>
+                    <div style='margin-top: 4px;'>
+            """, unsafe_allow_html=True)
+            
+            for specialty in buyer['specialties']:
+                badge_color = "#4caf50" if specialty.lower() in vehicle['model'].lower() else "#e0e0e0"
+                text_color = "white" if specialty.lower() in vehicle['model'].lower() else "#666"
+                st.markdown(f"""
+                <span style='display: inline-block; background-color: {badge_color}; color: {text_color}; 
+                            padding: 4px 10px; border-radius: 12px; font-size: 12px; margin: 2px 4px 2px 0;'>
+                    {specialty}
+                </span>
+                """, unsafe_allow_html=True)
+            
+            st.markdown("</div></div>", unsafe_allow_html=True)
+            
+            # Contact section
+            col_a, col_b = st.columns([2, 1])
+            with col_a:
+                st.markdown(f"""
+                <div style='font-size: 13px; color: #666; margin: 8px 0;'>
+                    📞 {buyer['phone']}<br>
+                    📧 {buyer['email']}
+                </div>
+                """, unsafe_allow_html=True)
+            
+            with col_b:
+                if st.button(f"📲 Ping {buyer['name'].split()[0]}", key=f"ping_{buyer['email']}", use_container_width=True):
+                    st.session_state[f"ping_form_{buyer['email']}"] = True
+                    st.rerun()
+            
+            # Ping form (appears when button clicked)
+            if st.session_state.get(f"ping_form_{buyer['email']}", False):
+                st.markdown(f"""
+                <div style='background-color: #e3f2fd; padding: 16px; border-radius: 8px; margin-top: 12px;'>
+                    <h5 style='margin: 0 0 12px 0; color: {PRIMARY};'>📤 Send Request to {buyer['name']}</h5>
+                </div>
+                """, unsafe_allow_html=True)
+                
+                with st.form(key=f"ping_form_submit_{buyer['email']}"):
+                    col_x, col_y = st.columns(2)
+                    with col_x:
+                        customer_name = st.text_input("Your Name *", placeholder="John Smith", key=f"ping_name_{buyer['email']}")
+                    with col_y:
+                        customer_phone = st.text_input("Your Phone *", placeholder="07700 900000", key=f"ping_phone_{buyer['email']}")
+                    
+                    customer_email = st.text_input("Your Email *", placeholder="customer@example.com", key=f"ping_email_{buyer['email']}")
+                    
+                    preferred_contact = st.radio(
+                        "Preferred Contact Method",
+                        ["Phone", "Email", "Either"],
+                        horizontal=True,
+                        key=f"ping_contact_{buyer['email']}"
+                    )
+                    
+                    urgency = st.select_slider(
+                        "How soon are you looking to sell?",
+                        options=["This week", "Within 2 weeks", "Within a month", "Just exploring"],
+                        key=f"ping_urgency_{buyer['email']}"
+                    )
+                    
+                    additional_notes = st.text_area(
+                        "Additional Information (optional)",
+                        placeholder="Any specific questions or requirements...",
+                        key=f"ping_notes_{buyer['email']}"
+                    )
+                    
+                    col_submit, col_cancel = st.columns(2)
+                    with col_submit:
+                        submitted = st.form_submit_button("✅ Send Request", use_container_width=True, type="primary")
+                    with col_cancel:
+                        cancelled = st.form_submit_button("❌ Cancel", use_container_width=True)
+                    
+                    if submitted:
+                        if customer_name and customer_phone and customer_email:
+                            request_ref = f"REQ-{datetime.datetime.now().strftime('%Y%m%d%H%M%S')}"
+                            st.success(f"""
+                            ✅ **Request Sent Successfully!**
+                            
+                            **Reference:** {request_ref}  
+                            **Buyer:** {buyer['name']} at {buyer['location']}  
+                            **Vehicle:** {vehicle['year']} {vehicle['make']} {vehicle['model']} ({reg})  
+                            **Contact Method:** {preferred_contact}  
+                            **Urgency:** {urgency}
+                            
+                            📧 Confirmation sent to: {customer_email}  
+                            ⏱️ **Expected Response Time:** Within 2 hours during business hours
+                            
+                            {buyer['name']} will contact you shortly to arrange a valuation!
+                            """)
+                            st.balloons()
+                            del st.session_state[f"ping_form_{buyer['email']}"]
+                        else:
+                            st.error("⚠️ Please fill in all required fields")
+                    
+                    if cancelled:
+                        del st.session_state[f"ping_form_{buyer['email']}"]
+                        st.rerun()
+            
+            st.markdown("</div>", unsafe_allow_html=True)
+        
+        if not filtered_buyers:
+            st.info("No buyers found for the selected area. Try 'All Areas' to see all available buyers.")
+        
+        # Summary info box
+        st.markdown("---")
+        st.markdown(f"""
+        <div style='background-color: #fff3cd; padding: 16px; border-radius: 8px; border-left: 4px solid #ffc107;'>
+            <p style='margin: 0;'><strong>💡 How it works:</strong></p>
+            <ul style='margin: 8px 0 0 0; padding-left: 20px; font-size: 14px;'>
+                <li>Click "Ping" to send a quick request to any buyer</li>
+                <li>Buyers marked with ⭐ SPECIALIST have expertise in your vehicle type</li>
+                <li>You'll receive a response within 2 hours during business hours</li>
+                <li>All buyers can arrange same-day inspections if needed</li>
+                <li>No obligation - compare offers from multiple buyers</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+
 def render_summary_page():
     """Render the vehicle summary page with tabbed interface"""
     reg = st.session_state.reg
