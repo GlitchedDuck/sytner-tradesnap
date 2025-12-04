@@ -14,28 +14,28 @@ PAGE_BG = "#e6f0fa"
 PLATE_REGEX = re.compile(r"[A-Z0-9]{5,10}", re.I)
 
 GARAGES = [
-    "Sytner BMW Cardiff - 285-287 Penarth Road, Cardiff",
-    "Sytner BMW Chigwell - Langston Road, Loughton, Essex",
-    "Sytner BMW Coventry - 128 Holyhead Road, Coventry",
-    "Sytner BMW Harold Wood - A12 Colchester Road, Romford, Essex",
-    "Sytner BMW High Wycombe - 575-647 London Road, High Wycombe",
-    "Sytner BMW Leicester - Meridian East, Leicester",
-    "Sytner BMW Luton - 501 Dunstable Road, Luton, Bedfordshire",
-    "Sytner BMW Maidenhead - Bath Road, Maidenhead, Berkshire",
-    "Sytner BMW Newport - Oak Way, The Old Town Dock, Newport",
-    "Sytner BMW Nottingham - Lenton Lane, Nottingham",
-    "Sytner BMW Oldbury - 919 Wolverhampton Road, Oldbury",
-    "Sytner BMW Sheffield - Brightside Way, Sheffield, South Yorkshire",
-    "Sytner BMW Shrewsbury - 70 Battlefield Road, Shrewsbury",
-    "Sytner BMW Solihull - 520 Highlands Road, Shirley, Solihull",
-    "Sytner BMW Stevenage - Arlington Business Park, Gunnels Wood Road",
-    "Sytner BMW Sunningdale - Station Road, Sunningdale, Berkshire",
-    "Sytner BMW Swansea - 375 Carmarthen Road, Cwmrhydyceirw, Swansea",
-    "Sytner BMW Tamworth - Winchester Rd, Tamworth, West Midlands",
-    "Sytner BMW Tring - Cow Roast, Tring, Hertfordshire",
-    "Sytner BMW Warwick - Fusiliers Way, Warwick",
-    "Sytner BMW Wolverhampton - Lever Street, Wolverhampton",
-    "Sytner BMW Worcester - Knightsbridge Park, Wallingford Road, Worcester"
+    "Sytner BMW Cardiff - 285-287 Penarth Road",
+    "Sytner BMW Chigwell - Langston Road, Loughton",
+    "Sytner BMW Coventry - 128 Holyhead Road",
+    "Sytner BMW Harold Wood - A12 Colchester Road",
+    "Sytner BMW High Wycombe - 575-647 London Road",
+    "Sytner BMW Leicester - Meridian East",
+    "Sytner BMW Luton - 501 Dunstable Road",
+    "Sytner BMW Maidenhead - Bath Road",
+    "Sytner BMW Newport - Oak Way",
+    "Sytner BMW Nottingham - Lenton Lane",
+    "Sytner BMW Oldbury - 919 Wolverhampton Road",
+    "Sytner BMW Sheffield - Brightside Way",
+    "Sytner BMW Shrewsbury - 70 Battlefield Road",
+    "Sytner BMW Solihull - 520 Highlands Road",
+    "Sytner BMW Stevenage - Arlington Business Park",
+    "Sytner BMW Sunningdale - Station Road",
+    "Sytner BMW Swansea - 375 Carmarthen Road",
+    "Sytner BMW Tamworth - Winchester Rd",
+    "Sytner BMW Tring - Cow Roast",
+    "Sytner BMW Warwick - Fusiliers Way",
+    "Sytner BMW Wolverhampton - Lever Street",
+    "Sytner BMW Worcester - Knightsbridge Park"
 ]
 
 # GPS coordinates for each garage (for automatic location detection)
@@ -1326,7 +1326,6 @@ def render_recalls_tab(recalls, vehicle, reg):
 def render_buyer_contact_tab(vehicle, reg):
     """Render buyer contact in tab"""
     st.markdown("### 👤 Connect with Sytner Vehicle Buyer")
-    st.markdown("Our expert buyers are ready to make you an offer within 2 hours")
     
     render_sytner_buyers(vehicle, reg)
 
@@ -1657,4 +1656,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
