@@ -569,7 +569,7 @@ def render_input_page():
     """, unsafe_allow_html=True)
 
 def get_sytner_buyers():
-    """Return list of Sytner buyers with their locations and contact info"""
+    """Return list of Sytner buyers with their allocated locations"""
     return [
         {
             "name": "Sarah Mitchell",
@@ -579,7 +579,8 @@ def get_sytner_buyers():
             "email": "sarah.mitchell@sytner.co.uk",
             "specialties": ["3 Series", "5 Series", "Estate Cars"],
             "rating": 4.9,
-            "deals_completed": 247
+            "deals_completed": 247,
+            "covers_garages": ["Sytner BMW Cardiff", "Sytner BMW Swansea", "Sytner BMW Newport"]
         },
         {
             "name": "James Thompson",
@@ -589,7 +590,8 @@ def get_sytner_buyers():
             "email": "james.thompson@sytner.co.uk",
             "specialties": ["X Series", "SUV", "4x4"],
             "rating": 4.8,
-            "deals_completed": 312
+            "deals_completed": 312,
+            "covers_garages": ["Sytner BMW Oldbury", "Sytner BMW Wolverhampton", "Sytner BMW Tamworth"]
         },
         {
             "name": "Emma Richardson",
@@ -599,7 +601,8 @@ def get_sytner_buyers():
             "email": "emma.richardson@sytner.co.uk",
             "specialties": ["M Sport", "Performance", "Diesel"],
             "rating": 4.9,
-            "deals_completed": 289
+            "deals_completed": 289,
+            "covers_garages": ["Sytner BMW Leicester", "Sytner BMW Nottingham", "Sytner BMW Coventry"]
         },
         {
             "name": "David Chen",
@@ -609,7 +612,8 @@ def get_sytner_buyers():
             "email": "david.chen@sytner.co.uk",
             "specialties": ["3 Series", "Saloon", "Hybrid"],
             "rating": 4.7,
-            "deals_completed": 198
+            "deals_completed": 198,
+            "covers_garages": ["Sytner BMW Nottingham", "Sytner BMW Sheffield"]
         },
         {
             "name": "Sophie Williams",
@@ -619,7 +623,8 @@ def get_sytner_buyers():
             "email": "sophie.williams@sytner.co.uk",
             "specialties": ["All Models", "Quick Deals", "Part Exchange"],
             "rating": 4.9,
-            "deals_completed": 356
+            "deals_completed": 356,
+            "covers_garages": ["Sytner BMW Coventry", "Sytner BMW Solihull", "Sytner BMW Warwick"]
         },
         {
             "name": "Michael O'Brien",
@@ -629,7 +634,8 @@ def get_sytner_buyers():
             "email": "michael.obrien@sytner.co.uk",
             "specialties": ["X Series", "High Mileage", "Commercial"],
             "rating": 4.8,
-            "deals_completed": 276
+            "deals_completed": 276,
+            "covers_garages": ["Sytner BMW Sheffield", "Sytner BMW Shrewsbury"]
         },
         {
             "name": "Lucy Anderson",
@@ -639,7 +645,8 @@ def get_sytner_buyers():
             "email": "lucy.anderson@sytner.co.uk",
             "specialties": ["Premium Models", "Low Mileage", "Executive"],
             "rating": 4.9,
-            "deals_completed": 423
+            "deals_completed": 423,
+            "covers_garages": ["Sytner BMW Solihull", "Sytner BMW Worcester"]
         },
         {
             "name": "Robert Taylor",
@@ -649,68 +656,63 @@ def get_sytner_buyers():
             "email": "robert.taylor@sytner.co.uk",
             "specialties": ["Diesel", "Estate", "Family Cars"],
             "rating": 4.7,
-            "deals_completed": 234
+            "deals_completed": 234,
+            "covers_garages": ["Sytner BMW Newport", "Sytner BMW Cardiff"]
         }
     ]
 
 def render_sytner_buyers(vehicle, reg):
-    """Render Sytner Buyers section with ping functionality"""
-    st.markdown(f"<h4 style='color: {PRIMARY}; margin-top: 0;'>🎯 Find Your Local Sytner Buyer</h4>", unsafe_allow_html=True)
-    st.markdown("Our expert buyers are ready to make you an offer within minutes")
+    """Render location-based buyer assignment"""
+    st.markdown(f"<h4 style='color: {PRIMARY}; margin-top: 0;'>🎯 Contact Your Local Buyer</h4>", unsafe_allow_html=True)
+    st.markdown("Select your nearest Sytner location to connect with the allocated vehicle buyer")
     
     buyers = get_sytner_buyers()
     
-    # Location selector
-    st.markdown("##### Select Your Preferred Location")
-    col1, col2 = st.columns([2, 1])
-    with col1:
-        location_filter = st.selectbox(
-            "Filter by area",
-            ["All Areas", "West Midlands", "East Midlands", "South Wales", "South Yorkshire"],
-            key="buyer_location_filter"
-        )
-    with col2:
-        sort_by = st.selectbox(
-            "Sort by",
-            ["Rating", "Deals Completed", "Name"],
-            key="buyer_sort"
-        )
+    # Location selection
+    st.markdown("##### 📍 Select Your Sytner Location")
+    selected_garage = st.selectbox(
+        "Choose your nearest location",
+        GARAGES,
+        key="garage_selector",
+        help="The allocated buyer for this location will be shown below"
+    )
     
-    # Filter and sort buyers
-    filtered_buyers = buyers
-    if location_filter != "All Areas":
-        filtered_buyers = [b for b in buyers if b["area"] == location_filter]
+    # Extract just the location name (e.g., "Sytner BMW Cardiff")
+    garage_name = selected_garage.split(" - ")[0] if " - " in selected_garage else selected_garage
     
-    if sort_by == "Rating":
-        filtered_buyers = sorted(filtered_buyers, key=lambda x: x["rating"], reverse=True)
-    elif sort_by == "Deals Completed":
-        filtered_buyers = sorted(filtered_buyers, key=lambda x: x["deals_completed"], reverse=True)
-    else:
-        filtered_buyers = sorted(filtered_buyers, key=lambda x: x["name"])
+    # Find the buyer allocated to this garage
+    allocated_buyer = None
+    for buyer in buyers:
+        if garage_name in buyer['covers_garages']:
+            allocated_buyer = buyer
+            break
     
-    # Display buyers
-    for buyer in filtered_buyers:
-        # Check if this vehicle matches buyer's specialties
+    if allocated_buyer:
+        buyer = allocated_buyer
         is_specialty = any(spec.lower() in vehicle['model'].lower() for spec in buyer['specialties'])
-        specialty_badge = " ⭐ SPECIALIST" if is_specialty else ""
         
+        st.markdown("<br>", unsafe_allow_html=True)
+        
+        # Show the allocated buyer card
         st.markdown(f"""
-        <div style='background-color: #f8f9fa; padding: 12px 16px; border-radius: 10px; margin-bottom: 12px; 
-                    border-left: 4px solid {"#4caf50" if is_specialty else ACCENT};'>
-            <div style='display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;'>
-                <div>
-                    <div style='margin: 0; color: {PRIMARY}; font-size: 16px; font-weight: 700;'>{buyer['name']}{specialty_badge}</div>
-                    <div style='margin: 2px 0 0 0; color: #666; font-size: 13px;'>
-                        📍 {buyer['location']} • {buyer['area']}
-                    </div>
-                </div>
-                <div style='text-align: right;'>
-                    <div style='color: #ffa726; font-size: 13px;'>★ {buyer['rating']}/5.0</div>
-                    <div style='color: #999; font-size: 11px;'>{buyer['deals_completed']} deals</div>
-                </div>
+        <div style='background: linear-gradient(135deg, {PRIMARY} 0%, {ACCENT} 100%); 
+                    padding: 14px 18px; border-radius: 10px; margin-bottom: 16px; color: white;'>
+            <div style='font-size: 13px; opacity: 0.9; margin-bottom: 6px;'>
+                ✅ <strong>Allocated Buyer for {garage_name}</strong>
             </div>
+            <div style='font-size: 16px; font-weight: 700;'>{buyer['name']}</div>
+            <div style='font-size: 12px; opacity: 0.85; margin-top: 4px;'>
+                📍 Based at {buyer['location']} • ★ {buyer['rating']}/5.0 • {buyer['deals_completed']} deals completed
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Detailed buyer card with specialties
+        st.markdown(f"""
+        <div style='background-color: #f8f9fa; padding: 14px 18px; border-radius: 10px; margin-bottom: 12px; 
+                    border-left: 4px solid {"#4caf50" if is_specialty else ACCENT};'>
             <div style='margin: 6px 0;'>
-                <div style='font-size: 11px; color: #999; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;'>Specialties</div>
+                <div style='font-size: 11px; color: #999; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;'>Specialties</div>
                 <div style='line-height: 1.8;'>
         """, unsafe_allow_html=True)
         
@@ -737,7 +739,7 @@ def render_sytner_buyers(vehicle, reg):
             """, unsafe_allow_html=True)
         
         with col_b:
-            if st.button(f"📲 Ping {buyer['name'].split()[0]}", key=f"ping_{buyer['email']}", use_container_width=True):
+            if st.button(f"📲 Ping {buyer['name'].split()[0]}", key=f"ping_{buyer['email']}", use_container_width=True, type="primary"):
                 st.session_state[f"ping_form_{buyer['email']}"] = True
                 st.rerun()
         
@@ -791,6 +793,7 @@ def render_sytner_buyers(vehicle, reg):
                         
                         **Reference:** {request_ref}  
                         **Buyer:** {buyer['name']} at {buyer['location']}  
+                        **Your Location:** {garage_name}  
                         **Vehicle:** {vehicle['year']} {vehicle['make']} {vehicle['model']} ({reg})  
                         **Contact Method:** {preferred_contact}  
                         **Urgency:** {urgency}
@@ -809,25 +812,21 @@ def render_sytner_buyers(vehicle, reg):
                     del st.session_state[f"ping_form_{buyer['email']}"]
                     st.rerun()
         
-        st.markdown("</div>", unsafe_allow_html=True)
+        # Coverage info
+        st.markdown("---")
+        covered_locations = [g.replace('Sytner BMW ', '') for g in buyer['covers_garages'] if g != garage_name]
+        if covered_locations:
+            st.markdown(f"""
+            <div style='background-color: #e8f5e9; padding: 12px; border-radius: 8px; border-left: 4px solid #4caf50;'>
+                <p style='margin: 0; font-size: 13px;'><strong>📍 {buyer['name']}'s Coverage Area:</strong></p>
+                <p style='margin: 6px 0 0 0; font-size: 12px; color: #666; line-height: 1.6;'>
+                    Also covers: {', '.join(covered_locations)}
+                </p>
+            </div>
+            """, unsafe_allow_html=True)
     
-    if not filtered_buyers:
-        st.info("No buyers found for the selected area. Try 'All Areas' to see all available buyers.")
-    
-    # Summary info box
-    st.markdown("---")
-    st.markdown(f"""
-    <div style='background-color: #fff3cd; padding: 16px; border-radius: 8px; border-left: 4px solid #ffc107;'>
-        <p style='margin: 0;'><strong>💡 How it works:</strong></p>
-        <ul style='margin: 8px 0 0 0; padding-left: 20px; font-size: 14px;'>
-            <li>Click "Ping" to send a quick request to any buyer</li>
-            <li>Buyers marked with ⭐ SPECIALIST have expertise in your vehicle type</li>
-            <li>You'll receive a response within 2 hours during business hours</li>
-            <li>All buyers can arrange same-day inspections if needed</li>
-            <li>No obligation - compare offers from multiple buyers</li>
-        </ul>
-    </div>
-    """, unsafe_allow_html=True)
+    else:
+        st.warning("⚠️ No buyer allocated to this location yet. Please contact Sytner directly.")
 
 def render_market_trends(vehicle):
     """Display market trends and seasonal forecasting"""
