@@ -1353,40 +1353,49 @@ def render_valuation_tab(vehicle):
                     </div>
                 </div>
             </div>
-            
-            <div style='background-color: white; padding: 16px; border-radius: 8px; margin-top: 12px;'>
-                <div style='display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;'>
-                    <div style='text-align: center;'>
-                        <div style='font-size: 11px; color: #999; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;'>
-                            Your Trade-In Covers
-                        </div>
-                        <div style='font-size: 22px; font-weight: 700; color: #4caf50;'>
-                            £{trade_in_value:,}
-                        </div>
-                    </div>
-                    <div style='text-align: center; border-left: 1px solid #e0e0e0; border-right: 1px solid #e0e0e0;'>
-                        <div style='font-size: 11px; color: #999; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;'>
-                            Additional Needed
-                        </div>
-                        <div style='font-size: 22px; font-weight: 700; color: {PRIMARY};'>
-                            £{remaining_amount:,}
-                        </div>
-                    </div>
-                    <div style='text-align: center;'>
-                        <div style='font-size: 11px; color: #999; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;'>
-                            Est. Monthly*
-                        </div>
-                        <div style='font-size: 22px; font-weight: 700; color: {ACCENT};'>
-                            £{monthly_payment}/mo
-                        </div>
-                    </div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Use columns for the three metrics
+        col_a, col_b, col_c = st.columns(3)
+        with col_a:
+            st.markdown(f"""
+            <div style='background-color: white; padding: 16px; border-radius: 8px; text-align: center;'>
+                <div style='font-size: 11px; color: #999; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;'>
+                    Your Trade-In Covers
+                </div>
+                <div style='font-size: 22px; font-weight: 700; color: #4caf50;'>
+                    £{trade_in_value:,}
                 </div>
             </div>
-            
-            <div style='margin-top: 12px; padding-top: 12px; border-top: 1px solid #e0e0e0;'>
-                <div style='font-size: 12px; color: #666; line-height: 1.5;'>
-                    💡 With £{deposit:,} deposit + your trade-in • 48-month term @ 4.9% APR (indicative)
+            """, unsafe_allow_html=True)
+        with col_b:
+            st.markdown(f"""
+            <div style='background-color: white; padding: 16px; border-radius: 8px; text-align: center; border-left: 2px solid #e0e0e0; border-right: 2px solid #e0e0e0;'>
+                <div style='font-size: 11px; color: #999; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;'>
+                    Additional Needed
                 </div>
+                <div style='font-size: 22px; font-weight: 700; color: {PRIMARY};'>
+                    £{remaining_amount:,}
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+        with col_c:
+            st.markdown(f"""
+            <div style='background-color: white; padding: 16px; border-radius: 8px; text-align: center;'>
+                <div style='font-size: 11px; color: #999; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;'>
+                    Est. Monthly*
+                </div>
+                <div style='font-size: 22px; font-weight: 700; color: {ACCENT};'>
+                    £{monthly_payment}/mo
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        st.markdown(f"""
+        <div style='background-color: #f8f9fa; padding: 12px 20px 20px 20px; border-radius: 0 0 12px 12px; margin-top: -4px;'>
+            <div style='font-size: 12px; color: #666; line-height: 1.5;'>
+                💡 With £{deposit:,} deposit + your trade-in • 48-month term @ 4.9% APR (indicative)
             </div>
         </div>
         """, unsafe_allow_html=True)
