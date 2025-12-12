@@ -341,10 +341,131 @@ def render_wheel_tracker(current_stage_index, stages):
         
         dots_html += f'<div class="stage-dot {dot_class}" title="{stage["name"]}">{stage["icon"]}</div>'
     
-    # Render everything in one markdown call with wrapper
-    st.markdown(f"""
-    <div class="wheel-tracker-wrapper">
+    # Build dynamic styles for rotation and gradient
+    dynamic_styles = f"""
     <style>
+    .wheel-outer-{current_stage_index} {{
+        transform: rotate({rotation}deg);
+    }}
+    .wheel-rim-{current_stage_index} {{
+        background: conic-gradient(
+            from 0deg,
+            #3498db 0deg,
+            #2ecc71 {progress_percent * 3.6}deg,
+            #95a5a6 {progress_percent * 3.6}deg,
+            #7f8c8d 360deg
+        );
+    }}
+    </style>
+    """
+    
+    # Render HTML with dynamic classes
+    html_content = f"""
+    {dynamic_styles}
+    <div class="wheel-tracker-wrapper">
+        <div class="wheel-container">
+            <div class="wheel-wrapper">
+                <div class="wheel-outer wheel-outer-{current_stage_index}">
+                    <div class="wheel-rim wheel-rim-{current_stage_index}"></div>
+                    <div class="wheel-center">
+                        {current_stage['icon']}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="progress-text">
+                <div class="stage-name">{current_stage['name']}</div>
+                <div style="font-size: 16px; opacity: 0.9;">Stage {current_stage_index + 1} of {total_stages}</div>
+                <div class="progress-percent">{progress_percent:.0f}%</div>
+            </div>
+            
+            <div class="stage-dots">
+                {dots_html}
+            </div>
+        </div>
+    </div>
+    """
+    
+    st.markdown(html_content, unsafe_allow_html=True)
+
+# ============================================================================
+# STYLING
+# ============================================================================
+
+def apply_custom_css():
+    """Apply custom CSS styling"""
+    st.markdown(f"""
+    <style>
+    [data-testid="stAppViewContainer"] {{
+        background-color: {PAGE_BG};
+    }}
+    .header-card {{
+        background-color: {PRIMARY};
+        color: white;
+        padding: 16px 24px;
+        border-radius: 12px;
+        font-size: 24px;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 24px;
+    }}
+    .content-card {{
+        background-color: white;
+        padding: 16px 20px;
+        border-radius: 12px;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+        margin-bottom: 16px;
+        color: {PRIMARY};
+    }}
+    .stButton>button {{
+        background-color: {ACCENT} !important;
+        color: white !important;
+        font-weight: 600;
+        border-radius: 8px;
+        border: none !important;
+        padding: 0.5rem 1rem;
+        font-size: 16px;
+    }}
+    .stButton>button:hover {{
+        background-color: #1873cc !important;
+    }}
+    .stFormSubmitButton>button {{
+        background-color: {ACCENT} !important;
+        color: white !important;
+        font-weight: 600;
+        border-radius: 8px;
+        border: none !important;
+        padding: 0.5rem 1rem;
+        font-size: 16px;
+    }}
+    .numberplate {{
+        background-color: #FFC600;
+        border: 4px solid #000000;
+        border-radius: 8px;
+        padding: 20px 32px;
+        font-size: 48px;
+        font-weight: 900;
+        color: #000000;
+        text-align: center;
+        margin: 24px auto;
+        letter-spacing: 8px;
+        box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+        max-width: 500px;
+        font-family: 'Charles Wright', Arial, sans-serif;
+    }}
+    .badge {{
+        padding: 4px 10px;
+        border-radius: 12px;
+        color: white;
+        margin-right: 4px;
+        font-size: 12px;
+        display: inline-block;
+    }}
+    .badge-warning {{background-color: #ff9800;}}
+    .badge-error {{background-color: #f44336;}}
+    .badge-success {{background-color: #4caf50;}}
+    
+    /* Wheel Tracker Styles */
     .wheel-tracker-wrapper {{
         width: 100%;
         margin: 20px 0;
@@ -384,7 +505,6 @@ def render_wheel_tracker(current_stage_index, stages):
         background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
         box-shadow: 0 10px 40px rgba(0,0,0,0.3),
                     inset 0 0 20px rgba(255,255,255,0.1);
-        transform: rotate({rotation}deg);
         transition: transform 1s ease-out;
     }}
     
@@ -395,13 +515,6 @@ def render_wheel_tracker(current_stage_index, stages):
         top: 5%;
         left: 5%;
         border-radius: 50%;
-        background: conic-gradient(
-            from 0deg,
-            #3498db 0deg,
-            #2ecc71 {progress_percent * 3.6}deg,
-            #95a5a6 {progress_percent * 3.6}deg,
-            #7f8c8d 360deg
-        );
         box-shadow: inset 0 0 30px rgba(0,0,0,0.4);
     }}
     
@@ -486,107 +599,6 @@ def render_wheel_tracker(current_stage_index, stages):
         background-color: rgba(255,255,255,0.2);
         border-color: rgba(255,255,255,0.3);
     }}
-    </style>
-    
-    <div class="wheel-container">
-        <div class="wheel-wrapper">
-            <div class="wheel-outer">
-                <div class="wheel-rim"></div>
-                <div class="wheel-center">
-                    {current_stage['icon']}
-                </div>
-            </div>
-        </div>
-        
-        <div class="progress-text">
-            <div class="stage-name">{current_stage['name']}</div>
-            <div style="font-size: 16px; opacity: 0.9;">Stage {current_stage_index + 1} of {total_stages}</div>
-            <div class="progress-percent">{progress_percent:.0f}%</div>
-        </div>
-        
-        <div class="stage-dots">
-            {dots_html}
-        </div>
-    </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-# ============================================================================
-# STYLING
-# ============================================================================
-
-def apply_custom_css():
-    """Apply custom CSS styling"""
-    st.markdown(f"""
-    <style>
-    [data-testid="stAppViewContainer"] {{
-        background-color: {PAGE_BG};
-    }}
-    .header-card {{
-        background-color: {PRIMARY};
-        color: white;
-        padding: 16px 24px;
-        border-radius: 12px;
-        font-size: 24px;
-        font-weight: 700;
-        text-align: center;
-        margin-bottom: 24px;
-    }}
-    .content-card {{
-        background-color: white;
-        padding: 16px 20px;
-        border-radius: 12px;
-        box-shadow: 0 6px 18px rgba(0,0,0,0.06);
-        margin-bottom: 16px;
-        color: {PRIMARY};
-    }}
-    .stButton>button {{
-        background-color: {ACCENT} !important;
-        color: white !important;
-        font-weight: 600;
-        border-radius: 8px;
-        border: none !important;
-        padding: 0.5rem 1rem;
-        font-size: 16px;
-    }}
-    .stButton>button:hover {{
-        background-color: #1873cc !important;
-    }}
-    .stFormSubmitButton>button {{
-        background-color: {ACCENT} !important;
-        color: white !important;
-        font-weight: 600;
-        border-radius: 8px;
-        border: none !important;
-        padding: 0.5rem 1rem;
-        font-size: 16px;
-    }}
-    .numberplate {{
-        background-color: #FFC600;
-        border: 4px solid #000000;
-        border-radius: 8px;
-        padding: 20px 32px;
-        font-size: 48px;
-        font-weight: 900;
-        color: #000000;
-        text-align: center;
-        margin: 24px auto;
-        letter-spacing: 8px;
-        box-shadow: 0 6px 16px rgba(0,0,0,0.25);
-        max-width: 500px;
-        font-family: 'Charles Wright', Arial, sans-serif;
-    }}
-    .badge {{
-        padding: 4px 10px;
-        border-radius: 12px;
-        color: white;
-        margin-right: 4px;
-        font-size: 12px;
-        display: inline-block;
-    }}
-    .badge-warning {{background-color: #ff9800;}}
-    .badge-error {{background-color: #f44336;}}
-    .badge-success {{background-color: #4caf50;}}
     </style>
     """, unsafe_allow_html=True)
 
