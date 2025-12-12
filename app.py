@@ -1254,19 +1254,67 @@ def render_customer_tracker_page():
         if journey:
             render_wheel_tracker(journey.get('current_stage', 0), SALES_STAGES)
             
-            st.markdown("---")
-            st.markdown("### 👤 Your Purchase Details")
+            st.markdown("<br>", unsafe_allow_html=True)
             
-            col1, col2 = st.columns(2)
-            with col1:
-                st.markdown(f"**Customer:** {journey['customer']['name']}")
-                st.markdown(f"**Vehicle:** {journey['vehicle']['year']} {journey['vehicle']['make']} {journey['vehicle']['model']}")
-            with col2:
-                st.markdown(f"**Tracking ID:** {journey['tracking_id']}")
-                collection_date = datetime.datetime.fromisoformat(journey['collection_date'])
-                st.markdown(f"**Expected Collection:** {collection_date.strftime('%d %B %Y')}")
+            # Purchase details in a nice card
+            st.markdown(f"""
+            <div style='background-color: white; padding: 24px; border-radius: 12px; 
+                        box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin: 24px 0;'>
+                <h3 style='color: {PRIMARY}; margin-top: 0;'>👤 Your Purchase Details</h3>
+                <div style='display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px;'>
+                    <div>
+                        <div style='color: #999; font-size: 12px; text-transform: uppercase; margin-bottom: 4px;'>Customer</div>
+                        <div style='font-size: 16px; font-weight: 600; color: {PRIMARY};'>{journey['customer']['name']}</div>
+                    </div>
+                    <div>
+                        <div style='color: #999; font-size: 12px; text-transform: uppercase; margin-bottom: 4px;'>Tracking ID</div>
+                        <div style='font-size: 16px; font-weight: 600; color: {PRIMARY};'>{journey['tracking_id']}</div>
+                    </div>
+                    <div>
+                        <div style='color: #999; font-size: 12px; text-transform: uppercase; margin-bottom: 4px;'>Vehicle</div>
+                        <div style='font-size: 16px; font-weight: 600; color: {PRIMARY};'>
+                            {journey['vehicle']['year']} {journey['vehicle']['make']} {journey['vehicle']['model']}
+                        </div>
+                    </div>
+                    <div>
+                        <div style='color: #999; font-size: 12px; text-transform: uppercase; margin-bottom: 4px;'>Expected Collection</div>
+                        <div style='font-size: 16px; font-weight: 600; color: {PRIMARY};'>
+                            {datetime.datetime.fromisoformat(journey['collection_date']).strftime('%d %B %Y')}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
             
-            st.markdown("---")
+            # Stage timeline
+            st.markdown("### 📅 Journey Timeline")
+            current_stage_idx = journey.get('current_stage', 0)
+            
+            for idx, stage in enumerate(SALES_STAGES):
+                if idx < current_stage_idx:
+                    status = "✅ Completed"
+                    status_color = "#4caf50"
+                elif idx == current_stage_idx:
+                    status = "📍 Current Stage"
+                    status_color = ACCENT
+                else:
+                    status = "⏳ Upcoming"
+                    status_color = "#bbb"
+                
+                st.markdown(f"""
+                <div style='background-color: #f8f9fa; padding: 16px; border-radius: 8px; 
+                            margin-bottom: 12px; border-left: 4px solid {status_color};'>
+                    <div style='display: flex; justify-content: space-between; align-items: center;'>
+                        <div>
+                            <div style='font-size: 18px; font-weight: 600;'>{stage['icon']} {stage['name']}</div>
+                            <div style='font-size: 13px; color: #666; margin-top: 4px;'>Stage {idx + 1} of {len(SALES_STAGES)}</div>
+                        </div>
+                        <div style='font-size: 14px; font-weight: 600; color: {status_color};'>{status}</div>
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+            
+            st.markdown("<br>", unsafe_allow_html=True)
             st.info("📞 **Questions?** Contact your salesperson or visit your local Sytner dealership")
             
         else:
