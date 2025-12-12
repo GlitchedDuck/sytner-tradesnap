@@ -1,0 +1,42 @@
+{
+  "summary": {
+    "total_active_sales": 50,
+    "total_pipeline_value": 3336653,
+    "average_deal_size": 66733.06,
+    "deals_needing_attention": 36,
+    "completion_rate": 16.0
+  },
+  "stage_distribution": {
+    "Deposit Taken": 5,
+    "Demands & Needs": 9,
+    "Sign/Ink Order": 6,
+    "Sell Option Extras": 22,
+    "Collection Day": 8
+  },
+  "salesperson_performance": {
+    "by_volume": {
+      "Tom Henderson": 12,
+      "Lisa Chen": 11,
+      "Marcus Thompson": 10,
+      "Rachel Green": 9,
+      "David Palmer": 8
+    },
+    "by_revenue": {
+      "Tom Henderson": 884275,
+      "Lisa Chen": 725193,
+      "Marcus Thompson": 741776,
+      "Rachel Green": 499582,
+      "David Palmer": 485827
+    }
+  },
+  "vehicle_distribution": {
+    "Land Rover": 5,
+    "Jaguar": 2,
+    "Porsche": 10,
+    "Audi": 10,
+    "BMW": 12,
+    "Mercedes-Benz": 8,
+    "MINI": 3
+  },
+  "generated_date": "2025-12-12T14:08:00.320944"
+}
