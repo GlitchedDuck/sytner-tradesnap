@@ -1169,13 +1169,83 @@ def render_summary_page():
                     **Tracking ID:** `{tracking_id}`
                     **Customer:** {customer_name}
                     **Vehicle:** {vehicle['year']} {vehicle['make']} {vehicle['model']}
-                    
-                    📱 Share this tracking ID with the customer!
                     """)
                     
                     st.code(tracking_url, language=None)
-                    st.balloons()
                     
+                    # Share tracking link section
+                    st.markdown("---")
+                    st.markdown("### 📱 Share Tracking Link with Customer")
+                    
+                    share_method = st.radio(
+                        "How would you like to share?",
+                        ["📧 Email", "📱 SMS/Text", "📋 Copy Link"],
+                        horizontal=True
+                    )
+                    
+                    if share_method == "📧 Email":
+                        with st.form("email_tracking_form"):
+                            st.markdown("#### Send via Email")
+                            email_to = st.text_input("Customer Email", value=customer_email)
+                            email_subject = st.text_input(
+                                "Subject", 
+                                value=f"Track Your {vehicle['year']} {vehicle['make']} {vehicle['model']} Purchase"
+                            )
+                            email_message = st.text_area(
+                                "Message",
+                                value=f"""Hi {customer_name},
+
+Thank you for your purchase! You can track your vehicle's progress using the link below:
+
+{tracking_url}
+
+Your Tracking ID: {tracking_id}
+
+Expected Collection: {collection_date.strftime('%d %B %Y')}
+
+If you have any questions, please don't hesitate to contact us.
+
+Best regards,
+{salesperson_name}
+Sytner BMW"""
+                            )
+                            
+                            if st.form_submit_button("✉️ Send Email", type="primary"):
+                                # In production, integrate with SendGrid, AWS SES, or similar
+                                st.success(f"✅ Email sent to {email_to}")
+                                st.info("💡 **Note:** In production, integrate with SendGrid, AWS SES, or your email service")
+                    
+                    elif share_method == "📱 SMS/Text":
+                        with st.form("sms_tracking_form"):
+                            st.markdown("#### Send via SMS")
+                            sms_to = st.text_input("Customer Phone", value=customer_phone)
+                            sms_message = st.text_area(
+                                "Message (160 chars recommended)",
+                                value=f"Hi {customer_name}! Track your {vehicle['make']} {vehicle['model']}: {tracking_url} - Tracking ID: {tracking_id}",
+                                max_chars=320
+                            )
+                            st.caption(f"Character count: {len(sms_message)}/320")
+                            
+                            if st.form_submit_button("📲 Send SMS", type="primary"):
+                                # In production, integrate with Twilio, AWS SNS, or similar
+                                st.success(f"✅ SMS sent to {sms_to}")
+                                st.info("💡 **Note:** In production, integrate with Twilio, AWS SNS, or your SMS service")
+                    
+                    else:  # Copy Link
+                        st.markdown("#### 📋 Copy & Share Link")
+                        st.text_input("Tracking URL", value=tracking_url, key="copy_url_field")
+                        
+                        # QR Code option
+                        if st.button("📱 Generate QR Code"):
+                            st.info("💡 **Note:** Install `qrcode` package to generate QR codes: `pip install qrcode[pil]`")
+                            st.code(f"""
+# To generate QR code:
+import qrcode
+qr = qrcode.make('{tracking_url}')
+qr.save('tracking_qr.png')
+                            """)
+                    
+                    st.balloons()
                     st.session_state.create_journey_mode = False
                 else:
                     st.error("⚠️ Please fill in all required fields")
@@ -1318,6 +1388,67 @@ def render_customer_tracker_page():
             
             st.markdown("<br>", unsafe_allow_html=True)
             st.info("📞 **Questions?** Contact your salesperson or visit your local Sytner dealership")
+            
+            # Share this tracker
+            st.markdown("---")
+            with st.expander("📤 Share This Tracker", expanded=False):
+                st.markdown("**Share your vehicle progress with family & friends**")
+                
+                share_url = f"https://your-app.streamlit.app/?track={journey['tracking_id']}"
+                
+                col_share1, col_share2 = st.columns(2)
+                
+                with col_share1:
+                    if st.button("📧 Email This Link", use_container_width=True):
+                        st.session_state[f"share_email_{tracking_id}"] = True
+                        st.rerun()
+                
+                with col_share2:
+                    if st.button("📱 SMS This Link", use_container_width=True):
+                        st.session_state[f"share_sms_{tracking_id}"] = True
+                        st.rerun()
+                
+                # Email share form
+                if st.session_state.get(f"share_email_{tracking_id}", False):
+                    with st.form("customer_share_email"):
+                        st.markdown("##### Send via Email")
+                        recipient_email = st.text_input("Recipient Email", placeholder="friend@email.com")
+                        recipient_name = st.text_input("Recipient Name (optional)", placeholder="John")
+                        
+                        col_x, col_y = st.columns(2)
+                        with col_x:
+                            if st.form_submit_button("✉️ Send", type="primary"):
+                                if recipient_email:
+                                    st.success(f"✅ Tracking link sent to {recipient_email}")
+                                    st.info("💡 Email service integration required in production")
+                                    del st.session_state[f"share_email_{tracking_id}"]
+                        with col_y:
+                            if st.form_submit_button("❌ Cancel"):
+                                del st.session_state[f"share_email_{tracking_id}"]
+                                st.rerun()
+                
+                # SMS share form
+                if st.session_state.get(f"share_sms_{tracking_id}", False):
+                    with st.form("customer_share_sms"):
+                        st.markdown("##### Send via SMS")
+                        recipient_phone = st.text_input("Recipient Phone", placeholder="07700 900000")
+                        
+                        col_x, col_y = st.columns(2)
+                        with col_x:
+                            if st.form_submit_button("📲 Send", type="primary"):
+                                if recipient_phone:
+                                    st.success(f"✅ Tracking link sent to {recipient_phone}")
+                                    st.info("💡 SMS service integration required in production")
+                                    del st.session_state[f"share_sms_{tracking_id}"]
+                        with col_y:
+                            if st.form_submit_button("❌ Cancel"):
+                                del st.session_state[f"share_sms_{tracking_id}"]
+                                st.rerun()
+                
+                # Copy link option
+                st.markdown("---")
+                st.markdown("**Or copy this link:**")
+                st.code(share_url, language=None)
             
         else:
             st.error("❌ Tracking ID not found. Please check and try again.")
