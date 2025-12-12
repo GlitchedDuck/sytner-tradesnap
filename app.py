@@ -352,11 +352,12 @@ def render_wheel_tracker(current_stage_index, stages):
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
-        padding: 40px 20px;
+        justify-content: flex-start;
+        padding: 40px 20px 60px 20px;
         background: linear-gradient(135deg, {PRIMARY} 0%, {ACCENT} 100%);
         border-radius: 20px;
         margin: 20px 0;
+        min-height: 600px;
     }}
     
     .wheel-wrapper {{
@@ -434,6 +435,7 @@ def render_wheel_tracker(current_stage_index, stages):
         justify-content: center;
         gap: 15px;
         margin-top: 20px;
+        padding: 10px 20px 20px 20px;
         flex-wrap: wrap;
     }}
     
